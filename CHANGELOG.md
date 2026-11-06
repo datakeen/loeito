@@ -2,6 +2,13 @@
 
 All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Milestones (x.0.0, x.5.0) are preserved in `versions/`.
 
+## 1.6.2 — 2026-11-07
+
+### Changed
+- **Livelier tools:** toolbar and welcome cards react to hover and clicks; toolbar tools work on the welcome screen too (they ask for a file first).
+- **Arrow keys** move between the welcome cards.
+- **Search tools and commands** box on the welcome screen (same as Ctrl K).
+
 ## 1.6.1 — 2026-11-07
 
 ### Added

@@ -908,3 +908,23 @@ kbd { font: 11.5px var(--font); padding: 1px 6px; border-radius: 5px; background
 .ff-cal { border: 0; background: none; color: var(--accent); display: grid; place-items: center; cursor: pointer; padding: 0; }
 .ff-cal:hover { background: var(--accent-soft); }
 .ff-datepick { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+
+/* 1.6.2 — tools feel alive: hover, press, keyboard focus */
+.blade { transition: background .15s, color .15s, transform .08s; }
+.blade.idle { opacity: .72; }
+.blade.idle:hover { opacity: 1; }
+.blade:active { transform: scale(.94); }
+.blade:hover svg { transform: translateY(-1px); }
+.blade svg { transition: transform .15s; }
+.bcard { cursor: pointer; transition: transform .16s cubic-bezier(.2,.8,.3,1), box-shadow .16s; }
+.bcard:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(0,0,0,.09), 0 0 0 .5px var(--sep); }
+.bcard:active { transform: translateY(0) scale(.98); transition-duration: .06s; }
+.bcard:focus-visible { outline: none; box-shadow: 0 0 0 2.5px var(--accent), var(--shadow-sm); }
+.bcard .bi { transition: transform .2s; }
+.bcard:hover .bi { transform: scale(1.08); }
+.wfind { box-sizing: border-box; margin-top: 26px; width: min(460px, 100%); display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 0; border-radius: 12px; background: var(--surface); color: var(--text-2); font: inherit; font-size: 14px; cursor: text; box-shadow: var(--shadow-sm), 0 0 0 .5px var(--sep); transition: box-shadow .15s; }
+.wfind:hover, .wfind:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--accent-soft), 0 0 0 1px var(--accent); }
+.wfind span { flex: 1; text-align: left; }
+.wfind kbd { font: 11px/1 inherit; padding: 4px 6px; border-radius: 6px; background: var(--sep); color: var(--text-2); }
+.blade-grid { margin-top: 18px; }
+@media (prefers-reduced-motion: reduce) { .blade, .bcard, .bcard .bi, .blade svg { transition: none; } .bcard:hover, .bcard:hover .bi { transform: none; } }

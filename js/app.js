@@ -95,7 +95,7 @@
     L.$('#btn-zoom-in').append(L.icon('plus')); L.$('#btn-zoom-out').append(L.icon('minus'));
     for (const [t, ic] of [['select', 'cursor'], ['text', 'ibeam'], ['hand', 'hand']]) L.$(`#hud-tools [data-tool="${t}"]`).append(L.icon(ic));
     const nav = L.$('#blades');
-    for (const b of L.blades) nav.append(h('button', { class: 'blade', 'data-blade': b.id, title: b.desc, onclick: () => L.setBlade(b.id) }, L.icon(b.icon), h('span', null, b.label)));
+    for (const b of L.blades) nav.append(h('button', { class: 'blade', 'data-blade': b.id, title: b.desc, onclick: () => { if (L.hasDoc()) L.setBlade(b.id); else { pendingBlade = b.id; L.pickFiles(false); } } }, L.icon(b.icon), h('span', null, b.label)));
     L.$('#btn-sidebar').onclick = () => { const ws = L.$('#workspace'); if (ws.classList.contains('grid-nosb')) return L.showSidebarAnyway(); ws.classList.toggle('no-sidebar'); };
     L.$('#doc-title').onclick = () => (L.hasDoc() ? L.openNameSheet() : L.pickFiles());
     L.$('#btn-undo').onclick = L.undo; L.$('#btn-redo').onclick = L.redo;
@@ -131,6 +131,14 @@
     dz.onclick = () => L.pickFiles(false);
     dz.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); L.pickFiles(false); } };
     const grid = L.$('#blade-grid');
+    grid.before(h('button', { class: 'wfind', type: 'button', onclick: () => L.openPalette() }, L.icon('search', 16), h('span', null, 'Search tools and commands…'), h('kbd', null, 'Ctrl K')));
+    grid.addEventListener('keydown', e => {
+      const cards = [...grid.querySelectorAll('.bcard')], i = cards.indexOf(document.activeElement);
+      if (i < 0 || !['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
+      const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+      const j = { ArrowLeft: i - 1, ArrowRight: i + 1, ArrowUp: i - cols, ArrowDown: i + cols, Home: 0, End: cards.length - 1 }[e.key];
+      if (cards[j]) { e.preventDefault(); cards[j].focus(); }
+    });
     grid.append(h('button', { class: 'bcard merge-card', style: { border: 0, font: 'inherit', textAlign: 'left' }, onclick: () => L.openMerge() },
       h('span', { class: 'bi', style: { background: '#0071e3' } }, L.icon('merge')), h('b', null, 'Merge PDFs'), h('span', null, 'Pick files, arrange pages, one click to merge, save and open.')));
     for (const b of L.blades.filter(b => b.id !== 'view')) {
@@ -155,7 +163,7 @@
     L.$('#doc-name').textContent = has ? s.name : 'Loeito';
     L.$('#doc-sub').textContent = has ? `${s.pages.length} page${s.pages.length === 1 ? '' : 's'}${s.dirty ? ' · Edited' : ''}` : '';
     document.title = has ? `${s.name}${s.dirty ? ' •' : ''} — Loeito` : 'Loeito — PDF, just right';
-    L.$$('.blade').forEach(b => { b.classList.toggle('active', has && b.dataset.blade === s.blade); b.disabled = !has; });
+    L.$$('.blade').forEach(b => { b.classList.toggle('active', has && b.dataset.blade === s.blade); b.classList.toggle('idle', !has); b.disabled = false; });
     L.$('#btn-save').disabled = !has; L.$('#btn-search').disabled = !has;
     L.$('#btn-undo').disabled = !L.canUndo(); L.$('#btn-redo').disabled = !L.canRedo();
     L.$('#page-input').value = has ? s.cur + 1 : '';
