@@ -147,6 +147,10 @@ A **check** points out what's missing or untidy and fixes it with one click.
 
 **How it works:** saves standard PDF form fields with Acrobat-compatible formats and totals. They work in Acrobat, Edge, Chrome and Foxit.
 
+**Dates:** a date field gets a calendar in Fill in, and impossible dates (like 23/76/5006) are flagged. Acrobat and Foxit also check dates in the saved file; browsers do not.
+
+**Scripts (for experts):** field scripts and the document script are Acrobat JavaScript. They run in **Acrobat, Foxit and PDF-XChange** only, not in Chrome, Edge, Firefox, phone apps or Loeito's preview. Basic syntax and recipes (totals, show/hide, today's date, checks) are in the User Manual → Forms → *Script recipes*.
+
 > Tutorial: **13 Forms**
 
 ## Protect

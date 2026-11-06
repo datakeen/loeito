@@ -2,6 +2,16 @@
 
 All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Milestones (x.0.0, x.5.0) are preserved in `versions/`.
 
+## 1.6.1 — 2026-11-07
+
+### Added
+- **Dates in forms:** a calendar button in Fill in, and impossible dates (like 23/76/5006 or 30/02) are flagged.
+- **Script help:** basic syntax and recipes in the User Manual, and a clear note on which readers run scripts.
+
+### Changed
+- **Templates:** each field now carries its own box, so moving, resizing or deleting a field takes its box along.
+- **README** rewritten for people who just want to download and use Loeito; developer details moved to CONTRIBUTING.md.
+
 ## 1.6.0 — 2026-11-06
 
 ### Changed

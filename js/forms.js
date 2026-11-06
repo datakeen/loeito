@@ -51,12 +51,27 @@
     return String(v);
   };
   const RX = { email: /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/, phone: /^\+?[0-9 ()\-]{7,20}$/, cnic: /^\d{5}-\d{7}-\d$/ };
+  /* ——— Dates: read and write them in the field's own style (dd/mm/yyyy, mm/dd/yyyy, yyyy-mm-dd, dd-mmm-yyyy) ——— */
+  const MON = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  F.parseDate = (str, fmt = 'dd/mm/yyyy') => {
+    const order = fmt.toLowerCase().match(/dd|mmm|mm|yyyy/g) || [], parts = String(str).trim().split(/[\/.\- ]+/);
+    if (parts.length !== order.length) return null;
+    let d, m, y;
+    order.forEach((t, i) => { const p = parts[i]; if (t === 'dd') d = +p; else if (t === 'mm') m = +p; else if (t === 'mmm') m = MON.indexOf(p.slice(0, 3).toLowerCase()) + 1; else y = +p; });
+    if (!(y >= 1800 && y <= 2200) || !(m >= 1 && m <= 12) || !(d >= 1)) return null;
+    const dt = new Date(y, m - 1, d);
+    return dt.getMonth() === m - 1 && dt.getDate() === d ? dt : null; // rejects 31/02 and 23/76
+  };
+  F.formatDate = (dt, fmt = 'dd/mm/yyyy') => fmt.toLowerCase()
+    .replace('yyyy', dt.getFullYear()).replace('mmm', MON[dt.getMonth()].replace(/^./, c => c.toUpperCase()))
+    .replace('mm', String(dt.getMonth() + 1).padStart(2, '0')).replace('dd', String(dt.getDate()).padStart(2, '0'));
   F.problem = f => {
     const v = f.value;
     if (f.kind === 'check' || f.kind === 'button' || f.kind === 'sign') return null;
     if (f.required && (v === '' || v == null)) return 'Required';
     if (v === '' || v == null) return null;
     if (F.numeric(f) && F.toNumber(v) == null) return 'Numbers only';
+    if (f.format === 'date' && !F.parseDate(v, f.dateFmt)) return `Not a real date — write it as ${f.dateFmt}`;
     if (RX[f.format] && !RX[f.format].test(String(v).trim())) return { email: 'Not an email address', phone: 'Not a phone number', cnic: 'Use #####-#######-#' }[f.format];
     if (f.format === 'mask' && f.mask && String(v).length !== f.mask.length) return `Use the pattern ${f.mask}`;
     return null;

@@ -905,3 +905,6 @@ kbd { font: 11.5px var(--font); padding: 1px 6px; border-radius: 5px; background
 .palette-item.on { background: var(--accent); color: #fff; }
 .palette-item.on kbd { color: #fff; background: rgba(255,255,255,.2); border-color: transparent; }
 .palette-empty { padding: 18px; text-align: center; color: var(--text-3); font-size: 13px; }
+.ff-cal { border: 0; background: none; color: var(--accent); display: grid; place-items: center; cursor: pointer; padding: 0; }
+.ff-cal:hover { background: var(--accent-soft); }
+.ff-datepick { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }

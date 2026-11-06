@@ -226,7 +226,57 @@ Select one or more fields. **Arrange** aligns them:
 ### Behaviour
 - **Buttons:** clear the form, print, **e-mail the filled form**, open a web page, go to a page, show/hide fields, or run your own script.
 - **Show only when…:** a field appears only when another one has a certain answer. For example, show “Other details” only when “Other” is chosen, or “Supervisor’s phone” only when a box is ticked. Conditional fields carry a small blue *if* badge.
-- **Scripts (for experts):** Format, Keystroke, Validate and Calculate scripts per field, plus a document script. These are Acrobat JavaScript, run by Acrobat, Foxit and PDF-XChange.
+- **Scripts (for experts):** Format, Keystroke, Validate and Calculate scripts per field, plus a document script. These are Acrobat JavaScript, run by Acrobat, Foxit and PDF-XChange, but not by browsers or phone apps (see below).
+
+### Dates
+Choose **Date** as the kind of answer and pick a style (dd/mm/yyyy, mm/dd/yyyy, yyyy-mm-dd or dd-mmm-yyyy).
+
+- In Loeito's **Fill in**, a date field has a small calendar button, and an impossible date such as 23/76/5006 or 30/02/2026 is marked *Not a real date*.
+- In the saved PDF, **Acrobat, Foxit and PDF-XChange** show their own calendar and refuse wrong dates.
+- **Browsers (Chrome, Edge, Firefox) and most phone apps** show a plain text box and accept anything. That is a limit of those readers, not of the file.
+
+### Scripts: where they work
+Scripts are **Acrobat JavaScript** stored inside the PDF.
+
+| Works | Does not work |
+|---|---|
+| Adobe Acrobat / Reader, Foxit, PDF-XChange (desktop) | Chrome, Edge, Firefox, Mac Preview, most phone apps, Loeito's own preview |
+
+So never make a form depend on a script alone. Loeito's own totals, formats and *Show only when* rules are saved in the standard way and work in more readers. Use scripts only for extras.
+
+### Script basics
+- `this` is the document; `event` is what just happened.
+- `this.getField("Name")` finds a field; `.value` reads or sets its answer; `.display = display.hidden` or `display.visible` hides or shows it.
+- `event.value` is the field's new value (in Calculate, Format and Validate); `event.rc = false` refuses it (in Validate and Keystroke).
+- `app.alert("Text")` shows a message.
+- The **document script** runs once when the PDF opens. Put shared functions there and call them from field scripts.
+
+### Script recipes
+**Total of three fields** (Calculate script of *Total*):
+```js
+event.value = Number(this.getField("A").value) + Number(this.getField("B").value) + Number(this.getField("C").value);
+```
+**Show a field only when a box is ticked** (Calculate script of the hidden field):
+```js
+event.target.display = this.getField("Has car").value !== "Off" ? display.visible : display.hidden;
+```
+**Today's date as the default** (document script):
+```js
+var d = this.getField("Date"); if (!d.value) d.value = util.printd("dd/mm/yyyy", new Date());
+```
+**Allow only 18 to 99** (Validate script of *Age*):
+```js
+if (event.value !== "" && (event.value < 18 || event.value > 99)) { app.alert("Age must be 18 to 99."); event.rc = false; }
+```
+**Capital letters** (Keystroke script):
+```js
+event.change = event.change.toUpperCase();
+```
+**A shared function** (document script, then use `fullName()` in any field):
+```js
+function fullName() { return this.getField("First").value + " " + this.getField("Last").value; }
+```
+Test scripted forms in Acrobat Reader or Foxit before you send them.
 
 ### Fill in and save
 **Fill in** lets you try the form exactly as people will: CNIC dashes appear by themselves, wrong e-mails are flagged, totals update and conditional fields appear. Answers can be saved and loaded as CSV or JSON. When saving, keep the form fillable or flatten the answers into the page.

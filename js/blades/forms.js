@@ -129,7 +129,7 @@
 
   /* ——— fill mode: real inputs over the page ——— */
   function drawFill(html, view, p) {
-    const k = view.scale;
+    const k = view.scale, extras = [];
     for (const f of p.fields || []) {
       const b = screenBox(f, view), fs = Math.max(9, Math.min(b.h * 0.62, (f.fontSize || 11) * k));
       const st = { position: 'absolute', left: b.x + 'px', top: b.y + 'px', width: b.w + 'px', height: b.h + 'px', fontSize: fs + 'px', boxSizing: 'border-box' };
@@ -146,12 +146,19 @@
         if (f.comb) Object.assign(st, { letterSpacing: Math.max(0, b.w / (f.maxLen || 10) - fs * 0.6) + 'px', fontFamily: 'monospace' });
         el.addEventListener('input', () => {
           touch();
-          const mask = f.format === 'date' ? f.dateFmt.replace(/[dmy]/gi, '9') : F.maskOf(f);
+          const mask = f.format === 'date' ? f.dateFmt.replace(/mmm/i, 'AAA').replace(/[dmy]/gi, '9') : F.maskOf(f);
           if (mask) { const m = F.applyMask(mask, el.value); if (m !== el.value) el.value = m; }
           f.value = el.value; after(el);
         });
         el.addEventListener('blur', () => { if (F.numeric(f) && !f.calc && f.value !== '') { const n = F.toNumber(f.value); if (n != null) { f.value = n; el.value = F.display(f); } } after(el); refresh(); });
         el.addEventListener('focus', () => { if (F.numeric(f) && !f.calc) el.value = f.value ?? ''; });
+        if (f.format === 'date' && !f.readOnly && !f.calc) { // a calendar button inside the field
+          const pick = h('input', { type: 'date', tabindex: '-1', class: 'ff-datepick', 'aria-hidden': 'true',
+            onchange: e => { if (!e.target.value) return; const [y, m, d] = e.target.value.split('-').map(Number); touch(); f.value = el.value = F.formatDate(new Date(y, m - 1, d), f.dateFmt); after(el); refresh(); } });
+          const cal = h('button', { class: 'ff-cal', title: 'Pick a date', tabindex: '-1', style: { position: 'absolute', left: b.x + b.w - Math.min(26, b.h) + 'px', top: b.y + 'px', width: Math.min(26, b.h) + 'px', height: b.h + 'px' },
+            onclick: () => { const cur = F.parseDate(el.value, f.dateFmt); pick.value = cur ? `${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, '0')}-${String(cur.getDate()).padStart(2, '0')}` : ''; try { pick.showPicker(); } catch { pick.click(); } } }, L.icon('calendar', 14), pick);
+          cal.dataset.fid = f.id; extras.push(cal);
+        }
       } else if (f.kind === 'check') {
         el = h('input', { type: 'checkbox', class: 'ff-check', checked: !!f.value, title: f.tip || f.name, onchange: e => { touch(); f.value = e.target.checked; after(); refresh(); } });
       } else if (f.kind === 'radio') {
@@ -172,9 +179,10 @@
       }
       if (!el) continue;
       Object.assign(el.style, st);
+      if (f.format === 'date') el.style.paddingRight = Math.min(26, b.h) + 'px';
       el.dataset.fid = f.id;
       if (F.problem(f)) el.classList.add('bad');
-      html.append(el);
+      html.append(el, ...extras.splice(0));
     }
     syncVisibility(html, p);
   }
@@ -472,7 +480,7 @@
           all.length ? h('details', { class: 'more', style: { marginTop: '12px' }, open: L.state.formScript ? true : null }, h('summary', null, 'Document script (for experts)'),
             h('div', { class: 'stack', style: { marginTop: '8px' } },
               h('textarea', { class: 'input mono', rows: 4, value: L.state.formScript || '', placeholder: '// runs when the PDF opens (Acrobat JavaScript)', onchange: e => change('document script', () => { L.state.formScript = e.target.value; }) }),
-              h('p', { class: 'muted tiny', style: { margin: 0 } }, 'Shared functions for your field scripts. Runs in Acrobat, Foxit and PDF-XChange.'))) : null),
+              h('p', { class: 'muted tiny', style: { margin: 0 } }, 'Shared functions for your field scripts. ⚠ Scripts run only in Acrobat, Foxit and PDF-XChange — not in Chrome, Edge, Firefox, phone apps or this preview. Don’t make the form depend on them. Recipes: Help → User Manual → Forms.'))) : null),
       ];
     },
   });

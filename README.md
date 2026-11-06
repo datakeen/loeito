@@ -1,71 +1,49 @@
 # Loeito — PDF, just right
 
-Every everyday PDF task, just right: not too little, not too much.
-**Version 1.6.0 “Hantverk”** · see `CHANGELOG.md`.
+A free, private PDF workbench for everyday work: read, merge, edit, sign, fill and make forms, OCR scans, pull tables into Excel, and protect files with passwords.
 
-A private, install-free PDF workbench for everyday document work. Everything runs on your computer; files are never uploaded.
+Your files never leave your computer. No account, no upload, no subscription.
 
-Loeito is **free and open-source software**, licensed under the **GNU Affero General Public License v3** (AGPL-3.0-or-later). You may use, study, share and improve it; see `LICENSE` and `NOTICE.md`.
+**Version 1.6.1** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
 
-## Start
+## Download and install
 
-- **Desktop app (easiest):** download the installer for Windows, macOS or Linux from the GitHub *Releases* page and install it.
+1. Open the **[Releases](../../releases/latest)** page.
+2. Download the file for your computer:
+   - **Windows:** `Loeito-Setup-….exe`
+   - **macOS:** `Loeito-….dmg`
+   - **Linux:** `Loeito-….AppImage`
+3. Open the downloaded file and follow the steps. Then start **Loeito** like any other program.
 
-- **Double-click `Start Loeito.cmd`** (recommended). It starts Loeito’s small local helper (Python standard library) and opens http://localhost:8765 (or the next free port if another program uses 8765; if Loeito is already running, it just opens it). With it, Loeito can:
-  - save straight back into your files, keeping a safety copy of the old version;
-  - browse folders in its own Open / Save As sheet;
-  - open Word, Excel and PowerPoint files through your installed Microsoft Office.
-- Or double-click `index.html`. Everything works except folder browsing, safety copies and Office import.
-
-The first start needs an internet connection to load the PDF engine (and, for OCR, the language model).
+Windows or macOS may warn that the app is from an unknown publisher, because it is not yet code-signed. On Windows click **More info → Run anyway**.
 
 ## What it does
 
 | Tool | For |
 |---|---|
-| **Merge PDFs** | Pick files in order, preview, reorder files and pages, move/copy/rotate pages between files, one click to merge, save and open |
-| **Read** | Calm reader, focus mode, themes, contents, read-aloud, selectable text |
-| **Pages** | Rotate, reorder, delete, duplicate, merge, extract, split, send pages to other tabs |
-| **Edit** | Fix and add text, highlight, white-out, redact, draw, shapes, signature, images |
-| **Crop** | One, odd/even or all pages; auto-trim scans |
-| **Searchable** | OCR that keeps the layout |
-| **Tables** | Ruled and scanned tables with merged cells → Excel, CSV, Word, Markdown |
-| **Digitize** | Graphs → numbers; maps → Shapefile, GeoJSON, KML, DXF, Delft3D .ldb/.pol/.xyz … |
-| **Optimize** | What’s using space; smaller files; paper sizes; page images |
-| **Stamp** | Page numbers (incl. Bates across documents), 3-part headers and footers, watermarks — on all / odd / even / chosen pages, skipping first or last pages |
-| **Covers** | 8 front-cover designs and 5 last pages for PDF books, reports and theses |
-| **Forms** | 10 templates, drawing, automatic field finding (Word, Excel, scans), arrange & snap, behaviour (show-if, e-mail buttons, scripts), fill in |
-| **Properties** | Title, author, keywords, language, dates and your own fields, with a check and one-click tidy-up |
-| **Protect** | Find & black out (CNIC, phone, e-mail, accounts…) for real; inspect and remove hidden information; **passwords** (AES-256), permissions, unlock |
+| **Merge PDFs** | Put PDFs, pictures and Office files together in the order you want |
+| **Read** | A calm reader with themes, focus mode, contents and read-aloud |
+| **Pages** | Rotate, reorder, delete, extract and split pages |
+| **Edit** | Add or fix text, highlight, white-out, draw, sign, add pictures |
+| **Crop** | Trim margins on one, odd/even or all pages |
+| **Searchable** | Make scans searchable and copyable (OCR) |
+| **Tables** | Tables, even from scans, to Excel, CSV, Word or Markdown |
+| **Digitize** | Graphs to numbers; maps to Shapefile, GeoJSON, KML, DXF and more |
+| **Optimize** | Make files smaller; change the paper size |
+| **Stamp** | Page numbers, Bates numbers, headers, footers, watermarks |
+| **Covers** | Designed front covers and last pages for books, reports and theses |
+| **Forms** | 10 templates, draw fields or find them automatically, dates with a calendar, totals, fill in |
+| **Properties** | Title, author, keywords and other document details |
+| **Protect** | Black out private details for real, remove hidden data, add passwords |
 
-Across all tools:
+Handy everywhere: several documents in tabs, **Ctrl K** to find any command, **Ctrl S** to save, and **?** for all keyboard shortcuts.
 
-- **Save to the original** (Ctrl S, Enter confirms), or **Save As** (Ctrl Shift S) with folders, New folder, Replace / Keep both.
-- **Several documents in tabs.**
-- **Pointer tools:** Select, Text and Hand (V / T / H).
-- **Command palette:** Ctrl K, then type what you want to do.
-- **Zoom speed:** Auto, Fine, Normal or Fast; Shift zooms finely.
+## Help
 
-## Documents
+Inside Loeito, click **Help (?)**: quick help, 14 short tutorials, the User Manual and keyboard shortcuts.
 
-| File | What it is |
-|---|---|
-| `docs/Help.md` | Quick help: what each part does and how, each with a tutorial |
-| `docs/tutorials/` | 14 short hands-on tutorials, one per part (Help → Tutorials) |
-| `docs/About.md` | The About text shown in the app |
-| `docs/User Manual.md` | How to use everything (also under Help in the app) |
-| `docs/Reference Manual.md` | Architecture, data model, saving, server API, for maintainers |
-| `POLICY.md` | The Loeito Rulebook: design philosophy, rules, versioning, definition of done |
-| `ROADMAP.md` | Where Loeito is heading |
-| `CONTRIBUTING.md` | How to help |
-| `desktop/` | Desktop app and installer builds (Electron) |
-| `CHANGELOG.md` | What changed in each version |
-| `LICENSE` · `NOTICE.md` | GNU AGPL v3 licence text; copyright and third-party notices |
-| `sourceforge/` | Ready-to-paste texts for the SourceForge project page |
-| `versions/` | Preserved milestones (1.0.0 …), each runnable with its own manuals |
-
-Try the files in `samples/`: a Word form, an Excel form and a scanned form.
+Found a problem or have an idea? Open an **[Issue](../../issues)**. See [ROADMAP.md](ROADMAP.md) for what is coming and [CONTRIBUTING.md](CONTRIBUTING.md) to help, or to run Loeito from the source code.
 
 ## Licence
 
-Copyright (C) 2026 Ahmed Bilal and contributors. Loeito is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License, version 3 or (at your option) any later version. It comes with **no warranty**. Contributions are welcome under the same licence.
+Copyright (C) 2026 Ahmed Bilal and contributors. Loeito is free software under the GNU Affero General Public License, version 3 or later. It comes with **no warranty**. See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md).

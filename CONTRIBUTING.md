@@ -13,7 +13,11 @@ Thank you for helping. Loeito is free software under the **GNU AGPL v3 or later*
   ```
   `npm run dist` builds installers for your own system.
 
+`Start Loeito.cmd` starts `loeito_server.py`, a small local helper (Python standard library only) that listens on your own computer (127.0.0.1) and opens Loeito in your browser. The helper adds saving straight back into files with a safety copy, folder browsing, and Word/Excel/PowerPoint import through Microsoft Office. Passwords need `pip install pypdf cryptography`. Opening `index.html` directly works without the helper, minus those extras.
+
 There is no build step for the web app: edit the files in `js/` and `css/` and reload.
+
+Developer documents: `docs/Reference Manual.md` (architecture, saving, server API), `POLICY.md` (rules and versioning), `CHANGELOG.md`, and `desktop/` (Electron app and installer builds). Try the forms in `samples/`.
 
 ## Before you send a change
 

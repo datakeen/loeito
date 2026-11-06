@@ -144,7 +144,7 @@
     };
     const wrapLines = (s, font, size, maxW) => { const out = []; let cur = ''; for (const w of L.winAnsi(s).split(/\s+/)) { const t = cur ? cur + ' ' + w : w; if (font.widthOfTextAtSize(t, size) <= maxW || !cur) cur = t; else { out.push(cur); cur = w; } } if (cur) out.push(cur); return out; };
     const box = (x, yy, w, hh) => pg.drawRectangle({ x, y: yy, width: w, height: hh, color: C(FILL), borderColor: C(LINE), borderWidth: 0.6 });
-    const field = (kind, r, props) => { const f = L.forms.make(kind, r, { style: 'plain', ...props }); fields.push(f); return f; };
+    const field = (kind, r, props) => { const f = L.forms.make(kind, r, { style: 'box', ...props }); fields.push(f); return f; };
     const fmtProps = c => ({ format: c.format || 'none', decimals: c.decimals ?? 2, ...(c.kind === 'dropdown' ? { options: c.options } : {}) });
     const label = (s, x, yy, req) => { const w = text(s, x, yy, 7.5, reg, GREY); if (req) text(' *', x + w, yy, 7.5, bold, [0.84, 0.2, 0.2]); };
     const section = s => { need(40); y -= 14; text(s.toUpperCase(), M, y - 9, 8.5, bold, acc); y -= 14; pg.drawLine({ start: { x: M, y }, end: { x: M + CW, y }, thickness: 0.5, color: C(LINE) }); y -= 10; };
@@ -156,8 +156,6 @@
         const w = avail * c.w, fh = c.h || (c.kind === 'para' ? 46 : c.kind === 'sign' ? 26 : 20);
         label(c.label, x, y - 8, c.req);
         const by = y - 12 - fh;
-        if (c.kind === 'sign') pg.drawLine({ start: { x, y: by + 2 }, end: { x: x + w, y: by + 2 }, thickness: 0.6, color: C(INK) });
-        else box(x, by, w, fh);
         field(c.kind || 'text', { x: x + 1, y: by + 1, w: w - 2, h: fh - 2 }, { name: uniq(c.label), required: !!c.req, ...fmtProps(c), ...(c.kind === 'para' ? { fontSize: 9 } : {}) });
         x += w + gap;
       }
@@ -172,7 +170,6 @@
       for (const o of opts) {
         const ow = 16 + reg.widthOfTextAtSize(L.winAnsi(o), 9) + 18;
         if (x + ow > M + CW) { x = M; y -= rowH; need(rowH); }
-        pg.drawCircle({ x: x + 6, y: y - 7, size: 5.2, borderColor: C(GREY), borderWidth: 0.8, color: rgb(1, 1, 1) });
         field('radio', { x: x, y: y - 13, w: 12, h: 12 }, { group, name: group, exportValue: o, required: !!b.req && first });
         text(o, x + 16, y - 10, 9);
         x += ow; first = false;
@@ -185,14 +182,12 @@
       for (const o of b.options) {
         if (b.list || b.checks == null) {
           const ls = wrapLines(o, reg, 9, CW - 22), hh = ls.length * 12 + 6; need(hh);
-          pg.drawRectangle({ x, y: y - 12, width: 10, height: 10, borderColor: C(GREY), borderWidth: 0.8, color: rgb(1, 1, 1) });
           field('check', { x, y: y - 12, w: 10, h: 10 }, { name: uniq(o.replace(/^I (have |agree |take )?/i, '').slice(0, 40)) });
           ls.forEach((l, i) => text(l, x + 18, y - 10 - i * 12, 9));
           y -= hh;
         } else {
           const ow = 18 + reg.widthOfTextAtSize(L.winAnsi(o), 9) + 18;
           if (x + ow > M + CW) { x = M; y -= 18; }
-          pg.drawRectangle({ x, y: y - 12, width: 10, height: 10, borderColor: C(GREY), borderWidth: 0.8, color: rgb(1, 1, 1) });
           field('check', { x, y: y - 12, w: 10, h: 10 }, { name: uniq(`${b.checks}: ${o}`) });
           text(o, x + 16, y - 10, 9); x += ow;
         }
@@ -216,7 +211,7 @@
           const w = CW * c.w;
           if (c.fixed) { text(c.fixed[r - 1] || '', xs[i] + 5, y - 13, 9); return; }
           const nm = t.name ? `${t.name} ${r} ${c.label}` : `${c.label} ${r}`;
-          const f = field(c.kind || 'text', { x: xs[i] + 2, y: y - RH + 2, w: w - 4, h: RH - 4 }, { name: uniq(nm), ...fmtProps(c), ...(L.forms.numeric({ format: c.format || 'none' }) ? { align: 'right' } : {}) });
+          const f = field(c.kind || 'text', { x: xs[i] + 2, y: y - RH + 2, w: w - 4, h: RH - 4 }, { name: uniq(nm), style: 'plain', ...fmtProps(c), ...(L.forms.numeric({ format: c.format || 'none' }) ? { align: 'right' } : {}) });
           if (c.prd) { f.calc = { op: 'PRD', of: c.prd.map(k => (t.name ? `${t.name} ${r} ${k}` : `${k} ${r}`)) }; f.readOnly = true; }
         });
         pg.drawLine({ start: { x: M, y: y - RH }, end: { x: M + CW, y: y - RH }, thickness: 0.4, color: C(LINE) });
@@ -228,7 +223,7 @@
         text(t.total.label, xs[ci] - 8, y - 13, 8.5, bold, INK, { align: 'right' });
         pg.drawRectangle({ x: xs[ci], y: y - RH, width: w, height: RH, color: accTint });
         const of = Array.from({ length: n }, (_, k) => (t.name ? `${t.name} ${k + 1} ${c.label}` : `${c.label} ${k + 1}`));
-        field('text', { x: xs[ci] + 2, y: y - RH + 2, w: w - 4, h: RH - 4 }, { name: uniq(t.total.label), ...fmtProps(c), align: 'right', readOnly: true, calc: { op: 'SUM', of } });
+        field('text', { x: xs[ci] + 2, y: y - RH + 2, w: w - 4, h: RH - 4 }, { name: uniq(t.total.label), style: 'plain', ...fmtProps(c), align: 'right', readOnly: true, calc: { op: 'SUM', of } });
         y -= RH;
       }
       y -= 14;
@@ -238,7 +233,6 @@
         need(24);
         const w = 150, x = M + CW - w;
         text(t.label, x - 10, y - 13, t.strong ? 9.5 : 8.5, t.strong ? bold : reg, INK, { align: 'right' });
-        if (t.strong) pg.drawRectangle({ x, y: y - 20, width: w, height: 20, color: accTint }); else box(x, y - 20, w, 20);
         field('text', { x: x + 2, y: y - 18, w: w - 4, h: 16 }, { name: uniq(t.label), format: t.format || 'none', align: 'right', ...(t.sum ? { calc: { op: 'SUM', of: t.sum }, readOnly: true } : {}) });
         y -= 26;
       }
@@ -257,7 +251,6 @@
         const group = uniq(it);
         r.scale.forEach((s, i) => {
           const cx = M + iw + cw * i + cw / 2;
-          pg.drawCircle({ x: cx, y: y - RH / 2, size: 5.2, borderColor: C(GREY), borderWidth: 0.8, color: rgb(1, 1, 1) });
           field('radio', { x: cx - 6, y: y - RH / 2 - 6, w: 12, h: 12 }, { group, name: group, exportValue: s });
         });
         y -= RH;
@@ -274,7 +267,6 @@
         text(who, x, yy - 9, 8.5, bold); yy -= 16;
         for (const [lab, kind, fmt] of [['Name', 'text'], ['Signature', 'sign'], ['Date', 'text', 'date']]) {
           label(lab, x, yy - 8); const fh = kind === 'sign' ? 22 : 18, by = yy - 11 - fh;
-          if (kind === 'sign') pg.drawLine({ start: { x, y: by + 2 }, end: { x: x + w, y: by + 2 }, thickness: 0.6, color: C(INK) }); else box(x, by, w, fh);
           field(kind, { x: x + 1, y: by + 1, w: w - 2, h: fh - 2 }, { name: uniq(`${who} — ${lab}`), format: fmt || 'none' });
           yy = by - 6;
         }
@@ -289,7 +281,7 @@
     text(tpl.title, M, y - (org ? 40 : 30), 21, bold, INK);
     if (tpl.meta) {
       let my = y - 4; const w = 140, x = M + CW - w;
-      for (const [lab, fmt] of tpl.meta) { text(lab, x - 8, my - 13, 8, reg, GREY, { align: 'right' }); box(x, my - 18, w, 18); field('text', { x: x + 1, y: my - 17, w: w - 2, h: 16 }, { name: uniq(lab), format: fmt || 'none' }); my -= 22; }
+      for (const [lab, fmt] of tpl.meta) { text(lab, x - 8, my - 13, 8, reg, GREY, { align: 'right' }); field('text', { x: x + 1, y: my - 17, w: w - 2, h: 16 }, { name: uniq(lab), format: fmt || 'none' }); my -= 22; }
       y = Math.min(y - (org ? 52 : 42), my);
     } else y -= org ? 52 : 42;
     pg.drawLine({ start: { x: M, y }, end: { x: M + CW, y }, thickness: 0.8, color: C(INK) });
