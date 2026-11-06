@@ -1,6 +1,6 @@
 # Loeito — PDF, just right
 
-*Loeito* (formerly Lagom) — every everyday PDF task, just right: not too little, not too much.
+*Loeito*  — every everyday PDF task, just right: not too little, not too much.
 **Version 1.6.0 “Hantverk”** · see `CHANGELOG.md`.
 
 A private, install-free PDF workbench for everyday document work. Everything runs on your computer; files are never uploaded.
