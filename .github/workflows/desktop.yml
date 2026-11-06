@@ -3,6 +3,7 @@
 # Runs on every push of a version tag (e.g. v1.6.0) and creates a GitHub Release with the files;
 # can also be started by hand from the Actions tab ("Run workflow") — then the files are under the run's Artifacts.
 name: Desktop installers
+run-name: Build installers · ${{ github.ref_name }}
 
 on:
   push:
