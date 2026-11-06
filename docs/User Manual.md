@@ -1,6 +1,6 @@
-# Loeito 1.2 — User Manual
+# Loeito — User Manual
 
-_Loeito 1.2.0 “Hantverk” · November 2026. Quick answers: Help → Help. Step-by-step: Help → Tutorials._ Loeito (formerly Lagom): every PDF task, just right._
+_Loeito 1.6.0 · November 2026. Quick answers: Help → Help. Step-by-step: Help → Tutorials._ Every PDF task, just right._
 
 Loeito is a private PDF workbench. Everything happens on your computer: files are never uploaded.
 

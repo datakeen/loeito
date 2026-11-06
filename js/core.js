@@ -15,7 +15,7 @@
   L.reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ——— Preferences (remembered on this computer) ——— */
-  try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith('lagom.') && localStorage.getItem('loeito.' + k.slice(6)) == null) localStorage.setItem('loeito.' + k.slice(6), localStorage.getItem(k)); } } catch {} // 1.6: Lagom → Loeito
+  try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (k.startsWith('lagom.') && localStorage.getItem('loeito.' + k.slice(6)) == null) localStorage.setItem('loeito.' + k.slice(6), localStorage.getItem(k)); } } catch {} // carry over settings saved by older versions
   L.pref = (k, d) => { try { const v = localStorage.getItem('loeito.' + k); return v == null ? d : JSON.parse(v); } catch { return d; } };
   L.setPref = (k, v) => { try { localStorage.setItem('loeito.' + k, JSON.stringify(v)); } catch {} };
 

@@ -15,7 +15,7 @@ Three ideas carry that promise.
 
 | Idea | What it means for Loeito |
 |---|---|
-| **Lagom** (Swedish: “just right”), the idea Loeito grew from | Each screen shows what the task needs and nothing more. Advanced options exist, but they wait one click away. |
+| **Just right** — not too little, not too much | Each screen shows what the task needs and nothing more. Advanced options exist, but they wait one click away. |
 | **Swedish craftsmanship** | Finished, complete and durable. Edges are smooth: empty states, errors, undo, dark mode, keyboard, long files, scans. Honest materials: we never pretend something was done when it wasn’t. |
 | **Swiss army knife** | One compact tool with many blades. Each blade does one family of jobs well, folds away when not used, and works with the others (tabs, undo, save, export). It adapts to the user instead of the reverse. |
 
@@ -91,7 +91,7 @@ Archive procedure: finish and verify the release → update the manuals → copy
 Each release also:
 - writes its number to `VERSION` and to `L.VERSION` in `js/core.js` (shown in Help → About);
 - adds a `CHANGELOG.md` entry (Added / Changed / Fixed / Known limits), newest first;
-- gets a short Swedish codename for the release notes (1.0.0 *Lagom*, 1.1.0 *Hantverk*).
+- gets a short Swedish codename for the release notes (e.g. 1.1.0 *Hantverk*).
 
 **User documents (kept current with every change).** Each release updates:
 

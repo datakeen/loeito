@@ -2,7 +2,7 @@
 
 **Loeito — PDF, just right.** Version 1.6.0 “Hantverk”.
 
-**Loeito** (formerly called Lagom) is made in the spirit of the Swedish word *lagom*: “not too little, not too much — just right”. Loeito does every everyday PDF task without fuss: reading, merging, editing, signing, forms, tables, maps, OCR and safe sharing. It is designed to be calm and obvious, yet complete enough for professional work.
+**Loeito** is made in one spirit: not too little, not too much — just right. Loeito does every everyday PDF task without fuss: reading, merging, editing, signing, forms, tables, maps, OCR and safe sharing. It is designed to be calm and obvious, yet complete enough for professional work.
 
 It follows three ideas:
 

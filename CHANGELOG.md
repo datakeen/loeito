@@ -5,7 +5,7 @@ All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Mi
 ## 1.6.0 — 2026-11-06
 
 ### Changed
-- **Lagom is now Loeito.** New name everywhere: app, launcher (`Start Loeito.cmd`), server (`loeito_server.py`), documents. Saved preferences carry over.
+- **New name: Loeito**, everywhere: app, launcher (`Start Loeito.cmd`), server (`loeito_server.py`), documents. Saved preferences carry over.
 
 ### Added
 - **Document properties** (click the document name, or Ctrl K → "properties"):
@@ -133,7 +133,7 @@ Phase 1 of the five-phase plan (`PLAN.md`, Round 4): everyday craft, plus the fi
 - Bookmarks of the original are not kept when saving yet (planned for 1.2.0).
 - Expert form scripts run in Acrobat, Foxit and PDF-XChange; Loeito’s Fill in preview runs the built-in rules only.
 
-## 1.0.0 “Lagom” — 2026-10-12
+## 1.0.0 — 2026-10-12
 
 First complete release (development rounds 1–3). Preserved in `versions/1.0.0/`.
 

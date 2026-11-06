@@ -1,12 +1,12 @@
 # Loeito — PDF, just right
 
-**Free and open-source PDF workbench for Windows: read, merge, edit, sign, fill forms, OCR scans, extract tables, digitize maps. Private: nothing is uploaded.**
+**Free and open-source PDF app for Windows, macOS and Linux: read, merge, edit, sign, fill forms, OCR scans, extract tables, digitize maps. Private: nothing is uploaded.**
 
-*Loeito* (formerly Lagom) — every everyday PDF task, just right: not too little, not too much.
+Every everyday PDF task, just right: not too little, not too much.
 
-Loeito does the PDF jobs people do every day, in one calm, beautiful window that runs in your own browser. Your files never leave your computer. There is no account, no subscription and no upload.
+Loeito does the PDF jobs people do every day, in one calm, beautiful window. Your files never leave your computer. There is no account, no subscription and no upload.
 
-License: **GNU AGPL v3** · Version **1.6.0** · Windows 10/11 (other systems: the browser part works anywhere)
+License: **GNU AGPL v3** · Version **1.6.0** · Windows, macOS, Linux · Source code: https://github.com/datakeen/loeito
 
 ---
 
@@ -29,15 +29,13 @@ License: **GNU AGPL v3** · Version **1.6.0** · Windows 10/11 (other systems: t
 - **Optimize:** see what makes a file large, make it smaller, and change the paper size.
 - **Saving:** Save to the original (with a safety copy) or Save As with your own folders, and open Word / Excel / PowerPoint files through your installed Microsoft Office.
 
-## Install and run
+## Install
 
-1. Install **Python 3.10 or newer** from python.org (tick *Add to PATH*).
-2. Download and unzip `Loeito-1.6.0.zip`.
-3. Double-click **`Start Loeito.cmd`**. Loeito opens in your browser.
+- **Windows:** download `Loeito-Setup-1.6.0.exe` and run it. If Windows says *"Windows protected your PC"*, click **More info → Run anyway** (the app is not signed yet). Or use `Loeito-Portable-1.6.0.exe`, which runs without installing.
+- **macOS:** open the `.dmg` and drag Loeito into *Applications*. The first time, right-click Loeito → **Open** → **Open**.
+- **Linux:** make the `.AppImage` executable and run it, or install the `.deb`.
 
-You can also double-click `index.html` to use Loeito without Python, without the folder browser and Office import.
-
-An internet connection is needed the first time, to load the PDF engine and the OCR language data.
+An internet connection is needed the first time, to load the PDF engine and the OCR language data. For password protection, install Python with `pip install pypdf cryptography`.
 
 ## Privacy
 
