@@ -73,6 +73,15 @@ A protected PDF asks for its password when you open it. Saving keeps it protecte
 
 You need Loeito started with *Start Loeito.cmd* (or the desktop app) and, once, `py -m pip install pypdf cryptography`.
 
+## Views and snapshots
+**Ways to view (every tool):** click the zoom percentage at the bottom for:
+
+- **Full window** (Ctrl Shift F): hides the page list and the tabs, so the page gets the space. Esc brings them back.
+- **Full screen** (F11): the whole monitor.
+- **Continuous reading:** scroll through all pages in Read.
+- **Scroll on to the next page:** in any tool, keep scrolling past the end of a page and the next one opens. You can switch it off in the same menu.
+- **Snapshot** (Ctrl Shift C): drag a box on the page, or click for the whole page. Copy the picture, or save it as PNG. The picture is sharp, about 3000 pixels on the long side.
+
 ## Merge PDFs
 
 Click **Merge PDFs** on the welcome screen to start fresh. To start from the document you have open, use **Pages → Merge this with other files…** or the Save button's menu. The open document comes in first, **with all your edits** (page order, rotation, crop, highlights, form fields, OCR text), and Loeito asks for the files to add. Its card says *open tab · edited*. If you keep editing the tab, **Update from the open tab** on the card takes the newest version.

@@ -162,6 +162,7 @@
       [['Fit width', 'fit-width'], ['Fit page', 'fit-page'], ['Actual size', 1]].map(([t, z]) => h('button', { onclick: () => pick(z) }, t)),
       h('hr'),
       [0.5, 0.75, 1.25, 1.5, 2, 3, 4].map(z => h('button', { onclick: () => pick(z) }, Math.round(z * 100) + '%')),
+      L.viewMenuItems ? L.viewMenuItems(() => menu.remove()) : null,
       h('hr'),
       h('div', { class: 'zm-speed' }, h('span', null, 'Zoom speed'), seg, h('p', null, 'Hold Shift while zooming for fine control.')));
     L.$('#stage-wrap').append(menu);

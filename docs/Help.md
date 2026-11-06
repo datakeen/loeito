@@ -59,6 +59,14 @@ A **check** points out what's missing or untidy and fixes it with one click.
 
 **How it works:** Loeito lays the PDF's text, or the OCR text, invisibly over the page image. That is why you can select and copy it.
 
+**Ways to view (every tool):** click the zoom percentage at the bottom for:
+
+- **Full window** (Ctrl Shift F): hides the page list and the tabs, so the page gets the space. Esc brings them back.
+- **Full screen** (F11): the whole monitor.
+- **Continuous reading:** scroll through all pages in Read.
+- **Scroll on to the next page:** in any tool, keep scrolling past the end of a page and the next one opens. You can switch it off in the same menu.
+- **Snapshot** (Ctrl Shift C): drag a box on the page, or click for the whole page. Copy the picture, or save it as PNG. The picture is sharp, about 3000 pixels on the long side.
+
 > Tutorial: **03 Reading**
 
 ## Pages

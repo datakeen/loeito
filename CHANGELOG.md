@@ -5,6 +5,8 @@ All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Mi
 ## 1.7.0 — 2026-11-07
 
 ### Added
+- **Views in every tool:** full window (Ctrl Shift F), full screen (F11), continuous reading, and scrolling on into the next page — all from the zoom % menu.
+- **Snapshot** (Ctrl Shift C): drag a box or click for the whole page; copy it or save a sharp PNG.
 - **Works offline from the first start (desktop app):** the installers now carry pdf.js, pdf-lib, the OCR engine, the fonts and 7 OCR languages (English, Urdu, Arabic, Swedish, Chinese Simplified and Traditional, Japanese). Other languages download once.
 - **More OCR languages:** Chinese (Traditional), Japanese, Korean.
 
