@@ -2,6 +2,15 @@
 
 All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Milestones (x.0.0, x.5.0) are preserved in `versions/`.
 
+## 1.7.0 — 2026-11-07
+
+### Added
+- **Works offline from the first start (desktop app):** the installers now carry pdf.js, pdf-lib, the OCR engine, the fonts and 7 OCR languages (English, Urdu, Arabic, Swedish, Chinese Simplified and Traditional, Japanese). Other languages download once.
+- **More OCR languages:** Chinese (Traditional), Japanese, Korean.
+
+### Changed
+- **Full credits** for every library, font and tool in NOTICE.md and About.
+
 ## 1.6.2 — 2026-11-07
 
 ### Changed

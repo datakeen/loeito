@@ -2,9 +2,9 @@
 
 A free, private PDF workbench for everyday work: read, merge, edit, sign, fill and make forms, OCR scans, pull tables into Excel, and protect files with passwords.
 
-Your files never leave your computer. No account, no upload, no subscription.
+Your files never leave your computer. No account, no upload, no subscription. The installed app works without internet from the very first start.
 
-**Version 1.6.2** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
+**Version 1.7.0** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
 
 ## Download and install
 

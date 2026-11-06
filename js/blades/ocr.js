@@ -5,7 +5,7 @@
   const LANGS = [
     ['eng', 'English'], ['fra', 'French'], ['deu', 'German'], ['spa', 'Spanish'], ['ita', 'Italian'], ['por', 'Portuguese'], ['nld', 'Dutch'],
     ['swe', 'Swedish'], ['dan', 'Danish'], ['nor', 'Norwegian'], ['fin', 'Finnish'], ['pol', 'Polish'], ['tur', 'Turkish'], ['ind', 'Indonesian'],
-    ['urd', 'Urdu*'], ['ara', 'Arabic*'], ['hin', 'Hindi*'], ['rus', 'Russian*'], ['chi_sim', 'Chinese (Simplified)*'],
+    ['urd', 'Urdu*'], ['ara', 'Arabic*'], ['hin', 'Hindi*'], ['rus', 'Russian*'], ['chi_sim', 'Chinese (Simplified)*'], ['chi_tra', 'Chinese (Traditional)*'], ['jpn', 'Japanese*'], ['kor', 'Korean*'],
   ];
   const O = { lang: 'eng', lang2: '', scope: 'needed', quality: 'accurate', showWords: false, running: null, last: null };
   const hasText = new Map(); // pageKey -> bool
@@ -62,12 +62,12 @@
       t.set(0.01, 'Loading the text recogniser…');
       await L.loadScript(L.LIBS.tesseract);
       let cur = 0;
-      worker = await Tesseract.createWorker(lang, 1, {
+      worker = await Tesseract.createWorker(lang, 1, L.tessOptions(lang, {
         logger: m => {
           if (m.status === 'recognizing text') t.set((cur + m.progress) / list.length, `Reading page ${cur + 1} of ${list.length} · ${Math.round(m.progress * 100)}%`);
           else if (/loading|initializ/i.test(m.status)) t.set(0.02, m.status.replace(/^\w/, c => c.toUpperCase()) + '…');
         },
-      });
+      }));
       await worker.setParameters({ preserve_interword_spaces: '1' });
       L.checkpoint('make searchable');
       const dpi = O.quality === 'accurate' ? 300 : 200;
@@ -102,7 +102,7 @@
     await L.loadScript(L.LIBS.tesseract);
     const lang = [O.lang, O.lang2].filter(Boolean).join('+');
     clearTimeout(idleT);
-    if (!cellWorker || cellLang !== lang) { if (cellWorker) await cellWorker.terminate(); task && task.set(0.02, 'Loading the text recogniser…'); cellWorker = await Tesseract.createWorker(lang, 1); cellLang = lang; }
+    if (!cellWorker || cellLang !== lang) { if (cellWorker) await cellWorker.terminate(); task && task.set(0.02, 'Loading the text recogniser…'); cellWorker = await Tesseract.createWorker(lang, 1, L.tessOptions(lang)); cellLang = lang; }
     await cellWorker.setParameters({ tessedit_pageseg_mode: '6', preserve_interword_spaces: '0' });
     const k = 300 / 72, src = document.createElement('canvas');
     await L.renderInto(src, page, k, { dpr: 1, annotations: false, intent: 'print', readback: true });
@@ -209,7 +209,7 @@
           ui.select([{ value: 'needed', label: 'Pages without text' }, { value: 'all', label: `All ${s.pages.length} pages` }, { value: 'this', label: 'This page' }, { value: 'selected', label: 'Selected pages' }], O.scope, v => { O.scope = v; }),
           h('div', { style: { marginTop: '10px' } }, ui.seg([{ label: 'Accurate · 300 dpi', value: 'accurate' }, { label: 'Fast · 200 dpi', value: 'fast' }], O.quality, v => { O.quality = v; })),
           h('div', { style: { marginTop: '14px' } }, h('button', { class: 'btn primary block lg', disabled: !!O.running, onclick: run }, L.icon('ocr'), O.running ? 'Working…' : 'Make Searchable')),
-          h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'Runs on this computer. The first run downloads the language model (~10 MB).')),
+          h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, L.OFFLINE ? 'Runs on this computer. English, Urdu, Arabic, Swedish, Chinese and Japanese are built in; other languages download once.' : 'Runs on this computer. The first run downloads the language model (a few MB) once.')),
         ocrd.length ? ui.section('Results',
           h('div', { class: 'grid2' },
             h('div', { class: 'stat' }, h('span', { class: 'v' }, ocrd.length), h('span', { class: 'k' }, 'pages searchable')),

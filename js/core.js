@@ -2,7 +2,7 @@
 /* Loeito core: DOM helpers, icons, state, history, feedback (toasts, tasks, dialogs), file utilities. */
 (() => {
   const L = (window.Loeito = window.Loeito || {});
-  L.VERSION = '1.6.2'; L.CODENAME = 'Hantverk'; // keep in step with VERSION and CHANGELOG.md (see POLICY.md § 6)
+  L.VERSION = '1.7.0'; L.CODENAME = 'Hantverk'; // keep in step with VERSION and CHANGELOG.md (see POLICY.md § 6)
 
   /* ——— Motion: a just-rotated page turns into place wherever it is shown (grid, sidebar, page, reader) ——— */
   L.spins = new Map(); // page id -> { delta, until }
@@ -373,6 +373,16 @@
     const s = L.h('script', { src }); s.onload = res; s.onerror = () => { delete loaded[src]; rej(new Error('Could not load ' + src.split('/').pop() + ' — are you online?')); };
     document.head.append(s);
   });
+  // The desktop installer carries every library and the main OCR languages (desktop/prepare-app.js fills this in).
+  // In the browser it stays null and the libraries load from their public CDNs.
+  L.OFFLINE = null; /*LOEITO_OFFLINE*/
+  L.tessOptions = (lang, extra = {}) => {
+    const o = L.OFFLINE && L.OFFLINE.tess;
+    if (!o) return extra;
+    const local = lang.split('+').every(l => o.langs.includes(l));
+    const abs = p => new URL(p, location.href).href;
+    return { workerPath: abs(o.workerPath), corePath: abs(o.corePath), ...(local ? { langPath: abs(o.langPath) } : {}), ...extra };
+  };
   L.LIBS = {
     tesseract: 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
     jszip: 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
