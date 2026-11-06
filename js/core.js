@@ -165,12 +165,12 @@
     t.innerHTML = `<svg viewBox="0 0 24 24" ${size ? `width="${size}" height="${size}"` : ''} fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[name] || ''}</svg>`;
     return t.content.firstChild;
   };
-  L.logo = (size = 28) => {
+  L.logo = (size = 28) => { // two pages joined by a seam (desktop/build/icon.svg)
     const t = document.createElement('template');
-    const id = 'lg' + Math.random().toString(36).slice(2, 7);
-    t.innerHTML = `<svg viewBox="0 0 64 64" width="${size}" height="${size}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a8bff"/><stop offset="1" stop-color="#005fd6"/></linearGradient></defs><rect width="64" height="64" rx="15" fill="url(#${id})"/><path d="M21 14h15l9 9v27H21z" fill="#fff"/><path d="M36 14v9h9" fill="#cfe2ff"/><path d="M27 31v11h10" stroke="#005fd6" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    t.innerHTML = `<svg viewBox="0 0 256 256" width="${size}" height="${size}" aria-hidden="true"><polygon points="92,20 184,20 226,62 226,198 92,198" fill="#a9d1f4"/><polygon points="184,20 226,62 184,62" fill="#2f72bd"/><polygon points="30,74 164,74 164,236 72,236 30,194" fill="#a9d1f4"/><polygon points="30,194 72,194 72,236" fill="#2f72bd"/><polygon points="92,74 164,74 164,198 92,198" fill="#5e9fe3"/><polygon points="92,74 118,74 118,108 164,148 164,198 138,198 138,164 92,124" fill="#1f5596"/><g stroke="#fff" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round"><line x1="105" y1="80" x2="105" y2="112"/><line x1="151" y1="160" x2="151" y2="194"/></g></svg>`;
     return t.content.firstChild;
   };
+
 
   /* ——— Events ——— */
   const bus = {};
