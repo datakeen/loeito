@@ -1,0 +1,32 @@
+{
+  "name": "loeito",
+  "productName": "Loeito",
+  "version": "1.6.0",
+  "description": "Free and open-source PDF workbench: read, merge, edit, sign, forms, OCR, tables, maps. Private — nothing is uploaded.",
+  "author": "Ahmed Bilal and contributors",
+  "license": "AGPL-3.0-or-later",
+  "homepage": "https://github.com/datakeen/loeito",
+  "main": "main.js",
+  "scripts": {
+    "prepare-app": "node prepare-app.js",
+    "start": "npm run prepare-app && electron .",
+    "dist": "npm run prepare-app && electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "org.loeito.app",
+    "productName": "Loeito",
+    "copyright": "Copyright (C) 2026 Ahmed Bilal and contributors · AGPL-3.0-or-later",
+    "files": ["main.js", "server.js", "app/**/*", "build/icon.png"],
+    "directories": { "output": "dist", "buildResources": "build" },
+    "fileAssociations": [{ "ext": "pdf", "name": "PDF document", "role": "Editor" }],
+    "win": { "target": ["nsis", "portable"], "icon": "build/icon.png" },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "license": "app/LICENSE", "artifactName": "Loeito-Setup-${version}.${ext}" },
+    "portable": { "artifactName": "Loeito-Portable-${version}.${ext}" },
+    "mac": { "target": ["dmg"], "category": "public.app-category.productivity", "icon": "build/icon.png", "artifactName": "Loeito-${version}-${arch}.${ext}" },
+    "linux": { "target": ["AppImage", "deb"], "category": "Office", "icon": "build/icon.png", "maintainer": "Ahmed Bilal", "artifactName": "Loeito-${version}-${arch}.${ext}" }
+  }
+}
