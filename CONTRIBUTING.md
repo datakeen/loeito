@@ -17,11 +17,12 @@ Thank you for helping. Loeito is free software under the **GNU AGPL v3 or later*
 
 There is no build step for the web app: edit the files in `js/` and `css/` and reload.
 
-Developer documents: `docs/Reference Manual.md` (architecture, saving, server API), `POLICY.md` (rules and versioning), `CHANGELOG.md`, and `desktop/` (Electron app and installer builds). Try the forms in `samples/`.
+Developer documents: `docs/Reference Manual.md` (architecture, saving, server API), `CHANGELOG.md`, and `desktop/` (Electron app and installer builds). Try the forms in `samples/`.
 
 ## Before you send a change
 
-- Read `POLICY.md`, the design rulebook. Keep things plain, calm and complete.
+- Keep Loeito plain, calm and complete: the document comes first, every tool explains itself in everyday words, and nothing is uploaded.
+- Versions: a fix raises the last number (1.8.0 → 1.8.1), a new feature the middle one (1.8 → 1.9). Keep `VERSION`, `js/core.js` (`L.VERSION`) and `desktop/package.json` in step, and add the change to `CHANGELOG.md`.
 - Give every new source file the one-line license notice (`SPDX-License-Identifier: AGPL-3.0-or-later`).
 - Update the user documents your change touches: `docs/Help.md`, the matching tutorial in `docs/tutorials/`, the User Manual and `CHANGELOG.md`.
 - New libraries must have an AGPL-compatible license and be listed in `NOTICE.md`.

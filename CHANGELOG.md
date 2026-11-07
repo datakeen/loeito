@@ -1,6 +1,21 @@
 # Changelog
 
-All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Milestones (x.0.0, x.5.0) are preserved in `versions/`.
+All notable changes to Loeito, newest first. Every release is on the GitHub Releases page.
+
+## 1.9.0 — 2026-11-08
+
+### Added
+- **Office files with LibreOffice too:** the desktop app opens Word, Excel, PowerPoint and OpenDocument files with Microsoft Office (Windows) or the free LibreOffice (Windows, macOS, Linux).
+- **Website:** the browser version is published at datakeen.github.io/loeito.
+
+### Fixed
+- The browser tab shows Loeito's icon.
+- Text in Help, the manuals and About can be selected and copied.
+- About shows the author line properly.
+
+### Changed
+- Clearer messages when a Word or Excel file can't be opened, and when a feature needs the desktop app.
+- Documents tidied: shorter About, User Manual start section for everyday users.
 
 ## 1.8.1 — 2026-11-07
 
@@ -73,7 +88,7 @@ All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Mi
 
 ## 1.5.0 — 2026-11-05 · milestone
 
-Preserved in `versions/1.5.0/` with its manuals.
+A milestone release.
 
 ### Added
 - **Merge from where you are:** *Pages → Merge this with other files…* (also in the Save menu) starts the merge with your open document, then asks for the files to add.
@@ -117,7 +132,7 @@ Preserved in `versions/1.5.0/` with its manuals.
 
 
 ### License
-- Loeito is now **free and open-source software under the GNU AGPL v3** (AGPL-3.0-or-later): `LICENSE`, `NOTICE.md` (third-party licenses), a license line in every source file, and the license shown in About and the README. A ready-to-paste SourceForge kit is in `sourceforge/`.
+- Loeito is now **free and open-source software under the GNU AGPL v3** (AGPL-3.0-or-later): `LICENSE`, `NOTICE.md` (third-party licenses), a license line in every source file, and the license shown in About and the README.
 
 ### Added
 - **Merge PDFs workspace** (welcome screen, Pages tool, Save menu):
@@ -144,7 +159,7 @@ Preserved in `versions/1.5.0/` with its manuals.
 
 ## 1.1.0 “Hantverk” — 2026-10-28
 
-Phase 1 of the five-phase plan (`PLAN.md`, Round 4): everyday craft, plus the first professional tools.
+Everyday craft, plus the first professional tools.
 
 ### Added
 - **Save to the original.** Ctrl S writes back into the file you opened, after a short question: Enter = *Save to Original*, or *Save a Copy Instead…*. The previous version is kept as a safety copy for 30 days (find it under *Safety copies* in the Save As sheet).
@@ -162,7 +177,7 @@ Phase 1 of the five-phase plan (`PLAN.md`, Round 4): everyday craft, plus the fi
 - **Protect:** find & black out words and patterns (CNIC, phone, email, bank accounts, dates, money) with review before removal; hidden-information inspector; *Save a copy for sharing* that removes details, comments, attachments, scripts, links, private data and thumbnails.
 - **What’s using space** in Optimize: images, fonts, page drawings, metadata, structure; largest images and embedded fonts.
 - **Help menu:** what’s new, User Manual, Reference Manual, keyboard shortcuts (?), About.
-- **Versioning & rulebook:** `VERSION`, `CHANGELOG.md`, `POLICY.md`, `versions/1.0.0/`.
+- **Versioning:** `VERSION` and `CHANGELOG.md`.
 
 ### Changed
 - Zoom is brisker for reading (≈ 20 % per wheel notch instead of 10 %); precise tools keep fine steps.
@@ -180,7 +195,7 @@ Phase 1 of the five-phase plan (`PLAN.md`, Round 4): everyday craft, plus the fi
 
 ## 1.0.0 — 2026-10-12
 
-First complete release (development rounds 1–3). Preserved in `versions/1.0.0/`.
+First complete release.
 
 ### Added
 - Open PDFs, images, and Word / Excel / PowerPoint files (via the local server and Microsoft Office); several documents in tabs.

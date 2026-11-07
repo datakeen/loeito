@@ -12,7 +12,7 @@ _About 2 minutes. You need two or more PDFs (the files in `samples/` or `Input/`
    - hold **Ctrl** while dropping to copy instead of move;
    - or use **Cut / Copy** in the bar at the bottom, then click a **+** between pages, or **Paste at start / end** on any file.
 7. **Rotate** with the bar's Left / Right buttons, the buttons on each page, or the **R** key. **Delete** removes pages. **Ctrl Z** undoes.
-8. **More than PDFs:** use *Add files* for pictures, or for Word, Excel and PowerPoint files (they need Loeito started with Start Loeito.cmd). Click **Cover…** to put a designed front cover at the start or a last page at the end.
+8. **More than PDFs:** use *Add files* for pictures, or for Word, Excel and PowerPoint files (in the desktop app, with Microsoft Office or the free LibreOffice). Click **Cover…** to put a designed front cover at the start or a last page at the end.
 9. **Whole files:** click a card's **copy** button, then a *Paste file…* slot (start, between files, end). The **duplicate** button adds a copy right after it.
 10. Type a name next to **Save as**. Click the folder button to choose where it goes (normally the folder of the first file).
 11. Click **Merge & Open** (or press Ctrl Enter). Loeito saves the file and opens it in a new tab so you can check it. *Show in folder* is in the message that appears.

@@ -6,7 +6,7 @@
   const L = window.Loeito, h = L.h, ui = L.ui;
   const P = () => PDFLib;
 
-  /* ——— the ten forms (chosen from research into the most-used PDF form types; see PLAN.md Round 4 § 2) ——— */
+  /* ——— the ten forms (the most-used kinds of PDF forms) ——— */
   const EDU = { table: { cols: [{ label: 'Degree / certificate', w: 0.32 }, { label: 'Institution', w: 0.34 }, { label: 'Year', w: 0.12, format: 'number', decimals: 0 }, { label: 'Grade / CGPA', w: 0.22 }], rows: 3 } };
   const DECLARE = { text: 'I declare that the information given in this form is true and complete to the best of my knowledge.' };
   const PROVINCES = ['Punjab', 'Sindh', 'Khyber Pakhtunkhwa', 'Balochistan', 'Islamabad Capital Territory', 'Gilgit-Baltistan', 'Azad Jammu & Kashmir', 'Other'];

@@ -1,17 +1,23 @@
 # Loeito — User Manual
 
-_Loeito 1.6.0 · November 2026. Quick answers: Help → Help. Step-by-step: Help → Tutorials._ Every PDF task, just right._
+_Quick answers: Help → Help. Step-by-step: Help → Tutorials. Every PDF task, just right._
 
 Loeito is a private PDF workbench. Everything happens on your computer: files are never uploaded.
 
 ## Starting Loeito
 
-**Desktop app:** download the installer for Windows, macOS or Linux from the project's *Releases* page on GitHub. It runs Loeito in its own window, with everything built in.
+- **Desktop app (recommended):** download the installer for Windows, macOS or Linux from the *Releases* page on GitHub. It works without internet from the first start, saves straight back into your files (with a safety copy), browses your folders, and opens Word, Excel, PowerPoint and OpenDocument files.
+- **In your browser:** open Loeito's web page, nothing to install. Everything works except folder browsing, opening Office files and passwords.
 
+**Opening Word, Excel and PowerPoint files** (desktop app). Loeito turns them into PDF with an office program on your computer:
 
-- **Double-click `Start Loeito.cmd`** (recommended). A small local helper starts and Loeito opens in your browser at http://localhost:8765. With it, Loeito can save straight back into your files, browse your folders, and open Word, Excel and PowerPoint files through your installed Microsoft Office.
-- Or double-click `index.html`. Everything works except folder browsing, safety copies and Office import; saving back into a file still works in Edge and Chrome for files opened with Loeito’s Open button or dropped onto Loeito.
-- The first start needs an internet connection so Loeito can load its PDF engine (and, for OCR, the language model).
+| System | Uses |
+|---|---|
+| Windows | Microsoft Office if installed, otherwise the free LibreOffice |
+| macOS | The free LibreOffice (libreoffice.org) |
+| Linux | The free LibreOffice (usually already installed) |
+
+If neither is installed, Loeito tells you. You can always save the file as PDF in Word, Excel or LibreOffice first (File → Save As → PDF) and open that PDF.
 
 The welcome screen lists your **Recent** files. Click one to open it again.
 
@@ -71,7 +77,7 @@ Click the document's name in the toolbar (or press Ctrl K and type *properties*)
 
 A protected PDF asks for its password when you open it. Saving keeps it protected with the same password unless you click **Remove password**.
 
-You need Loeito started with *Start Loeito.cmd* (or the desktop app) and, once, `py -m pip install pypdf cryptography`.
+You need the desktop app and, for now, Python with two free packages: `py -m pip install pypdf cryptography`.
 
 ## Views and snapshots
 **Ways to view (every tool):** click the zoom percentage at the bottom for:
@@ -96,7 +102,7 @@ Click **Merge PDFs** on the welcome screen to start fresh. To start from the doc
    - **Cut / Copy** in the bar at the bottom (or Ctrl X / Ctrl C), then click a **+** between pages, or **Paste at start / Paste at end** on any file.
    - **Rotate** with Left / Right, the buttons on each page, or **R** (Shift R = left). **Delete** removes pages. **Ctrl Z** undoes.
 5. **Name and place:** type the name next to *Save as*. The folder button chooses where it goes (normally the folder of the first file).
-6. **More than PDFs:** add pictures, and Word, Excel or PowerPoint files (converted with your Microsoft Office; start Loeito with *Start Loeito.cmd* for this). **Cover…** adds a designed front cover (at the start) or last page (at the end).
+6. **More than PDFs:** add pictures, and Word, Excel or PowerPoint files (converted with Microsoft Office or LibreOffice in the desktop app). **Cover…** adds a designed front cover (at the start) or last page (at the end).
 7. **Whole files:** the copy button on a card copies the file; *Paste file at the start / here / at the end* slots appear between the cards. The duplicate button adds a copy right after it.
 8. **Merge & Open** (Ctrl Enter) saves without replacing anything ("(2)" is added if the name exists) and opens the result in a new tab. *Show in folder* is in the confirmation.
 
@@ -369,4 +375,4 @@ Press **?** in Loeito for the full list.
 - **Privacy:** files are processed in the browser window. The local helper only answers Loeito’s own page on this computer.
 - **Fonts:** stamps, covers, form templates and form answers use the standard PDF fonts, so they’re limited to Latin characters for now.
 - **Bookmarks** of the original aren’t kept when saving yet (coming in 1.2).
-- **Older versions:** each milestone is kept in the `versions` folder with its own manuals.
+- **Older versions:** every release, with its notes, is on the GitHub Releases page.

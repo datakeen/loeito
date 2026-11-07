@@ -6,7 +6,7 @@ _Loeito 1.6.0. Quick answers on how each part works. Every section ends with a s
 
 Tip: press **Ctrl K** anywhere and type what you want to do. The command palette finds every action.
 
-Start Loeito with **Start Loeito.cmd**. It opens in your browser, and your files never leave the computer. The welcome screen offers **Merge PDFs**, your **Recent** files and every tool. Drop a file anywhere, or press **Ctrl O**.
+Open the Loeito desktop app, or Loeito's web page in your browser. Your files never leave the computer. The welcome screen offers **Merge PDFs**, your **Recent** files and every tool. Drop a file anywhere, or press **Ctrl O**.
 
 > Tutorial: **02 Open and save** (Help → Tutorials)
 
@@ -33,7 +33,7 @@ A **check** points out what's missing or untidy and fixes it with one click.
 - Files appear in the order you click them, each with a preview, page count and size. Hover a preview for the author, dates and paper size.
 - Drag cards to reorder the files. Under **Show pages**, drag pages to move them; Ctrl-drag copies them.
 - Cut / Copy / Paste work through the bar at the bottom. Whole files can be copied, pasted or duplicated too.
-- Word, Excel and PowerPoint files can be added (with Start Loeito.cmd), and **Cover…** adds a designed cover or last page.
+- Word, Excel, PowerPoint and OpenDocument files can be added in the desktop app (it uses Microsoft Office or the free LibreOffice), and **Cover…** adds a designed cover or last page.
 - **Merge & Open** saves the result (in the first file's folder unless you choose another) and opens it for checking.
 
 > Tutorial: **01 Merge PDFs**
@@ -165,7 +165,7 @@ A **check** points out what's missing or untidy and fixes it with one click.
 
 ## Protect
 
-**Passwords:** Protect → *Password* locks the file with AES-256 and lets you choose what others may do (print, copy, fill forms, edit). Protected files stay protected when you save; *Remove password* unlocks them for good. This needs Start Loeito.cmd (or the desktop app) and the free pypdf + cryptography packages.
+**Passwords:** Protect → *Password* locks the file with AES-256 and lets you choose what others may do (print, copy, fill forms, edit). Protected files stay protected when you save; *Remove password* unlocks them for good. This needs the desktop app (for now also Python with the free pypdf and cryptography packages).
 
 **What it does:** finds and blacks out private details (names, CNIC, phone, email, accounts, dates, money). It also inspects and removes hidden information before you share.
 
@@ -179,7 +179,7 @@ Loeito is free and open-source software under the GNU AGPL v3. See Help → Abou
 
 ## When something doesn't work
 
-- **"Error 404 – File not found" in the browser:** close the black Loeito window and start `Start Loeito.cmd` again. Loeito picks a free port by itself.
+- **A Word or Excel file won't open:** install the free LibreOffice (libreoffice.org), or save it as PDF first.
 - **Can't save to the original:** the file may be open in another program (e.g. Acrobat). Close it, or save a copy.
 - **A scan has no text:** run Make Searchable first.
 - **Everything else:** Help → User Manual, or press **?** for keyboard shortcuts.

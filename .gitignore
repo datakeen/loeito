@@ -1,9 +1,3 @@
-# Only for the author — never published
-private/
-
-# Frozen milestone archives stay on the author's computer (each release is a git tag instead)
-versions/
-
 # Desktop build output
 desktop/node_modules/
 desktop/dist/

@@ -51,7 +51,7 @@
     for (const f of files) {
       try {
         let bytes, size = f.size;
-        if (OFFICE.test(f.name)) { bytes = await L.convertOffice(f, t); if (!bytes) continue; } // needs Start Loeito.cmd + Microsoft Office
+        if (OFFICE.test(f.name)) { bytes = await L.convertOffice(f, t); if (!bytes) continue; } // needs the desktop app (or local server) + Microsoft Office or LibreOffice
         else { bytes = await L.readFile(f); size = bytes.length; if (!/\.pdf$/i.test(f.name)) bytes = new Uint8Array(await L.imageToPdf(bytes, f.type || 'image/jpeg')); }
         const src = await L.addSource(bytes, f.name);
         let info = {}; try { info = (await src.doc.getMetadata()).info || {}; } catch {}
@@ -197,7 +197,7 @@
     return first ? L.path.dir(first.path) : L.pref('lastFolder', null);
   }
   async function chooseFolder() {
-    if (!L.fs.on()) return L.toast('Your browser will ask where to save. Start Loeito with “Start Loeito.cmd” to pick a folder here.', { icon: 'info', ms: 5000 });
+    if (!L.fs.on()) return L.toast('Your browser will ask where to save. The Loeito desktop app lets you pick a folder here.', { icon: 'info', ms: 5000 });
     const res = await L.files.pickFolder({ title: 'Save the merged file in…', folder: await folderGuess() });
     if (res) { M.folder = res.folder; paint(); }
   }

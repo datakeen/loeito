@@ -2,7 +2,7 @@
 """Loeito local server.
 
 Serves the Loeito app and gives it what a web page alone cannot have:
-  * Word / Excel / PowerPoint -> PDF with the Microsoft Office installed on this computer (tools/convert.ps1);
+  * Word / Excel / PowerPoint / OpenDocument -> PDF with Microsoft Office (Windows, tools/convert.ps1) or the free LibreOffice (Windows, macOS, Linux);
   * a small file API for Loeito's own Open / Save As sheet: browse folders, make a folder, open a file by path,
     save over the original (keeping a safety copy of the old version) and show a file in Explorer.
 
@@ -50,6 +50,14 @@ def pdf_crypto():
         return True
     except ImportError:
         return False
+
+
+def find_soffice():
+    """The LibreOffice program, if installed (any system)."""
+    for p in ('/Applications/LibreOffice.app/Contents/MacOS/soffice', r'C:\Program Files\LibreOffice\program\soffice.exe', r'C:\Program Files (x86)\LibreOffice\program\soffice.exe'):
+        if os.path.exists(p):
+            return p
+    return shutil.which('soffice') or shutil.which('libreoffice')
 
 
 def office_apps():
@@ -183,7 +191,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         route = urllib.parse.urlparse(self.path).path
         if route == '/api/status':
             apps = office_apps()
-            return self._json({'ok': True, 'app': 'loeito', 'root': os.path.normcase(self.directory), 'office': any(apps.values()), 'apps': apps, 'types': sorted(OFFICE_TYPES), 'fs': True, 'crypto': pdf_crypto()})
+            return self._json({'ok': True, 'app': 'loeito', 'root': os.path.normcase(self.directory), 'office': any(apps.values()) or bool(find_soffice()), 'apps': {**apps, 'libreoffice': bool(find_soffice())}, 'types': sorted(OFFICE_TYPES), 'fs': True, 'crypto': pdf_crypto()})
         if route.startswith('/api/'):
             if not self._from_loeito():
                 return self._json({'error': 'Not allowed'}, 403)
@@ -356,9 +364,20 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             src, out = os.path.join(work, 'input' + ext), os.path.join(work, 'output.pdf')
             with open(src, 'wb') as f:
                 f.write(data)
-            run = subprocess.run(
-                ['powershell', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', CONVERTER, '-In', src, '-Out', out],
-                capture_output=True, text=True, timeout=180)
+            run = None
+            if any(office_apps().values()):  # Microsoft Office (Windows)
+                run = subprocess.run(
+                    ['powershell', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', CONVERTER, '-In', src, '-Out', out],
+                    capture_output=True, text=True, timeout=180)
+            lo = find_soffice()
+            if not os.path.exists(out) and lo:  # LibreOffice (any system)
+                profile = 'file:///' + os.path.join(work, 'lo').replace('\\', '/').lstrip('/')
+                run = subprocess.run([lo, '--headless', '--norestore', '-env:UserInstallation=' + profile, '--convert-to', 'pdf', '--outdir', work, src],
+                                     capture_output=True, text=True, timeout=180)
+                if os.path.exists(os.path.join(work, 'input.pdf')):
+                    os.replace(os.path.join(work, 'input.pdf'), out)
+            if run is None:
+                return self._json({'error': 'Install Microsoft Office or the free LibreOffice to open this file'}, 501)
             if run.returncode != 0 or not os.path.exists(out):
                 msg = (run.stderr or run.stdout or 'Conversion failed').strip().splitlines()
                 return self._json({'error': next((m for m in msg if m.strip()), 'Conversion failed')[:300]}, 500)

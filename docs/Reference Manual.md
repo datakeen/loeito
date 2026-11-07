@@ -1,7 +1,7 @@
-# Loeito 1.1 — Reference Manual
+# Loeito — Reference Manual
 
 _For people who maintain, extend or audit Loeito. Users want the User Manual instead._
-_Loeito 1.1.0 “Hantverk” · 2026-10-28. Rules for changes: `POLICY.md`. History: `CHANGELOG.md`, `private/PLAN.md` (kept locally)._
+_History of changes: `CHANGELOG.md`. How to contribute: `CONTRIBUTING.md`._
 
 ## 1 · What Loeito is
 
@@ -32,7 +32,7 @@ All of them run in the page. An optional local Python server adds the file API a
 | `js/build.js` | `buildPdf`, resize, compress, **`sanitizePdf`** (hidden data + unreachable objects), **`spaceAudit`**, image/text export |
 | `js/files.js` | **File API client** (`L.fs`), paths (`L.path`), **Open / Save As sheet** (`L.files.sheet`), `L.save` (to original), `L.saveAs`, exports (`L.saveFile`), recent files, `writeFree` |
 | `js/merge.js` | **Merge workspace**: own model `{ files:[{ name, path, info, pages }] }`, FLIP motion, drag & drop, clipboard, undo, output via `buildPdf` on a temporary state + `files.writeFree` |
-| `docs/Help.md`, `docs/About.md`, `docs/tutorials/*.md` | User help set shown under Help (kept up to date with every change, see POLICY § 6) |
+| `docs/Help.md`, `docs/About.md`, `docs/tutorials/*.md` | User help set shown under Help (kept up to date with every change) |
 | `js/help.js` | Help menu, Markdown renderer for `docs/*.md`, shortcuts, About, “what’s new” |
 | `js/geo.js` | Coordinate systems and GIS / Delft3D / CAD writers |
 | `js/tablegrid.js` | Table engine (vector and raster rulings, merged cells, exporters) |
@@ -45,7 +45,6 @@ All of them run in the page. An optional local Python server adds the file API a
 | `loeito_server.py` | Local server (stdlib): static files, Office conversion, file API |
 | `tools/convert.ps1` | Office COM export to PDF |
 | `docs/` | User Manual, Reference Manual (this file) |
-| `versions/` | Frozen milestones (see `versions/README.md`) |
 
 ## 3 · Data model
 
@@ -138,6 +137,3 @@ pdf.js 3.11.174 · pdf-lib 1.17.1 · tesseract.js 5.1.1 (lazy) · JSZip 3.10.1 (
 - **Pages:** Ctrl L / R rotate · Ctrl \ sidebar · ← → pages.
 - **Forms:** Ctrl D duplicate · Alt-click key field · Alt-drag without snapping · arrows nudge.
 
-## 10 · Verification record
-
-`private/PLAN.md` (kept locally) Round 4 § 5 lists how each 1.1 feature was verified: in the browser with the files in `../Input` and `samples/`, with outputs read back with pypdf. Earlier rounds are recorded above it.

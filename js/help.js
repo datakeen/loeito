@@ -48,7 +48,7 @@
   async function showDoc(path, title) {
     const md = await readDoc(path);
     const body = md ? h('article', { class: 'manual', html: L.markdown(md) })
-      : h('div', { class: 'stack' }, h('p', null, `Open “Loeito/${path}” in any text editor or browser to read it.`), h('p', { class: 'muted tiny' }, 'Loeito can show it here when it’s started with “Start Loeito.cmd”.'));
+      : h('div', { class: 'stack' }, h('p', null, `Open “Loeito/${path}” in any text editor or browser to read it.`), h('p', { class: 'muted tiny' }, 'Loeito shows it here in the desktop app and on its web page.'));
     const toc = md ? h('nav', { class: 'manual-toc' }, [...body.querySelectorAll('h2')].map((el, k) => { el.id = 'm' + k; return h('button', { onclick: () => el.scrollIntoView({ behavior: 'smooth', block: 'start' }) }, el.textContent); })) : null;
     await L.dialog({ title, wide: 'xl', body: md ? h('div', { class: 'manual-wrap' }, toc, body) : body, actions: [{ label: 'Done', primary: true, value: true }] });
   }

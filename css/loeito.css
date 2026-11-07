@@ -943,3 +943,6 @@ body.full-window #sidebar, body.full-window #tabbar { display: none !important; 
 .snap-img { flex: 1; min-height: 0; overflow: auto; background: repeating-conic-gradient(#0000000d 0 25%, transparent 0 50%) 0 0 / 16px 16px; display: grid; place-items: center; padding: 16px; }
 .snap-img img { max-width: 100%; max-height: 60vh; box-shadow: 0 2px 12px rgba(0,0,0,.15); }
 .snap-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 18px; }
+
+/* 1.9.0 — help, manuals, About and messages: text can be selected and copied */
+.manual, .manual *, .modal p, .toast span { user-select: text; -webkit-user-select: text; }

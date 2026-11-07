@@ -29,7 +29,7 @@
   // Passwords: AES-256 through the local server (pypdf). Passwords travel in headers, never in the URL.
   const b64 = s => btoa(unescape(encodeURIComponent(s || '')));
   L.pdfCrypt = async (bytes, { encrypt = false, password = '', open = '', owner = '', allow = [] } = {}) => {
-    if (!FS.on()) throw new Error('Passwords need Loeito started with “Start Loeito.cmd”.');
+    if (!FS.on()) throw new Error('Passwords need the Loeito desktop app.');
     const res = await fetch('/api/pdf/' + (encrypt ? 'encrypt' : 'decrypt'), { method: 'POST', body: new Blob([bytes]),
       headers: { 'X-Loeito': '1', 'X-Pdf-Password': b64(password), 'X-Open-Password': b64(open), 'X-Owner-Password': b64(owner), 'X-Allow': allow.join(',') } });
     if (!res.ok) { let m = res.statusText; try { m = (await res.json()).error || m; } catch {} throw new Error(m); }
@@ -383,7 +383,7 @@
     } else {
       // no local server: name and options here, then the browser's own save window (or a download)
       const nameIn = h('input', { class: 'input', value: s.name, style: { height: '36px', fontSize: '15px', fontWeight: 600 } });
-      const ok = await L.dialog({ title: 'Save As', text: 'Tip: start Loeito with “Start Loeito.cmd” to pick folders right here.', body: h('div', { class: 'stack', style: { gap: '14px' } }, ui.field('Name', nameIn), extras({ setExt: () => {} })), actions: [{ label: 'Cancel', value: false }, { label: 'Save', primary: true, value: true }] });
+      const ok = await L.dialog({ title: 'Save As', text: 'Tip: the Loeito desktop app lets you pick folders right here.', body: h('div', { class: 'stack', style: { gap: '14px' } }, ui.field('Name', nameIn), extras({ setExt: () => {} })), actions: [{ label: 'Cancel', value: false }, { label: 'Save', primary: true, value: true }] });
       if (!ok) return;
       target = { name: L.safeName(nameIn.value), native: true };
     }

@@ -8,18 +8,25 @@
   const isPdf = f => f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
   const isImg = f => /^image\/(png|jpe?g)$/.test(f.type) || /\.(png|jpe?g)$/i.test(f.name);
   const isOffice = f => /\.(docx?|docm|rtf|odt|xlsx?|xlsm|ods|pptx?|odp)$/i.test(f.name);
-  // Loeito's local server (Start Loeito.cmd) converts Office files with the Microsoft Office on this computer.
+  // The desktop app (or the local server) converts Office files with Microsoft Office or LibreOffice on this computer.
   L.server = null;
   L.serverReady = (location.protocol.startsWith('http') ? fetch('/api/status').then(r => (r.ok ? r.json() : null)).catch(() => null) : Promise.resolve(null)).then(s => (L.server = s));
   L.convertOffice = (f, t) => convertOffice(f, t);
   async function convertOffice(f, t) {
     const srv = await L.serverReady;
     if (!srv || !srv.office) {
-      await L.dialog({ title: `Open “${f.name}”`, text: srv ? 'Microsoft Office isn’t available on this computer, so Loeito can’t convert this file.' : 'To open Word, Excel or PowerPoint files directly, start Loeito with “Start Loeito.cmd” (it uses your installed Microsoft Office — nothing is uploaded).',
-        body: L.h('p', { class: 'muted', style: { margin: 0 } }, 'Or, in Word / Excel: File → Save As → PDF, then drop that PDF here. Loeito will find the form fields for you.'), actions: [{ label: 'OK', primary: true }] });
+      const desktop = srv && srv.desktop;
+      await L.dialog({ title: `Open “${f.name}”`,
+        text: srv ? 'To open Word, Excel, PowerPoint and OpenDocument files, Loeito uses Microsoft Office or the free LibreOffice on this computer — neither was found.'
+          : 'The browser version can’t open Word, Excel or PowerPoint files yet. The Loeito desktop app can, using Microsoft Office or the free LibreOffice on your computer.',
+        body: L.h('div', { class: 'stack', style: { gap: '8px' } },
+          L.h('p', { class: 'muted', style: { margin: 0 } }, srv ? (desktop ? 'Install LibreOffice (libreoffice.org, free), then try again.' : 'Install Microsoft Office or LibreOffice (libreoffice.org, free), then start Loeito again.')
+            : 'Get the desktop app from the Download page, and install LibreOffice (free, libreoffice.org) if you don’t have Microsoft Office.'),
+          L.h('p', { class: 'muted', style: { margin: 0 } }, 'For now: in Word, Excel or LibreOffice choose File → Save As → PDF, then open that PDF here. Loeito finds the form fields for you.')),
+        actions: [{ label: 'OK', primary: true }] });
       return null;
     }
-    t && t.set(0.2, `Converting ${f.name} with Microsoft Office…`);
+    t && t.set(0.2, `Converting ${f.name}…`);
     const res = await fetch(`/api/convert?name=${encodeURIComponent(f.name)}`, { method: 'POST', headers: { 'X-Loeito': '1' }, body: await L.readFile(f) });
     if (!res.ok) { let msg = res.statusText; try { msg = (await res.json()).error || msg; } catch {} throw new Error(msg); }
     return new Uint8Array(await res.arrayBuffer());

@@ -19,7 +19,11 @@ function create({ root, getPath, reveal }) {
   const safetyDir = path.join(getPath('userData'), 'Safety copies');
   const which = cmd => spawnSync(process.platform === 'win32' ? 'where' : 'which', [cmd], { encoding: 'utf8' }).status === 0;
   const python = ['py', 'python3', 'python'].find(p => spawnSync(p, ['-c', 'import pypdf, cryptography'], { encoding: 'utf8' }).status === 0) || null;
-  const soffice = process.platform === 'win32' ? null : ['soffice', 'libreoffice'].find(which) || (fs.existsSync('/Applications/LibreOffice.app/Contents/MacOS/soffice') ? '/Applications/LibreOffice.app/Contents/MacOS/soffice' : null);
+  // LibreOffice (free) converts Word, Excel, PowerPoint and OpenDocument files on Windows, macOS and Linux
+  const sofficePaths = ['/Applications/LibreOffice.app/Contents/MacOS/soffice', 'C:\\Program Files\\LibreOffice\\program\\soffice.exe', 'C:\\Program Files (x86)\\LibreOffice\\program\\soffice.exe'];
+  const soffice = sofficePaths.find(p => fs.existsSync(p)) || (process.platform === 'win32' ? null : ['soffice', 'libreoffice'].find(which)) || null;
+  // Microsoft Office on Windows: registered Word / Excel / PowerPoint automation
+  const msOffice = process.platform === 'win32' && ['Word', 'Excel', 'PowerPoint'].some(a => spawnSync('reg', ['query', `HKCR\\${a}.Application\\CLSID`], { encoding: 'utf8' }).status === 0);
 
   const send = (res, code, body, type = 'application/json') => { res.writeHead(code, { 'Content-Type': type, 'Cache-Control': 'no-cache', 'Content-Length': Buffer.byteLength(body) }); res.end(body); };
   const json = (res, obj, code = 200) => send(res, code, JSON.stringify(obj));
@@ -49,7 +53,7 @@ function create({ root, getPath, reveal }) {
 
   async function api(req, res, port) {
     const url = new URL(req.url, 'http://x'), r = url.pathname, q = Object.fromEntries(url.searchParams);
-    if (r === '/api/status') return json(res, { ok: true, app: 'loeito', root, office: process.platform === 'win32' || !!soffice, apps: {}, types: [...OFFICE], fs: true, crypto: !!python, desktop: true });
+    if (r === '/api/status') return json(res, { ok: true, app: 'loeito', root, office: msOffice || !!soffice, apps: { microsoft: msOffice, libreoffice: !!soffice }, types: [...OFFICE], fs: true, crypto: !!python, desktop: true });
     if (!fromLoeito(req, port)) return json(res, { error: 'Not allowed' }, 403);
     try {
       if (r === '/api/fs/places') return json(res, { places: [['desktop', 'Desktop'], ['documents', 'Documents'], ['downloads', 'Downloads']].map(([id, name]) => ({ id, name, path: getPath(id) })), drives: drives(), home: os.homedir(), safety: safetyDir, sep: path.sep });
@@ -79,9 +83,10 @@ function create({ root, getPath, reveal }) {
         const work = fs.mkdtempSync(path.join(os.tmpdir(), 'loeito-')), src = path.join(work, 'input' + ext), out = path.join(work, 'output.pdf');
         try {
           fs.writeFileSync(src, await body(req));
-          if (process.platform === 'win32') await run('powershell', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', path.join(root, 'tools', 'convert.ps1'), '-In', src, '-Out', out]);
-          else if (soffice) { await run(soffice, ['--headless', '--convert-to', 'pdf', '--outdir', work, src]); fs.renameSync(path.join(work, 'input.pdf'), out); }
-          else return json(res, { error: 'Install LibreOffice to open Office files on this computer' }, 501);
+          let done = false;
+          if (msOffice) { try { await run('powershell', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', path.join(root, 'tools', 'convert.ps1'), '-In', src, '-Out', out]); done = fs.existsSync(out); } catch { done = false; } }
+          if (!done && soffice) { await run(soffice, ['--headless', '--norestore', `-env:UserInstallation=file:///${work.replace(/\\/g, '/')}/lo`, '--convert-to', 'pdf', '--outdir', work, src]); fs.renameSync(path.join(work, 'input.pdf'), out); done = true; }
+          if (!done) return json(res, { error: 'Install Microsoft Office or the free LibreOffice to open this file' }, 501);
           return send(res, 200, fs.readFileSync(out), 'application/pdf');
         } finally { fs.rmSync(work, { recursive: true, force: true }); }
       }

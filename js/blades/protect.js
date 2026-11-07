@@ -154,7 +154,7 @@
   function passwordSection() {
     const S = L.state, sec = S.security, wasLocked = S.pages.some(p => L.sources[p.src]?.encrypted);
     const crypto = L.server && L.server.crypto;
-    if (!L.fs.on()) return ui.section('Password', ui.callout('Adding or removing a password needs Loeito started with <b>Start Loeito.cmd</b>.', '', 'shield'));
+    if (!L.fs.on()) return ui.section('Password', ui.callout('Adding or removing a password needs the <b>Loeito desktop app</b>.', '', 'shield'));
     if (!crypto) return ui.section('Password', ui.callout('Passwords need two free Python packages. In a terminal run <b>py -m pip install pypdf cryptography</b>, then restart Loeito.', 'warn', 'warn'));
     const s = strength(PW.open), words = ['Too short', 'Weak', 'Fair', 'Good', 'Strong'];
     const pwIn = (k, ph) => h('input', { class: 'input', type: PW.show ? 'text' : 'password', value: PW[k], placeholder: ph, autocomplete: 'new-password', oninput: e => { PW[k] = e.target.value; if (k === 'open') { const m = e.target.closest('.section').querySelector('.pw-meter'); m.dataset.s = strength(PW.open); m.querySelector('span').textContent = PW.open ? words[strength(PW.open)] : ''; } } });

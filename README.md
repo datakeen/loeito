@@ -8,7 +8,7 @@
 
 Your files never leave your computer. No account, no upload, no subscription. The installed app works without internet from the very first start.
 
-**Version 1.8.1** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
+**Version 1.9.0** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
 
 In the browser, everything works except folder browsing, opening Word / Excel / PowerPoint files and passwords; those need the desktop app.
 
