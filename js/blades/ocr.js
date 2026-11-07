@@ -59,7 +59,7 @@
     const lang = [O.lang, O.lang2].filter(Boolean).join('+');
     let worker, done = 0;
     try {
-      t.set(0.01, 'Loading the text recogniser…');
+      t.set(0.01, 'Loading the text recognizer…');
       await L.loadScript(L.LIBS.tesseract);
       let cur = 0;
       worker = await Tesseract.createWorker(lang, 1, L.tessOptions(lang, {
@@ -72,7 +72,7 @@
       L.checkpoint('make searchable');
       const dpi = O.quality === 'accurate' ? 300 : 200;
       for (cur = 0; cur < list.length; cur++) {
-        if (t.cancelled) break;
+        if (t.canceled) break;
         const p = list[cur], proxy = await L.proxy(p);
         const base = L.makeView(proxy, p, 1, { full: true });
         const scale = Math.min(dpi / 72, 4200 / Math.max(base.width, base.height));
@@ -90,28 +90,28 @@
       }
       L.invalidateSearch();
       O.last = { done, total: list.length, lang };
-      L.toast(t.cancelled ? `Stopped — ${done} page(s) made searchable` : `${done} page${done === 1 ? '' : 's'} now searchable`, { kind: 'ok', icon: 'ocr' });
+      L.toast(t.canceled ? `Stopped — ${done} page(s) made searchable` : `${done} page${done === 1 ? '' : 's'} now searchable`, { kind: 'ok', icon: 'ocr' });
     } catch (e) { L.error('Text recognition failed', e); }
     finally { t.done(); O.running = null; if (worker) worker.terminate(); L.renderInspector(); }
   }
 
   /* Cell-by-cell OCR for tables: each cell is cropped, its border lines are wiped, and it is read on its own,
-     so a busy page layout (stamps, scanner streaks) can't mix lines from neighbouring cells. */
+     so a busy page layout (stamps, scanner streaks) can't mix lines from neighboring cells. */
   let cellWorker = null, cellLang = null, idleT = 0;
   L.ocrCells = async (page, rects, { task } = {}) => {
     await L.loadScript(L.LIBS.tesseract);
     const lang = [O.lang, O.lang2].filter(Boolean).join('+');
     clearTimeout(idleT);
-    if (!cellWorker || cellLang !== lang) { if (cellWorker) await cellWorker.terminate(); task && task.set(0.02, 'Loading the text recogniser…'); cellWorker = await Tesseract.createWorker(lang, 1, L.tessOptions(lang)); cellLang = lang; }
+    if (!cellWorker || cellLang !== lang) { if (cellWorker) await cellWorker.terminate(); task && task.set(0.02, 'Loading the text recognizer…'); cellWorker = await Tesseract.createWorker(lang, 1, L.tessOptions(lang)); cellLang = lang; }
     await cellWorker.setParameters({ tessedit_pageseg_mode: '6', preserve_interword_spaces: '0' });
     const k = 300 / 72, src = document.createElement('canvas');
     await L.renderInto(src, page, k, { dpr: 1, annotations: false, intent: 'print', readback: true });
     const sctx = src.getContext('2d'), out = [];
-    // paper level of this page: only near-paper greys are whitened, so soft (blurred) letter edges survive
+    // paper level of this page: only near-paper grays are whitened, so soft (blurred) letter edges survive
     let paper = 245; { const pd = sctx.getImageData(0, 0, src.width, src.height).data, hist = new Uint32Array(256); let n = 0; for (let j = 0; j < pd.length; j += 4 * 13) { hist[Math.round(pd[j] * 0.299 + pd[j + 1] * 0.587 + pd[j + 2] * 0.114)]++; n++; } let a = 0; for (let v = 0; v < 256; v++) { a += hist[v]; if (a >= n * 0.6) { paper = v; break; } } }
     const whiten = L.clamp(paper - 30, 170, 225);
     for (let i = 0; i < rects.length; i++) {
-      if (task && task.cancelled) break;
+      if (task && task.canceled) break;
       task && task.set(0.05 + 0.95 * i / rects.length, `Reading cell ${i + 1} of ${rects.length}`);
       const r = rects[i], inset = 2.2;
       const x = Math.max(0, Math.round((r.x + inset) * k)), y = Math.max(0, Math.round((r.y + inset) * k));
@@ -123,7 +123,7 @@
       const edge = Math.max(4, Math.round(1.6 * k));
       for (let yy = 0; yy < hh; yy++) { if (yy >= edge && yy < hh - edge) continue; let n = 0; for (let xx = 0; xx < w; xx++) if (dark((yy * w + xx) * 4)) n++; if (n > w * 0.55) for (let xx = 0; xx < w; xx++) d.fill(255, (yy * w + xx) * 4, (yy * w + xx) * 4 + 3); }
       for (let xx = 0; xx < w; xx++) { if (xx >= edge && xx < w - edge) continue; let n = 0; for (let yy = 0; yy < hh; yy++) if (dark((yy * w + xx) * 4)) n++; if (n > hh * 0.55) for (let yy = 0; yy < hh; yy++) d.fill(255, (yy * w + xx) * 4, (yy * w + xx) * 4 + 3); }
-      // find ink blobs (to drop specks); light greys — paper tint, scanner streaks — are whitened, letter edges keep their grey
+      // find ink blobs (to drop specks); light grays — paper tint, scanner streaks — are whitened, letter edges keep their gray
       const bw = new Uint8Array(w * hh), lumAt = j => d[j] * 0.299 + d[j + 1] * 0.587 + d[j + 2] * 0.114;
       for (let j = 0, q = 0; q < bw.length; j += 4, q++) bw[q] = lumAt(j) < 140 ? 1 : 0;
       // drop specks: ink blobs smaller than ~0.6 pt across
@@ -192,19 +192,19 @@
       const status = h('div', { class: 'callout' }, L.icon('info'), h('div', null, 'Checking this page…'));
       if (p) pageHasText(p).then(has => {
         status.replaceChildren(L.icon(p.ocr ? 'check' : has ? 'info' : 'warn'), h('div', {
-          html: p.ocr ? `<b>This page is searchable.</b> ${p.ocr.words.length.toLocaleString()} words recognised, ${p.ocr.conf}% average confidence.`
+          html: p.ocr ? `<b>This page is searchable.</b> ${p.ocr.words.length.toLocaleString()} words recognized, ${p.ocr.conf}% average confidence.`
             : has ? '<b>This page already has text.</b> It’s searchable as it is.' : '<b>This page is an image.</b> Its words can’t be searched or copied yet.',
         }));
       });
       const nonLatin = /\*$/.test((LANGS.find(l => l[0] === O.lang) || [])[1] || '');
       return [
-        ui.head('ocr', 'Make Searchable', 'Recognises the words on scanned pages and tucks an invisible text layer beneath them.'),
+        ui.head('ocr', 'Make Searchable', 'Recognizes the words on scanned pages and tucks an invisible text layer beneath them.'),
         h('div', { class: 'section' }, status),
         ui.section('Language',
           h('div', { class: 'grid2' },
             ui.select(LANGS.map(([v, l]) => ({ value: v, label: l })), O.lang, v => { O.lang = v; L.renderInspector(); }),
             ui.select([{ value: '', label: '+ none' }, ...LANGS.filter(l => l[0] !== O.lang).map(([v, l]) => ({ value: v, label: '+ ' + l }))], O.lang2, v => { O.lang2 = v; })),
-          nonLatin ? h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, '* Recognised text can be copied and exported. The invisible PDF layer currently supports Latin-script languages.') : null),
+          nonLatin ? h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, '* Recognized text can be copied and exported. The invisible PDF layer currently supports Latin-script languages.') : null),
         ui.section('Pages',
           ui.select([{ value: 'needed', label: 'Pages without text' }, { value: 'all', label: `All ${s.pages.length} pages` }, { value: 'this', label: 'This page' }, { value: 'selected', label: 'Selected pages' }], O.scope, v => { O.scope = v; }),
           h('div', { style: { marginTop: '10px' } }, ui.seg([{ label: 'Accurate · 300 dpi', value: 'accurate' }, { label: 'Fast · 200 dpi', value: 'fast' }], O.quality, v => { O.quality = v; })),
@@ -214,10 +214,10 @@
           h('div', { class: 'grid2' },
             h('div', { class: 'stat' }, h('span', { class: 'v' }, ocrd.length), h('span', { class: 'k' }, 'pages searchable')),
             h('div', { class: 'stat' }, h('span', { class: 'v' }, ocrd.reduce((a, q) => a + q.ocr.words.length, 0).toLocaleString()), h('span', { class: 'k' }, 'words found'))),
-          h('div', { style: { marginTop: '12px' } }, ui.check('Show recognised words on the page', O.showWords, v => { O.showWords = v; L.drawOverlay(); })),
+          h('div', { style: { marginTop: '12px' } }, ui.check('Show recognized words on the page', O.showWords, v => { O.showWords = v; L.drawOverlay(); })),
           h('div', { class: 'stack', style: { marginTop: '12px' } },
             p && p.ocr ? ui.btn('Copy this page’s text', 'copy', () => L.copyText(L.wordsToText(p.ocr.words, p)), 'block') : null,
-            ui.btn('Export recognised text (.txt)', 'download', async () => {
+            ui.btn('Export recognized text (.txt)', 'download', async () => {
               const text = ocrd.map(q => `——— Page ${L.pageIndex(q.id) + 1} ———\n` + L.wordsToText(q.ocr.words, q)).join('\n\n');
               await L.saveFile(new Blob([text], { type: 'text/plain' }), L.safeName(s.name) + ' — text.txt', 'text/plain', 'txt');
             }, 'block'),

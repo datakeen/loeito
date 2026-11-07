@@ -1,5 +1,5 @@
 /* Loeito - free and open-source PDF workbench. Copyright (C) 2026 Ahmed Bilal and contributors. SPDX-License-Identifier: AGPL-3.0-or-later (see LICENSE) */
-/* Digitize blade: recover numbers from charts (calibrate axes, click or colour-trace) and coordinates from maps (control points, measure). */
+/* Digitize blade: recover numbers from charts (calibrate axes, click or color-trace) and coordinates from maps (control points, measure). */
 (() => {
   const L = window.Loeito, h = L.h, ui = L.ui;
   const SERIES_COLORS = ['#e5484d', '#0090ff', '#30a46c', '#f76b15', '#8e4ec6', '#d6409f'];
@@ -82,7 +82,7 @@
   /* ——— Auto-trace ——— */
   function trace(box) {
     const g = dig(), view = L.viewer.view, c = L.$('#page-canvas'), dpr = c.width / view.width;
-    if (!D.color) { L.toast('Pick the curve’s colour first.', { icon: 'dropper' }); return; }
+    if (!D.color) { L.toast('Pick the curve’s color first.', { icon: 'dropper' }); return; }
     const x0 = Math.max(0, Math.round(box.x * dpr)), y0 = Math.max(0, Math.round(box.y * dpr));
     const W = Math.min(c.width - x0, Math.round(box.w * dpr)), H = Math.min(c.height - y0, Math.round(box.h * dpr));
     if (W < 2 || H < 2) return;
@@ -98,7 +98,7 @@
       if (D.traceMode === 'line') prevY = pick[0];
       for (const y of pick) out.push(view.toPdf([(x0 + x) / dpr, (y0 + y) / dpr]));
     }
-    if (!out.length) { L.toast('No matching colour found in that area. Try a higher tolerance.', { kind: 'err' }); return; }
+    if (!out.length) { L.toast('No matching color found in that area. Try a higher tolerance.', { kind: 'err' }); return; }
     dmut('auto-trace', () => { g.series[g.active].pts.push(...out.map(p => [+p[0].toFixed(3), +p[1].toFixed(3)])); });
     L.toast(`Captured ${out.length} points`, { kind: 'ok', icon: 'trace' });
   }
@@ -143,7 +143,7 @@
       if (type === 'up' && D.drag) { D.drag = null; refreshInspector(); }
       return;
     }
-    // map: digitise, edit vertices (drag), Alt-click deletes a vertex, press-and-drag traces freehand
+    // map: digitize, edit vertices (drag), Alt-click deletes a vertex, press-and-drag traces freehand
     const m = g.map;
     if (type === 'down') {
       const hitV = !D.drawing && vertexAt(view, m, ev.sx, ev.sy);
@@ -265,7 +265,7 @@
     const rows = [['series', 'x', 'y'], ...data.flatMap(d => d.pts.map(p => [d.se.name, p[0], p[1]]))];
     const text = rows.map(r => r.join(kind === 'copy' ? '\t' : ',')).join(kind === 'copy' ? '\n' : '\r\n');
     if (kind === 'copy') return L.copyText(text);
-    L.saveFile(new Blob([text], { type: 'text/csv' }), baseName() + ' — digitised.csv', 'text/csv', 'csv');
+    L.saveFile(new Blob([text], { type: 'text/csv' }), baseName() + ' — digitized.csv', 'text/csv', 'csv');
   }
   /* ——— Map exports ——— */
   // map coordinates rounded to what the source can honestly support: 1 mm projected, ~1 mm in degrees
@@ -281,11 +281,11 @@
     { id: 'kml', group: 'GIS', label: 'KML', sub: 'Google Earth', need: (fs, crs) => fs.length && L.geo.canLonLat(crs), why: 'Needs UTM or longitude/latitude coordinates' },
     { id: 'gpx', group: 'GIS', label: 'GPX', sub: 'GPS devices', need: (fs, crs) => fs.length && L.geo.canLonLat(crs), why: 'Needs UTM or longitude/latitude coordinates' },
     { id: 'csv', group: 'GIS', label: 'CSV + WKT', sub: 'Excel · any GIS', need: fs => fs.length },
-    { id: 'ldb', group: 'Delft3D · D-Flow FM', label: 'Land boundary', sub: '.ldb · RGFGRID A.2', need: fs => fs.some(f => f.type !== 'point'), why: 'Digitise a line or an area first' },
-    { id: 'pol', group: 'Delft3D · D-Flow FM', label: 'Polygons', sub: '.pol · A.5', need: fs => fs.some(f => f.type === 'polygon'), why: 'Digitise an area first' },
-    { id: 'pli', group: 'Delft3D · D-Flow FM', label: 'Polylines', sub: '.pli · boundaries', need: fs => fs.some(f => f.type !== 'point'), why: 'Digitise a line first' },
+    { id: 'ldb', group: 'Delft3D · D-Flow FM', label: 'Land boundary', sub: '.ldb · RGFGRID A.2', need: fs => fs.some(f => f.type !== 'point'), why: 'Digitize a line or an area first' },
+    { id: 'pol', group: 'Delft3D · D-Flow FM', label: 'Polygons', sub: '.pol · A.5', need: fs => fs.some(f => f.type === 'polygon'), why: 'Digitize an area first' },
+    { id: 'pli', group: 'Delft3D · D-Flow FM', label: 'Polylines', sub: '.pli · boundaries', need: fs => fs.some(f => f.type !== 'point'), why: 'Digitize a line first' },
     { id: 'xyz', group: 'Delft3D · D-Flow FM', label: 'Samples', sub: '.xyz · A.3', need: fs => L.geo.xyzCount(fs), why: 'Give points or contour lines a value (e.g. depth) first' },
-    { id: 'xyn', group: 'Delft3D · D-Flow FM', label: 'Observation pts', sub: '.xyn', need: fs => fs.some(f => f.type === 'point'), why: 'Digitise points first' },
+    { id: 'xyn', group: 'Delft3D · D-Flow FM', label: 'Observation pts', sub: '.xyn', need: fs => fs.some(f => f.type === 'point'), why: 'Digitize points first' },
     { id: 'dxf', group: 'CAD', label: 'DXF', sub: 'AutoCAD · Civil 3D', need: fs => fs.length },
   ];
   async function exportMap(id) {
@@ -326,8 +326,8 @@
           h('div', { class: 'stack', style: { marginTop: '12px' } },
             h('div', { class: 'row' },
               h('span', { class: 'swatch', style: { background: D.color ? `rgb(${D.color})` : 'transparent', flex: 'none', outline: D.color ? '' : '1px dashed var(--sep-strong)' } }),
-              h('button', { class: 'btn' + (D.mode === 'pick' ? ' primary' : ''), onclick: () => { D.mode = 'pick'; L.setCursor('pick'); L.renderInspector(); } }, L.icon('dropper'), D.mode === 'pick' ? 'Click the curve…' : 'Pick curve colour')),
-            h('div', { class: 'field' }, h('span', null, `Colour tolerance · ${D.tol}`), h('input', { type: 'range', min: 10, max: 160, value: D.tol, oninput: e => { D.tol = +e.target.value; e.target.previousSibling.textContent = `Colour tolerance · ${D.tol}`; } })),
+              h('button', { class: 'btn' + (D.mode === 'pick' ? ' primary' : ''), onclick: () => { D.mode = 'pick'; L.setCursor('pick'); L.renderInspector(); } }, L.icon('dropper'), D.mode === 'pick' ? 'Click the curve…' : 'Pick curve color')),
+            h('div', { class: 'field' }, h('span', null, `Color tolerance · ${D.tol}`), h('input', { type: 'range', min: 10, max: 160, value: D.tol, oninput: e => { D.tol = +e.target.value; e.target.previousSibling.textContent = `Color tolerance · ${D.tol}`; } })),
             h('div', { class: 'grid2' },
               ui.field('Every', ui.select([{ value: '2', label: '2 px' }, { value: '3', label: '3 px' }, { value: '6', label: '6 px' }, { value: '12', label: '12 px' }], String(D.step), v => { D.step = +v; })),
               ui.field('Shape', ui.select([{ value: 'line', label: 'Line' }, { value: 'scatter', label: 'Scatter' }], D.traceMode, v => { D.traceMode = v; L.drawOverlay(); }))),
@@ -362,7 +362,7 @@
     // gentle hint if the numbers typed don't match the chosen coordinate system
     const vals = m.cps.filter(c => c.X !== '' && c.Y !== '').map(c => [+c.X, +c.Y]);
     const looksLL = vals.length && vals.every(([x, y]) => Math.abs(x) <= 180 && Math.abs(y) <= 90), looksUTM = vals.length && vals.every(([x, y]) => x > 100000 && x < 900000 && Math.abs(y) < 10000000);
-    const hint = crs.type !== 'wgs84' && looksLL ? 'These look like longitude / latitude — choose “Longitude / latitude”.' : crs.type !== 'utm' && looksUTM ? 'These look like UTM metres — choose “UTM” and its zone.' : null;
+    const hint = crs.type !== 'wgs84' && looksLL ? 'These look like longitude / latitude — choose “Longitude / latitude”.' : crs.type !== 'utm' && looksUTM ? 'These look like UTM meters — choose “UTM” and its zone.' : null;
     const fs = tf ? mapFeatures(m, tf) : [];
     const groups = [...new Set(MAP_FORMATS.map(f => f.group))];
     const crsNote = crs.type === 'utm' ? 'Pakistan: Karachi ≈ 42N, Lahore / Islamabad ≈ 43N. Exports carry the matching .prj; KML and GPX are converted to latitude / longitude.'
@@ -371,7 +371,7 @@
       : `Click to add vertices, or press and drag to trace freehand. ${D.feat === 'polygon' ? 'Click the first point to close. ' : ''}Double-click or Enter finishes · Esc cancels.`;
     return [
       ui.section('1 · Coordinate system',
-        ui.select([{ value: 'local', label: 'Local / unknown (drawing units)' }, { value: 'utm', label: 'UTM — metres (WGS 84)' }, { value: 'wgs84', label: 'Longitude / latitude (WGS 84)' }], crs.type, v => dmut('coordinate system', () => { crs.type = v; })),
+        ui.select([{ value: 'local', label: 'Local / unknown (drawing units)' }, { value: 'utm', label: 'UTM — meters (WGS 84)' }, { value: 'wgs84', label: 'Longitude / latitude (WGS 84)' }], crs.type, v => dmut('coordinate system', () => { crs.type = v; })),
         crs.type === 'utm' ? h('div', { class: 'grid2', style: { marginTop: '8px' } },
           ui.field('Zone', ui.num(crs.zone, v => dmut('UTM zone', () => { crs.zone = L.clamp(Math.round(v) || 43, 1, 60); }), { min: 1, max: 60 })),
           ui.field('Hemisphere', ui.select([{ value: 'N', label: 'North' }, { value: 'S', label: 'South' }], crs.south ? 'S' : 'N', v => dmut('hemisphere', () => { crs.south = v === 'S'; })))) : null,
@@ -384,13 +384,13 @@
           h('button', { class: 'btn ghost', style: { paddingLeft: 0 }, onclick: () => dmut('add control point', () => m.cps.push({ p: null, X: '', Y: '' })) }, L.icon('plus'), 'Add point'),
           tf ? h('span', { class: 'muted tiny', title: 'Root-mean-square misfit of the reference points' }, tf.similarity ? '2-point fit (no skew)' : tf.n === 3 || tf.rms < 1e-6 ? 'Exact fit' : `Fit error ±${fmt(tf.rms)}${geo ? '°' : ' ' + units}`) : null),
         h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'Place points whose real coordinates you know — grid crossings, survey marks, the ends of a scale bar. Two points suit an upright, undistorted map; three or more also correct skew.')),
-      ui.section('3 · Digitise',
+      ui.section('3 · Digitize',
         ui.seg([{ label: 'Point', value: 'point', icon: 'pin' }, { label: 'Line', value: 'line', icon: 'polyline' }, { label: 'Area', value: 'polygon', icon: 'polygon' }], D.feat, v => { D.feat = v; D.drawing = null; D.placing = null; L.drawOverlay(); L.renderInspector(); }),
         h('p', { class: 'muted tiny', style: { margin: '10px 0 0' } }, drawHint),
         h('p', { class: 'muted tiny', style: { margin: '4px 0 0' } }, 'Edit later: drag any vertex · Alt-click a vertex to delete it.'),
         D.drawing ? h('div', { class: 'row', style: { marginTop: '8px' } }, ui.btn('Finish', 'check', finishFeature, 'primary'), ui.btn('Cancel', null, () => { D.drawing = null; L.drawOverlay(); L.renderInspector(); })) : null),
       ui.section('4 · Features',
-        !m.feats.length ? h('p', { class: 'muted', style: { margin: 0 } }, 'Nothing digitised yet.') :
+        !m.feats.length ? h('p', { class: 'muted', style: { margin: 0 } }, 'Nothing digitized yet.') :
           h('div', { class: 'list' }, m.feats.map((f, i) => {
             const r = tf && measure(f, tf.f, geo);
             const val = !tf ? 'needs reference points' : f.type === 'point' ? r.pts[0].map(fmt).join(', ') : f.type === 'line' ? `${fmtLen(r.len, geo, units)} · ${f.pts.length} vertices` : `${fmtArea(r.area, geo, units)} · ${fmtLen(r.len, geo, units)}`;

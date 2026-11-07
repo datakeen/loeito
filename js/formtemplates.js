@@ -19,8 +19,8 @@
       { row: [{ label: 'Postal address', w: 1 }] },
       { row: [{ label: 'City', w: 0.4 }, { label: 'Province', w: 0.35, kind: 'dropdown', options: PROVINCES }, { label: 'Postal code', w: 0.25 }] },
       { head: 'Education' }, EDU,
-      { head: 'Programme' },
-      { row: [{ label: 'Programme / course applied for', w: 0.65, req: true }, { label: 'Session', w: 0.35 }] },
+      { head: 'Program' },
+      { row: [{ label: 'Program / course applied for', w: 0.65, req: true }, { label: 'Session', w: 0.35 }] },
       { choice: 'Preferred shift', options: ['Morning', 'Evening', 'Weekend'] },
       { head: 'Declaration' }, DECLARE, { sign: ['Signature of applicant', 'Date'] },
     ] },
@@ -32,7 +32,7 @@
       { row: [{ label: 'Address', w: 1 }] },
       { head: 'Education' }, EDU,
       { head: 'Experience — most recent first' },
-      { table: { cols: [{ label: 'Organisation', w: 0.3 }, { label: 'Job title', w: 0.24 }, { label: 'From', w: 0.15, format: 'date' }, { label: 'To', w: 0.15, format: 'date' }, { label: 'Years', w: 0.16, format: 'number', decimals: 1 }], rows: 3, total: { col: 'Years', label: 'Total experience (years)' } } },
+      { table: { cols: [{ label: 'Organization', w: 0.3 }, { label: 'Job title', w: 0.24 }, { label: 'From', w: 0.15, format: 'date' }, { label: 'To', w: 0.15, format: 'date' }, { label: 'Years', w: 0.16, format: 'number', decimals: 1 }], rows: 3, total: { col: 'Years', label: 'Total experience (years)' } } },
       { checks: 'Available for', options: ['Full-time', 'Part-time', 'Contract', 'Remote'] },
       { row: [{ label: 'Earliest start date', w: 0.5, format: 'date' }, { label: 'Notice period', w: 0.5 }] },
       { head: 'References' },
@@ -54,7 +54,7 @@
     ] },
     expense: { title: 'Expense Claim', note: 'Receipts table with an automatic total', blocks: [
       { row: [{ label: 'Name', w: 0.5, req: true }, { label: 'Employee no.', w: 0.22 }, { label: 'Department', w: 0.28 }] },
-      { row: [{ label: 'Purpose of the expense', w: 0.68 }, { label: 'Project / cost centre', w: 0.32 }] },
+      { row: [{ label: 'Purpose of the expense', w: 0.68 }, { label: 'Project / cost center', w: 0.32 }] },
       { head: 'Expenses' },
       { table: { cols: [{ label: 'Date', w: 0.15, format: 'date' }, { label: 'Description', w: 0.43 }, { label: 'Category', w: 0.2, kind: 'dropdown', options: ['Travel', 'Meals', 'Lodging', 'Fuel', 'Supplies', 'Other'] }, { label: 'Amount', w: 0.22, format: 'currency' }], rows: 8, total: { col: 'Amount', label: 'Total claimed' } } },
       { row: [{ label: 'Advance received', w: 0.5, format: 'currency' }, { label: 'Balance to be paid', w: 0.5, format: 'currency' }] },
@@ -71,7 +71,7 @@
     ] },
     purchase: { title: 'Purchase Requisition', note: 'Items, estimated cost, budget and approvals', blocks: [
       { row: [{ label: 'Requested by', w: 0.4, req: true }, { label: 'Department', w: 0.32 }, { label: 'Date', w: 0.28, format: 'date' }] },
-      { row: [{ label: 'Budget head / cost centre', w: 0.5 }, { label: 'Needed by', w: 0.5, format: 'date' }] },
+      { row: [{ label: 'Budget head / cost center', w: 0.5 }, { label: 'Needed by', w: 0.5, format: 'date' }] },
       { head: 'Items' },
       { table: { cols: [{ label: 'Item and specification', w: 0.42 }, { label: 'Unit', w: 0.1 }, { label: 'Qty', w: 0.12, format: 'number', decimals: 0 }, { label: 'Unit price', w: 0.17, format: 'currency' }, { label: 'Amount', w: 0.19, format: 'currency', prd: ['Qty', 'Unit price'] }], rows: 7, total: { col: 'Amount', label: 'Estimated total' } } },
       { choice: 'Priority', options: ['Normal', 'Urgent'] },
@@ -82,16 +82,16 @@
       { row: [{ label: 'Name (optional)', w: 0.55 }, { label: 'Date', w: 0.45, format: 'date' }] },
       { row: [{ label: 'Course / event / service', w: 1 }] },
       { head: 'How would you rate…' },
-      { rating: { items: ['Overall experience', 'Quality of the content', 'Clarity of communication', 'Organisation and timing', 'Value for your time', 'Venue and facilities'], scale: ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'] } },
+      { rating: { items: ['Overall experience', 'Quality of the content', 'Clarity of communication', 'Organization and timing', 'Value for your time', 'Venue and facilities'], scale: ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'] } },
       { choice: 'Would you recommend it to others?', options: ['Yes', 'Maybe', 'No'] },
       { para: 'What did you like most?', h: 46 },
       { para: 'What could be better?', h: 46 },
       { text: 'Thank you — your answers help us improve.' },
     ] },
-    consent: { title: 'Consent & Release', note: 'Statements to tick, guardian and signatures', blocks: [
+    consent: { title: 'Consent & Release', note: 'Statements to check, guardian and signatures', blocks: [
       { row: [{ label: 'Participant’s full name', w: 0.62, req: true }, { label: 'Date of birth', w: 0.38, format: 'date' }] },
       { row: [{ label: 'Activity / study / event', w: 1 }] },
-      { text: 'Please read each statement and tick it to confirm.' },
+      { text: 'Please read each statement and check it to confirm.' },
       { checks: null, list: true, options: ['I have read and understood the information about this activity.', 'I have had the chance to ask questions, and they were answered.', 'I take part voluntarily and may withdraw at any time without giving a reason.', 'I agree that photographs or recordings may be used as described.', 'I agree that my information is kept confidential and used only as described.'] },
       { row: [{ label: 'Emergency contact', w: 0.55 }, { label: 'Emergency phone', w: 0.45, format: 'phone' }] },
       { sign: ['Signature of participant', 'Date'] },
@@ -124,7 +124,7 @@
   L.FORM_TEMPLATES = T;
 
   /* ——— layout engine ——— */
-  const GREY = [0.43, 0.43, 0.45], INK = [0.11, 0.11, 0.12], LINE = [0.78, 0.78, 0.8], FILL = [0.985, 0.985, 0.99];
+  const GRAY = [0.43, 0.43, 0.45], INK = [0.11, 0.11, 0.12], LINE = [0.78, 0.78, 0.8], FILL = [0.985, 0.985, 0.99];
   L.formTemplatePdf = async (id, { org = '', accent = '#0071e3', paper = 'A4' } = {}) => {
     const { PDFDocument, StandardFonts, rgb } = P();
     const tpl = T[id], doc = await PDFDocument.create();
@@ -146,17 +146,29 @@
     const box = (x, yy, w, hh) => pg.drawRectangle({ x, y: yy, width: w, height: hh, color: C(FILL), borderColor: C(LINE), borderWidth: 0.6 });
     const field = (kind, r, props) => { const f = L.forms.make(kind, r, { style: 'box', ...props }); fields.push(f); return f; };
     const fmtProps = c => ({ format: c.format || 'none', decimals: c.decimals ?? 2, ...(c.kind === 'dropdown' ? { options: c.options } : {}) });
-    const label = (s, x, yy, req) => { const w = text(s, x, yy, 7.5, reg, GREY); if (req) text(' *', x + w, yy, 7.5, bold, [0.84, 0.2, 0.2]); };
-    const section = s => { need(40); y -= 14; text(s.toUpperCase(), M, y - 9, 8.5, bold, acc); y -= 14; pg.drawLine({ start: { x: M, y }, end: { x: M + CW, y }, thickness: 0.5, color: C(LINE) }); y -= 10; };
+    // labels are Label objects that belong to their field: they can be edited, recolored and moved with it, and the
+    // red * follows the field's Required setting
+    const hex = a => '#' + a.map(c => Math.round(c * 255).toString(16).padStart(2, '0')).join('');
+    const ltext = (s, x, base, size, font = reg, color = INK, opts = {}, owner = null) => {
+      const isBold = font === bold, tw = font.widthOfTextAtSize(L.winAnsi(s), size), pad = size * 0.3;
+      const bx = opts.align === 'right' ? x - tw - pad : opts.align === 'center' ? x - tw / 2 - pad : x;
+      fields.push(L.forms.make('label', { x: bx, y: base - size * 0.4, w: tw + 2 * pad + (owner && owner.required ? size : 0), h: size * 1.6 }, { text: s, fontSize: size, bold: isBold, color: hex(Array.isArray(color) ? color : INK), align: opts.align === 'right' ? 'right' : opts.align === 'center' ? 'center' : 'left', of: owner ? owner.id : null }));
+      return tw;
+    };
+    const flabel = (s, x, base, size, owner, { isBold = false, color = GRAY, w } = {}) => {
+      const tw = (isBold ? bold : reg).widthOfTextAtSize(L.winAnsi(s), size) + size * 1.4;
+      fields.push(L.forms.make('label', { x, y: base - size * 0.4, w: Math.max(w || 0, tw), h: size * 1.6 }, { text: s, fontSize: size, bold: isBold, color: hex(color), of: owner ? owner.id : null }));
+    };
+    const section = s => { need(40); y -= 14; ltext(s.toUpperCase(), M, y - 9, 8.5, bold, ac); y -= 14; fields.push(L.forms.make('line', { x: M, y: y - 3, w: CW, h: 6 }, { color: hex(LINE), lineW: 0.5 })); y -= 10; };
     const rowFields = cells => {
       const hh = Math.max(...cells.map(c => c.h || (c.kind === 'para' ? 46 : c.kind === 'sign' ? 26 : 20)));
       need(hh + 22);
       let x = M; const gap = 10, avail = CW - gap * (cells.length - 1);
       for (const c of cells) {
         const w = avail * c.w, fh = c.h || (c.kind === 'para' ? 46 : c.kind === 'sign' ? 26 : 20);
-        label(c.label, x, y - 8, c.req);
         const by = y - 12 - fh;
-        field(c.kind || 'text', { x: x + 1, y: by + 1, w: w - 2, h: fh - 2 }, { name: uniq(c.label), required: !!c.req, ...fmtProps(c), ...(c.kind === 'para' ? { fontSize: 9 } : {}) });
+        const f = field(c.kind || 'text', { x: x + 1, y: by + 1, w: w - 2, h: fh - 2 }, { name: uniq(c.label), required: !!c.req, ...fmtProps(c), ...(c.kind === 'para' ? { fontSize: 9 } : {}) });
+        flabel(c.label, x, y - 8, 7.5, f, { w: Math.min(w, 200) });
         x += w + gap;
       }
       y -= 12 + hh + 10;
@@ -164,32 +176,33 @@
     const choice = b => {
       const group = uniq(b.choice), opts = b.options;
       need(40);
-      const lw = text(b.choice, M, y - 9, 8.5, bold); if (b.req) text(' *', M + lw, y - 9, 8.5, bold, [0.84, 0.2, 0.2]);
+      const titleY = y - 9;
       y -= 16;
       let x = M; const rowH = 18; let first = true;
       for (const o of opts) {
         const ow = 16 + reg.widthOfTextAtSize(L.winAnsi(o), 9) + 18;
         if (x + ow > M + CW) { x = M; y -= rowH; need(rowH); }
-        field('radio', { x: x, y: y - 13, w: 12, h: 12 }, { group, name: group, exportValue: o, required: !!b.req && first });
-        text(o, x + 16, y - 10, 9);
+        const rf = field('radio', { x: x, y: y - 13, w: 12, h: 12 }, { group, name: group, exportValue: o, required: !!b.req && first });
+        if (first) flabel(b.choice, M, titleY, 8.5, rf, { isBold: true, color: INK });
+        flabel(o, x + 16, y - 10, 9, null, { color: INK });
         x += ow; first = false;
       }
       y -= rowH + 8;
     };
     const checks = b => {
-      if (b.checks) { need(20); text(b.checks, M, y - 9, 8.5, bold); y -= 16; }
+      if (b.checks) { need(20); ltext(b.checks, M, y - 9, 8.5, bold); y -= 16; }
       let x = M;
       for (const o of b.options) {
         if (b.list || b.checks == null) {
           const ls = wrapLines(o, reg, 9, CW - 22), hh = ls.length * 12 + 6; need(hh);
-          field('check', { x, y: y - 12, w: 10, h: 10 }, { name: uniq(o.replace(/^I (have |agree |take )?/i, '').slice(0, 40)) });
-          ls.forEach((l, i) => text(l, x + 18, y - 10 - i * 12, 9));
+          const cf = field('check', { x, y: y - 12, w: 10, h: 10 }, { name: uniq(o.replace(/^I (have |agree |take )?/i, '').slice(0, 40)) });
+          ls.forEach((l, i) => ltext(l, x + 18, y - 10 - i * 12, 9, reg, INK, {}, cf));
           y -= hh;
         } else {
           const ow = 18 + reg.widthOfTextAtSize(L.winAnsi(o), 9) + 18;
           if (x + ow > M + CW) { x = M; y -= 18; }
-          field('check', { x, y: y - 12, w: 10, h: 10 }, { name: uniq(`${b.checks}: ${o}`) });
-          text(o, x + 16, y - 10, 9); x += ow;
+          const cf = field('check', { x, y: y - 12, w: 10, h: 10 }, { name: uniq(`${b.checks}: ${o}`) });
+          ltext(o, x + 16, y - 10, 9, reg, INK, {}, cf); x += ow;
         }
       }
       y -= b.list || b.checks == null ? 6 : 26;
@@ -257,17 +270,18 @@
       });
       y -= 12;
     };
-    const statement = s => { const ls = wrapLines(s, reg, 9, CW); need(ls.length * 13 + 6); ls.forEach((l, i) => text(l, M, y - 10 - i * 13, 9, reg, [0.23, 0.23, 0.24])); y -= ls.length * 13 + 8; };
+    const statement = s => { const ls = wrapLines(s, reg, 9, CW); need(ls.length * 13 + 6); ls.forEach((l, i) => ltext(l, M, y - 10 - i * 13, 9, reg, [0.23, 0.23, 0.24])); y -= ls.length * 13 + 8; };
     const signRow = ([a, b]) => rowFields([{ label: a, w: 0.62, kind: 'sign', req: true }, { label: b, w: 0.38, format: 'date' }]);
     const approvals = list => {
       const n = list.length, gap = 14, w = (CW - gap * (n - 1)) / n;
       need(96); y -= 4;
       list.forEach((who, i) => {
         const x = M + i * (w + gap); let yy = y;
-        text(who, x, yy - 9, 8.5, bold); yy -= 16;
+        ltext(who, x, yy - 9, 8.5, bold); yy -= 16;
         for (const [lab, kind, fmt] of [['Name', 'text'], ['Signature', 'sign'], ['Date', 'text', 'date']]) {
-          label(lab, x, yy - 8); const fh = kind === 'sign' ? 22 : 18, by = yy - 11 - fh;
-          field(kind, { x: x + 1, y: by + 1, w: w - 2, h: fh - 2 }, { name: uniq(`${who} — ${lab}`), format: fmt || 'none' });
+          const fh = kind === 'sign' ? 22 : 18, by = yy - 11 - fh;
+          const af = field(kind, { x: x + 1, y: by + 1, w: w - 2, h: fh - 2 }, { name: uniq(`${who} — ${lab}`), format: fmt || 'none' });
+          flabel(lab, x, yy - 8, 7.5, af);
           yy = by - 6;
         }
       });
@@ -275,13 +289,13 @@
     };
 
     newPage();
-    // header: a short accent dash, organisation, title, and (for invoices) reference fields on the right
+    // header: a short accent dash, organization, title, and (for invoices) reference fields on the right
     pg.drawRectangle({ x: M, y: y - 3, width: 28, height: 3, color: acc });
-    if (org) text(org.toUpperCase(), M, y - 18, 8.5, bold, GREY);
-    text(tpl.title, M, y - (org ? 40 : 30), 21, bold, INK);
+    if (org) ltext(org.toUpperCase(), M, y - 18, 8.5, bold, GRAY);
+    ltext(tpl.title, M, y - (org ? 40 : 30), 21, bold, INK);
     if (tpl.meta) {
       let my = y - 4; const w = 140, x = M + CW - w;
-      for (const [lab, fmt] of tpl.meta) { text(lab, x - 8, my - 13, 8, reg, GREY, { align: 'right' }); field('text', { x: x + 1, y: my - 17, w: w - 2, h: 16 }, { name: uniq(lab), format: fmt || 'none' }); my -= 22; }
+      for (const [lab, fmt] of tpl.meta) { const mf = field('text', { x: x + 1, y: my - 17, w: w - 2, h: 16 }, { name: uniq(lab), format: fmt || 'none' }); ltext(lab, x - 8, my - 13, 8, reg, GRAY, { align: 'right' }, mf); my -= 22; }
       y = Math.min(y - (org ? 52 : 42), my);
     } else y -= org ? 52 : 42;
     pg.drawLine({ start: { x: M, y }, end: { x: M + CW, y }, thickness: 0.8, color: C(INK) });
@@ -301,8 +315,8 @@
     }
     pages.forEach(({ pg: p }, i) => {
       pg = p;
-      if (org) text(org, M, 30, 7.5, reg, GREY);
-      text(`${tpl.title}${pages.length > 1 ? ` · ${i + 1} / ${pages.length}` : ''}`, M + CW, 30, 7.5, reg, GREY, { align: 'right' });
+      if (org) text(org, M, 30, 7.5, reg, GRAY);
+      text(`${tpl.title}${pages.length > 1 ? ` · ${i + 1} / ${pages.length}` : ''}`, M + CW, 30, 7.5, reg, GRAY, { align: 'right' });
     });
     doc.setTitle(tpl.title); doc.setProducer('Loeito PDF'); doc.setCreator('Loeito PDF');
     return { bytes: await doc.save(), fields: pages.map(p => p.fields) };
@@ -351,16 +365,16 @@
     const repaint = L.debounce(() => { run++; paint(); }, 350);
     const body = h('div', { class: 'stack', style: { gap: '14px' } },
       h('div', { class: 'tpl-opts' },
-        ui.field('Organisation name (top of the form)', h('input', { class: 'input', value: org, placeholder: 'e.g. Wah Engineering College', oninput: e => { org = e.target.value; repaint(); } })),
+        ui.field('Organization name (top of the form)', h('input', { class: 'input', value: org, placeholder: 'e.g. Wah Engineering College', oninput: e => { org = e.target.value; repaint(); } })),
         ui.field('Paper', ui.seg([{ value: 'A4', label: 'A4' }, { value: 'Letter', label: 'Letter' }], paper, v => { paper = v; repaint(); })),
-        h('div', { class: 'field' }, h('span', null, 'Accent colour'), L.swatches(accent, v => { accent = v; repaint(); }, ['#0071e3', '#1d1d1f', '#30a46c', '#b5562f', '#8e4ec6', '#c08a2b']))),
+        h('div', { class: 'field' }, h('span', null, 'Accent color'), L.swatches(accent, v => { accent = v; repaint(); }, ['#0071e3', '#1d1d1f', '#30a46c', '#b5562f', '#8e4ec6', '#c08a2b']))),
       cards);
     paint();
     const go = await L.dialog({ title: 'Start from a template', text: 'Ten everyday forms with real fields, formats and totals. Pick one, then make it your own.', body, wide: 'xl',
       actions: [{ label: 'Cancel', value: false }, { label: 'Create form', primary: true, value: true }] });
     if (!go) return;
     L.setPref('formTemplate', pick); L.setPref('formOrg', org); L.setPref('formAccent', accent); L.setPref('formPaper', paper);
-    const t = L.task('Making the form', { cancellable: false });
+    const t = L.task('Making the form', { cancelable: false });
     try { await L.createFromTemplate(pick, { org, accent, paper }); } catch (e) { L.error('Couldn’t make the form', e); } finally { t.done(); }
   };
 })();

@@ -2,7 +2,7 @@
 /* Loeito core: DOM helpers, icons, state, history, feedback (toasts, tasks, dialogs), file utilities. */
 (() => {
   const L = (window.Loeito = window.Loeito || {});
-  L.VERSION = '1.7.0'; L.CODENAME = 'Hantverk'; // keep in step with VERSION and CHANGELOG.md (see POLICY.md § 6)
+  L.VERSION = '1.8.0'; L.CODENAME = 'Hantverk'; // keep in step with VERSION and CHANGELOG.md (see POLICY.md § 6)
 
   /* ——— Motion: a just-rotated page turns into place wherever it is shown (grid, sidebar, page, reader) ——— */
   L.spins = new Map(); // page id -> { delta, until }
@@ -156,6 +156,9 @@
     comment: '<path d="M4.5 5.5h15v10h-8l-4 3.5v-3.5h-3z"/>',
     tag: '<path d="M3.5 12.5V4.5h8l9 9-8 8z"/><circle cx="8" cy="9" r="1.4"/>',
     external: '<path d="M14 4.5h5.5V10M19.5 4.5L11 13M17 14v4.5a1.5 1.5 0 01-1.5 1.5h-10A1.5 1.5 0 014 18.5v-10A1.5 1.5 0 015.5 7H10"/>',
+    label: '<path d="M4 18 8.5 6h1L14 18M5.6 14h6.8"/><path d="M16 11.5c.6-.9 1.4-1.3 2.4-1.3 1.5 0 2.1.9 2.1 2.3V18M20.5 14.6c-3.3 0-4.8.7-4.8 2 0 .9.7 1.5 1.8 1.5 1.6 0 3-1.2 3-3.2"/>',
+    square: '<rect x="4" y="5.5" width="16" height="13" rx="1.5"/>',
+    circle: '<ellipse cx="12" cy="12" rx="8.5" ry="6.5"/>',
     camera: '<path d="M4 8h3l1.6-2.5h6.8L17 8h3v11H4z"/><circle cx="12" cy="13.2" r="3.6"/>',
     calendar: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
     gear: '<circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M20.5 12h-2.2M5.7 12H3.5M18 6l-1.6 1.6M7.6 16.4L6 18M18 18l-1.6-1.6M7.6 7.6L6 6"/>',
@@ -284,12 +287,12 @@
   L.error = (msg, err) => { console.error(msg, err); L.toast(msg + (err && err.message ? ` — ${err.message}` : ''), { kind: 'err', ms: 5200 }); };
 
   // Long-running work: a quiet HUD with a progress bar and Cancel.
-  L.task = (title, { cancellable = true } = {}) => {
+  L.task = (title, { cancelable = true } = {}) => {
     const bar = L.h('div', { style: { width: '0%' } });
     const sub = L.h('div', { class: 't-sub' }, 'Starting…');
-    const t = { cancelled: false };
+    const t = { canceled: false };
     const el = L.h('div', { class: 'toast task' },
-      L.h('div', { class: 't-row' }, L.h('span', null, title), cancellable ? L.h('button', { onclick: () => { t.cancelled = true; sub.textContent = 'Cancelling…'; } }, 'Cancel') : null),
+      L.h('div', { class: 't-row' }, L.h('span', null, title), cancelable ? L.h('button', { onclick: () => { t.canceled = true; sub.textContent = 'Canceling…'; } }, 'Cancel') : null),
       L.h('div', { class: 'progress' }, bar), sub);
     L.$('#hud-root').append(el);
     t.set = (frac, text) => { if (frac != null) bar.style.width = Math.round(Math.max(0, Math.min(1, frac)) * 100) + '%'; if (text) sub.textContent = text; };
@@ -438,7 +441,7 @@
     const el = L.h('div', { class: 'swatches' });
     const paint = v => L.$$('.swatch', el).forEach(b => b.classList.toggle('on', b.dataset.c === v));
     for (const c of colors) el.append(L.h('button', { class: 'swatch', 'data-c': c, style: { background: c }, title: c, onclick: () => { paint(c); onChange(c); } }));
-    el.append(L.h('label', { class: 'swatch custom', title: 'Custom colour' }, L.h('input', { type: 'color', value, oninput: e => { paint(null); onChange(e.target.value); } })));
+    el.append(L.h('label', { class: 'swatch custom', title: 'Custom color' }, L.h('input', { type: 'color', value, oninput: e => { paint(null); onChange(e.target.value); } })));
     paint(value);
     return el;
   };

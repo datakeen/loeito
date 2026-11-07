@@ -58,7 +58,7 @@
   });
 
   /* ——— The sheet ———
-     mode 'save' → { path, folder, name, overwrite } · 'open' → { paths } · 'folder' → { folder } · or null when cancelled. */
+     mode 'save' → { path, folder, name, overwrite } · 'open' → { paths } · 'folder' → { folder } · or null when canceled. */
   const when = ms => {
     const d = new Date(ms), now = new Date();
     if (d.toDateString() === now.toDateString()) return 'Today ' + d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
@@ -334,7 +334,7 @@
       s.dirty = false; L.emit('docs');
       L.toast(`Saved to the original · ${L.fmtBytes(bytes.length)}`, { kind: 'ok', ms: 5200, action: o.path ? { label: 'Show in folder', fn: () => FS.reveal(o.path) } : null });
     } catch (e) {
-      if (e.message === 'Cancelled') return;
+      if (e.message === 'Canceled') return;
       t.done();
       const again = await L.dialog({ title: 'Couldn’t save to the original', text: e.message, actions: [{ label: 'Cancel', value: false }, { label: 'Save a Copy…', primary: true, value: true }] });
       if (again) L.saveAs();
@@ -362,7 +362,7 @@
     ] : fmt === 'images' ? [h('div', { class: 'grid2' },
       ui.field('Format', ui.select([{ value: 'png', label: 'PNG' }, { value: 'jpg', label: 'JPEG' }], imgFmt, v => { imgFmt = v; paintOpts(); })),
       ui.field('Resolution', ui.select([{ value: '72', label: '72 dpi — screen' }, { value: '150', label: '150 dpi — standard' }, { value: '300', label: '300 dpi — print' }], String(dpi), v => { dpi = +v; })))]
-      : [h('p', { class: 'muted', style: { margin: 0 } }, 'Plain text in reading order — including text recognised by OCR.')]).filter(Boolean)); };
+      : [h('p', { class: 'muted', style: { margin: 0 } }, 'Plain text in reading order — including text recognized by OCR.')]).filter(Boolean)); };
     const chips = h('div', { class: 'row wrap fs-chips' });
     const extras = c => {
       ctl = c; paintOpts();
@@ -398,7 +398,7 @@
       } else if (fmt === 'images') {
         const files = [];
         for (let i = 0; i < pages.length; i++) {
-          if (t.cancelled) throw new Error('Cancelled');
+          if (t.canceled) throw new Error('Canceled');
           t.set(i / pages.length, `Page ${i + 1} of ${pages.length}`);
           files.push({ name: `${name} — page ${String(L.pageIndex(pages[i].id, s) + 1).padStart(3, '0')}.${imgFmt}`, data: await L.renderPageImage(pages[i], dpi, imgFmt, 0.9, s) });
         }
@@ -410,7 +410,7 @@
         const out = await writeAndTell(target, data);
         if (whole) { doc.origin = { kind: 'pdf', name: P.base(out.path), path: out.path, handle: null }; doc.noAsk = false; }
       } else if (window.showSaveFilePicker && window.top === window) {
-        const handle = await showSaveFilePicker({ suggestedName: `${name}.${ext}`, types: [{ description: ext.toUpperCase() + ' file', accept: { [mime]: ['.' + ext] } }] }).catch(e => { if (e.name === 'AbortError') throw new Error('Cancelled'); throw e; });
+        const handle = await showSaveFilePicker({ suggestedName: `${name}.${ext}`, types: [{ description: ext.toUpperCase() + ' file', accept: { [mime]: ['.' + ext] } }] }).catch(e => { if (e.name === 'AbortError') throw new Error('Canceled'); throw e; });
         const w = await handle.createWritable(); await w.write(data); await w.close();
         if (whole) doc.origin = { kind: 'pdf', name: handle.name, path: null, handle };
         L.toast(`Saved “${handle.name}”`, { kind: 'ok' });
@@ -419,7 +419,7 @@
         if (name !== s.name) L.mutate('rename', () => { s.name = name; if (!s.meta.title) s.meta.title = name; }, { silent: true });
         s.dirty = false; L.emit('docs');
       }
-    } catch (e) { if (e.message !== 'Cancelled') L.error('Couldn’t save', e); }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Couldn’t save', e); }
     finally { t.done(); }
   };
   L.openSave = L.save; // v1.0 name

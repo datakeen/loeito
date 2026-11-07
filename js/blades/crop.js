@@ -48,7 +48,7 @@
     const base = L.makeView(proxy, p, 1, { full: true }), scale = 1000 / Math.max(base.width, base.height);
     const view = await L.renderInto(c, p, scale, { full: true, dpr: 1, annotations: true, readback: true });
     const W = c.width, H = c.height, d = c.getContext('2d').getImageData(0, 0, W, H).data;
-    // Ink is counted on a coarse grid; cells with no inked neighbour are scanner specks and ignored.
+    // Ink is counted on a coarse grid; cells with no inked neighbor are scanner specks and ignored.
     const S = 6, GW = Math.ceil(W / S), GH = Math.ceil(H / S), cnt = new Uint16Array(GW * GH);
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) { const k = (y * W + x) * 4; if (d[k] + d[k + 1] + d[k + 2] < 540) cnt[((y / S) | 0) * GW + ((x / S) | 0)]++; }
     const ink = i => cnt[i] >= 3;
@@ -77,11 +77,11 @@
     const t = L.task('Finding margins'); const res = new Map();
     try {
       for (let i = 0; i < list.length; i++) {
-        if (t.cancelled) throw new Error('Cancelled');
+        if (t.canceled) throw new Error('Canceled');
         t.set(i / list.length, `Page ${i + 1} of ${list.length}`);
         const r = await contentBox(list[i]); if (r) res.set(list[i].id, r);
       }
-    } catch (e) { if (e.message !== 'Cancelled') L.error('Auto-trim failed', e); t.done(); return; }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Auto-trim failed', e); t.done(); return; }
     t.done();
     if (!res.size) return L.toast('Couldn’t find any content to trim to.', { kind: 'err' });
     L.inDoc(doc, () => L.mutate(`auto-trim ${res.size} page${res.size > 1 ? 's' : ''}`, () => { L.state.pages = L.state.pages.map(q => res.has(q.id) ? { ...q, crop: res.get(q.id) } : q); }, { silent: doc !== L.doc }));

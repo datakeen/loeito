@@ -5,10 +5,10 @@
 
   const TOOLS = [
     { id: 'select', label: 'Select', icon: 'cursor', hint: 'Click an edit to select it. Drag to move, drag the corner to resize, Delete to remove. Double-click text to retype it.' },
-    { id: 'retype', label: 'Edit text', icon: 'textedit', hint: 'Click any existing line of text to rewrite it. Loeito covers the old line with matching paper colour and types your version on top.' },
+    { id: 'retype', label: 'Edit text', icon: 'textedit', hint: 'Click any existing line of text to rewrite it. Loeito covers the old line with matching paper color and types your version on top.' },
     { id: 'text', label: 'Text', icon: 'type', hint: 'Click where you want to type. Press Esc or click away when done.' },
     { id: 'highlight', label: 'Highlight', icon: 'highlight', hint: 'Drag across text to highlight it.' },
-    { id: 'whiteout', label: 'White-out', icon: 'whiteout', hint: 'Drag over anything to hide it. The fill matches the paper colour automatically.' },
+    { id: 'whiteout', label: 'White-out', icon: 'whiteout', hint: 'Drag over anything to hide it. The fill matches the paper color automatically.' },
     { id: 'redact', label: 'Redact', icon: 'redact', hint: 'Drag over sensitive content. On save, redacted pages are flattened to images so the hidden text is truly gone.' },
     { id: 'pen', label: 'Draw', icon: 'pen', hint: 'Draw freely with the mouse, pen or finger.' },
     { id: 'rect', label: 'Box', icon: 'rect', hint: 'Drag to draw a box.' },
@@ -42,7 +42,7 @@
     L.renderInspector(); L.drawOverlay();
   }
 
-  // Sample the paper colour around a screen rect (median of the border pixels).
+  // Sample the paper color around a screen rect (median of the border pixels).
   function paperColor(sr) {
     try {
       const c = L.$('#page-canvas'), dpr = c.width / L.viewer.view.width, cx = c.getContext('2d');
@@ -248,7 +248,7 @@
       if (t === 'text') {
         const st = E.style.text, ang = view.uprightAngle();
         const a = { id: L.uid('a'), type: 'text', x: ev.pt[0], y: ev.pt[1], a: ang, text: '', ...st };
-        const { d } = L.annFrame(a); a.x -= d[0] * st.size * 0.6; a.y -= d[1] * st.size * 0.6; // centre the caret on the click
+        const { d } = L.annFrame(a); a.x -= d[0] * st.size * 0.6; a.y -= d[1] * st.size * 0.6; // center the caret on the click
         L.mutate('add text', () => p.ann.push(a), { silent: true });
         openEditor(a); return;
       }
@@ -347,7 +347,7 @@
     const kids = [];
     const val = k => (a && a[k] !== undefined ? a[k] : st[k]);
     if (key === 'whiteout') {
-      kids.push(ui.check('Match paper colour automatically', st.match, v => { st.match = v; L.renderInspector(); }));
+      kids.push(ui.check('Match paper color automatically', st.match, v => { st.match = v; L.renderInspector(); }));
       if (!st.match) kids.push(h('div', { style: { marginTop: '10px' } }, L.swatches(val('color'), v => set('color', v), ['#ffffff', '#f6f1e7', '#eeeeee', '#1d1d1f'])));
     } else {
       kids.push(L.swatches(val('color'), v => set('color', v), key === 'highlight' ? ['#ffd60a', '#a5f3a1', '#7fd3ff', '#ffa8d9', '#ffb86b'] : L.COLORS));

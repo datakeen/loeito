@@ -68,7 +68,7 @@
       if (d.contributor) line(pg, d.contributor, { x: W / 2, y: H * 0.25 - W * 0.04, size: W * 0.019, font: f.serifI, color: shade('#6e6458', 0), align: 'center' });
       if (pubLine(d)) line(pg, pubLine(d), { x: W / 2, y: H * 0.1, size: W * 0.018, font: f.serif, color: shade('#6e6458', 0), align: 'center', tracking: 0.08 });
     } },
-    swiss: { name: 'Swiss', note: 'Colour field, bold grid', draw(pg, d, f, { W, H, accent }) {
+    swiss: { name: 'Swiss', note: 'Color field, bold grid', draw(pg, d, f, { W, H, accent }) {
       const band = H * 0.56, m = W * 0.09, white = P().rgb(1, 1, 1), ink = P().rgb(0.1, 0.1, 0.1);
       pg.drawRectangle({ x: 0, y: H - band, width: W, height: band, color: rgbOf(accent) });
       if (d.series) line(pg, d.series.toUpperCase(), { x: m, y: H - m * 0.9, size: W * 0.018, font: f.sansB, color: white, tracking: 0.12 });
@@ -112,41 +112,41 @@
       if (pubLine(d)) line(pg, pubLine(d), { x: W / 2, y: H * 0.115, size: W * 0.016, font: f.serifI, color: P().rgb(0.7, 0.68, 0.63), align: 'center' });
     } },
     academic: { name: 'Thesis', note: 'University title page', draw(pg, d, f, { W, H, accent, img }) {
-      const ink = P().rgb(0.08, 0.08, 0.1), grey = P().rgb(0.35, 0.35, 0.38), m = W * 0.12;
+      const ink = P().rgb(0.08, 0.08, 0.1), gray = P().rgb(0.35, 0.35, 0.38), m = W * 0.12;
       pg.drawRectangle({ x: 0, y: 0, width: W, height: H, color: P().rgb(1, 1, 1) });
       let y = H - m * 0.9;
       if (d.publisher) y = lines(pg, wrap(d.publisher.toUpperCase(), f.serifB, W * 0.026, W - 2 * m, 0.04 * W * 0.026), { x: W / 2, top: y, size: W * 0.026, lh: 1.25, font: f.serifB, color: ink, align: 'center', tracking: 0.04 });
-      if (d.series) y = lines(pg, wrap(d.series, f.serif, W * 0.022, W - 2 * m), { x: W / 2, top: y - 4, size: W * 0.022, lh: 1.25, font: f.serif, color: grey, align: 'center' });
+      if (d.series) y = lines(pg, wrap(d.series, f.serif, W * 0.022, W - 2 * m), { x: W / 2, top: y - 4, size: W * 0.022, lh: 1.25, font: f.serif, color: gray, align: 'center' });
       if (img) { const box = { x: W / 2 - W * 0.11, y: y - W * 0.25, w: W * 0.22, h: W * 0.22 }; picture(pg, img, box, 'contain'); y = box.y - 10; }
       else { pg.drawLine({ start: { x: m, y: y - 14 }, end: { x: W - m, y: y - 14 }, thickness: 0.6, color: rgbOf(accent) }); y -= 28; }
       const t = fit(d.title, f.serifB, W * 0.055, 14, W - 2 * m, 5);
       y = lines(pg, t.lines, { x: W / 2, top: H * 0.58 + blockH(t.lines.length, t.size, 1.2) / 2, size: t.size, lh: 1.2, font: f.serifB, color: ink, align: 'center' });
-      if (d.subtitle) y = lines(pg, wrap(d.subtitle, f.serifI, W * 0.024, W - 2.2 * m), { x: W / 2, top: y - 14, size: W * 0.024, lh: 1.35, font: f.serifI, color: grey, align: 'center' });
+      if (d.subtitle) y = lines(pg, wrap(d.subtitle, f.serifI, W * 0.024, W - 2.2 * m), { x: W / 2, top: y - 14, size: W * 0.024, lh: 1.35, font: f.serifI, color: gray, align: 'center' });
       let yb = H * 0.3;
-      if (d.author) { line(pg, 'by', { x: W / 2, y: yb, size: W * 0.02, font: f.serifI, color: grey, align: 'center' }); line(pg, d.author, { x: W / 2, y: yb - W * 0.04, size: W * 0.03, font: f.serifB, color: ink, align: 'center' }); yb -= W * 0.1; }
-      if (d.contributor) { line(pg, d.contributor, { x: W / 2, y: yb, size: W * 0.021, font: f.serif, color: grey, align: 'center' }); }
+      if (d.author) { line(pg, 'by', { x: W / 2, y: yb, size: W * 0.02, font: f.serifI, color: gray, align: 'center' }); line(pg, d.author, { x: W / 2, y: yb - W * 0.04, size: W * 0.03, font: f.serifB, color: ink, align: 'center' }); yb -= W * 0.1; }
+      if (d.contributor) { line(pg, d.contributor, { x: W / 2, y: yb, size: W * 0.021, font: f.serif, color: gray, align: 'center' }); }
       if (d.edition) line(pg, d.edition, { x: W / 2, y: m * 0.8, size: W * 0.022, font: f.serif, color: ink, align: 'center' });
     } },
     report: { name: 'Report', note: 'Technical or company report', draw(pg, d, f, { W, H, accent, img }) {
-      const ink = P().rgb(0.1, 0.11, 0.13), grey = P().rgb(0.42, 0.43, 0.46), m = W * 0.11;
+      const ink = P().rgb(0.1, 0.11, 0.13), gray = P().rgb(0.42, 0.43, 0.46), m = W * 0.11;
       pg.drawRectangle({ x: 0, y: 0, width: W * 0.035, height: H, color: rgbOf(accent) });
       if (img) picture(pg, img, { x: m, y: H - m - W * 0.09, w: W * 0.3, h: W * 0.09 }, 'contain');
       else if (d.publisher) line(pg, d.publisher.toUpperCase(), { x: m, y: H - m - W * 0.03, size: W * 0.02, font: f.sansB, color: rgbOf(accent), tracking: 0.1 });
-      if (d.series) line(pg, d.series, { x: W - m * 0.7, y: H - m - W * 0.03, size: W * 0.019, font: f.sans, color: grey, align: 'right' });
+      if (d.series) line(pg, d.series, { x: W - m * 0.7, y: H - m - W * 0.03, size: W * 0.019, font: f.sans, color: gray, align: 'right' });
       const t = fit(d.title, f.sansB, W * 0.07, 16, W - 1.8 * m, 4);
       let y = lines(pg, t.lines, { x: m, top: H * 0.66, size: t.size, lh: 1.08, font: f.sansB, color: ink });
-      if (d.subtitle) y = lines(pg, wrap(d.subtitle, f.sans, W * 0.03, W - 2 * m), { x: m, top: y - 8, size: W * 0.03, lh: 1.3, font: f.sans, color: grey });
+      if (d.subtitle) y = lines(pg, wrap(d.subtitle, f.sans, W * 0.03, W - 2 * m), { x: m, top: y - 8, size: W * 0.03, lh: 1.3, font: f.sans, color: gray });
       pg.drawLine({ start: { x: m, y: y - 14 }, end: { x: m + W * 0.12, y: y - 14 }, thickness: 2.4, color: rgbOf(accent) });
       const rows = [['Prepared by', d.author], ['With', d.contributor], ['For', d.publisher && img ? d.publisher : ''], ['Date', d.edition]].filter(r => r[1] && r[1].trim());
       let ry = m + rows.length * W * 0.05;
       for (const [k, v] of rows) {
         pg.drawLine({ start: { x: m, y: ry + W * 0.033 }, end: { x: W - m * 0.7, y: ry + W * 0.033 }, thickness: 0.4, color: P().rgb(0.8, 0.8, 0.82) });
-        line(pg, k.toUpperCase(), { x: m, y: ry, size: W * 0.015, font: f.sansB, color: grey, tracking: 0.08 });
+        line(pg, k.toUpperCase(), { x: m, y: ry, size: W * 0.015, font: f.sansB, color: gray, tracking: 0.08 });
         line(pg, v, { x: m + W * 0.22, y: ry, size: W * 0.021, font: f.sans, color: ink });
         ry -= W * 0.05;
       }
     } },
-    bold: { name: 'Bold', note: 'Full colour, big type', draw(pg, d, f, { W, H, accent }) {
+    bold: { name: 'Bold', note: 'Full color, big type', draw(pg, d, f, { W, H, accent }) {
       const white = P().rgb(1, 1, 1), m = W * 0.08;
       pg.drawRectangle({ x: 0, y: 0, width: W, height: H, color: rgbOf(accent) });
       pg.drawRectangle({ x: 0, y: 0, width: W, height: H * 0.18, color: shade(accent, 0.25) });
@@ -160,7 +160,7 @@
       const ink = P().rgb(0.1, 0.1, 0.1), top = H * 0.4, m = W * 0.08;
       pg.drawRectangle({ x: 0, y: 0, width: W, height: H, color: P().rgb(0.985, 0.98, 0.97) });
       if (img) picture(pg, img, { x: 0, y: top, w: W, h: H - top });
-      else { // no photo yet: a quiet pattern in the accent colour
+      else { // no photo yet: a quiet pattern in the accent color
         pg.drawRectangle({ x: 0, y: top, width: W, height: H - top, color: tint(accent, 0.2) });
         pg.pushOperators(P().pushGraphicsState(), P().rectangle(0, top, W, H - top), P().clip(), P().endPath());
         for (let k = 5; k >= 1; k--) pg.drawCircle({ x: W * 0.78, y: top + (H - top) * 0.62, size: W * 0.13 * k, color: tint(accent, 0.2 + k * 0.1) });
@@ -178,7 +178,7 @@
     blurb: { name: 'Back cover', note: 'Description, author, ISBN', draw(pg, d, f, { W, H, accent }) {
       const ivory = P().rgb(0.97, 0.96, 0.93), m = W * 0.12;
       pg.drawRectangle({ x: 0, y: 0, width: W, height: H, color: shade(accent, 0.55) });
-      // measure first, so the whole text block sits optically centred
+      // measure first, so the whole text block sits optically centered
       const t = fit(d.title, f.serifB, W * 0.05, 14, W - 2 * m, 2), bs = W * 0.026, as = W * 0.022;
       const paras = d.blurb ? String(d.blurb).split(/\n\s*\n|\n/).filter(p => p.trim()).map(p => wrap(p, f.serif, bs, W - 2 * m)) : [];
       const about = d.about ? wrap(d.about, f.serifI, as, W - 2.4 * m) : [];
@@ -290,7 +290,7 @@
   async function add(where) {
     const s = L.state, d = info();
     if (!d.title.trim() && C.kind === 'front') return L.toast('Type a title first', { icon: 'info' });
-    const t = L.task('Making the page', { cancellable: false });
+    const t = L.task('Making the page', { cancelable: false });
     try {
       const T = (C.kind === 'back' ? BACK : FRONT)[current()];
       const bytes = await L.coverPdf(C.kind, current(), d, await pageSize());

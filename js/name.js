@@ -22,7 +22,7 @@
   // "Capital Development Authority" → "CDA"
   const ORG_END = 'Authority|Ministry|Department|University|Corporation|Commission|Board|Council|Agency|Institute|Directorate|Company|Bank';
   const ORG = new RegExp(`\\b((?:[A-Z][A-Za-z&]+[ \\t]+){1,4}(?:${ORG_END}|${ORG_END.toUpperCase()}))\\b`, 'g');
-  // The most frequently named organisation, e.g. "Capital Development Authority" → "CDA" (ignores "Published by Authority").
+  // The most frequently named organization, e.g. "Capital Development Authority" → "CDA" (ignores "Published by Authority").
   const orgAcronym = text => {
     const counts = {};
     for (const m of text.matchAll(ORG)) {
@@ -97,7 +97,7 @@
     if (headline) add(clip(L.titleCase(headline)), 'Largest heading on page 1');
     if (date) add(`${iso(date)} — ${best}`, 'Date first — sorts chronologically');
     const yr = date && !best.includes(String(date[0])) ? ` (${date[0]})` : '';
-    if (acr && !best.toUpperCase().includes(acr)) add(`${acr} — ${best}${yr}`, `Organisation “${acr}” named on page 1`);
+    if (acr && !best.toUpperCase().includes(acr)) add(`${acr} — ${best}${yr}`, `Organization “${acr}” named on page 1`);
     else if (yr) add(best + yr, 'With the year');
     add(fromFile, 'Original file name, tidied');
     return out.slice(0, 6);

@@ -94,14 +94,14 @@
     const W = Math.min(c.width - x0, Math.ceil(region.w * k)), Hh = Math.min(c.height - y0, Math.ceil(region.h * k));
     if (W < 10 || Hh < 10) return { H: [], V: [], fills: [] };
     // Two ink levels (hysteresis): lines must be found at the strict level; the loose level only extends them where
-    // a grey border fades. Scanner streaks never pass the strict level, so they can't sneak in through the loose one.
+    // a gray border fades. Scanner streaks never pass the strict level, so they can't sneak in through the loose one.
     const d = c.getContext('2d').getImageData(x0, y0, W, Hh).data, strict = new Uint8Array(W * Hh), loose = new Uint8Array(W * Hh);
-    // levels follow the paper: a grey photocopy and a bright laser print get the same treatment
+    // levels follow the paper: a gray photocopy and a bright laser print get the same treatment
     const hist = new Uint32Array(256); for (let i = 0; i < W * Hh; i += 7) hist[Math.round(d[i * 4] * 0.299 + d[i * 4 + 1] * 0.587 + d[i * 4 + 2] * 0.114)]++;
     let acc = 0, total = 0; for (const v of hist) total += v; let paper = 255; for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= total * 0.6) { paper = v; break; } }
-    const tS = Math.min(150, paper - 80), tL = Math.min(185, paper - 45); // stricter only on grey paper
+    const tS = Math.min(150, paper - 80), tL = Math.min(185, paper - 45); // stricter only on gray paper
     for (let i = 0; i < W * Hh; i++) { const l = d[i * 4] * 0.299 + d[i * 4 + 1] * 0.587 + d[i * 4 + 2] * 0.114; strict[i] = l < tS ? 1 : 0; loose[i] = l < tL ? 1 : 0; }
-    // Lines in photos are grey, broken and slightly skewed. Each axis is traced on a mask thickened by 1 px across
+    // Lines in photos are gray, broken and slightly skewed. Each axis is traced on a mask thickened by 1 px across
     // the line, short solid pieces (≥ 80 % ink, gaps ≤ 3 px bridged) are collected, then stitched end-to-end while the
     // line drifts by a pixel or two. Only stitched lines ≥ 18 pt survive — letter stems and text rows never get that far.
     const runs = (len, other, at) => {

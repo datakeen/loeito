@@ -2,6 +2,17 @@
 
 All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Milestones (x.0.0, x.5.0) are preserved in `versions/`.
 
+## 1.8.0 — 2026-11-07
+
+### Added
+- **Labels, boxes, ovals and lines inside Forms** (Add text & shapes). Select, move, resize, align, snap and undo them like fields.
+- **A field's own label:** Add label on any field. It moves and is deleted with the field and shows a red * by itself when the field is Required.
+- **Text color** for the answers in text fields.
+
+### Changed
+- **Templates are fully editable:** every label, heading and line in the ten templates is now a label or line you can change, recolor, move or delete.
+- **US English** throughout the app and documents (color, center, license, canceled, email, check…).
+
 ## 1.7.0 — 2026-11-07
 
 ### Added
@@ -52,7 +63,7 @@ All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Mi
 - `ROADMAP.md` (public) and `CONTRIBUTING.md`.
 
 ### Fixed
-- Encrypted PDFs were not recognised as encrypted when opened, so saving them could hang. They are now detected and unlocked properly.
+- Encrypted PDFs were not recognized as encrypted when opened, so saving them could hang. They are now detected and unlocked properly.
 
 ## 1.5.0 — 2026-11-05 · milestone
 
@@ -71,7 +82,7 @@ Preserved in `versions/1.5.0/` with its manuals.
 ### Added
 - **Move pages with the keyboard** (Pages): it works for one page, pages scattered across the document, or a range.
   - **← →** move one place; **↑ ↓** move one row, and the pages passed shift along; **Home / End** go to the start / end.
-  - Scattered pages each step past their neighbour; a range moves as a block.
+  - Scattered pages each step past their neighbor; a range moves as a block.
 - **Cut / Copy / Paste pages:**
   - **Ctrl X / Ctrl C / Ctrl V** (Ctrl Shift V pastes before the selection), also between tabs;
   - **Ctrl D** duplicates;
@@ -99,8 +110,8 @@ Preserved in `versions/1.5.0/` with its manuals.
 
 
 
-### Licence
-- Loeito is now **free and open-source software under the GNU AGPL v3** (AGPL-3.0-or-later): `LICENSE`, `NOTICE.md` (third-party licences), a licence line in every source file, and the licence shown in About and the README. A ready-to-paste SourceForge kit is in `sourceforge/`.
+### License
+- Loeito is now **free and open-source software under the GNU AGPL v3** (AGPL-3.0-or-later): `LICENSE`, `NOTICE.md` (third-party licenses), a license line in every source file, and the license shown in About and the README. A ready-to-paste SourceForge kit is in `sourceforge/`.
 
 ### Added
 - **Merge PDFs workspace** (welcome screen, Pages tool, Save menu):
@@ -136,13 +147,13 @@ Phase 1 of the five-phase plan (`PLAN.md`, Round 4): everyday craft, plus the fi
 - **Pointer tools:** Select (I-beam over text, drag empty paper to move), Text (select text anywhere), Hand (open hand, closed hand while dragging). Keys V / T / H, Space = temporary hand.
 - **Selectable text on every page,** including OCR’d scans, with a selection bar: Copy · Highlight · Find · Speak.
 - **Zoom speed:** Auto · Fine · Normal · Fast in the zoom menu; Shift = fine; a zoom read-out while zooming.
-- **Stamp, rebuilt for whole documents:** header and footer with left / centre / right text, fonts, thin rules; number styles (1, i, I, a, A, Page 1 of N, Bates, custom); every stamp on all / odd / even / chosen pages, skipping the first or last pages, mirrored for books; numbering can start at the first numbered page.
+- **Stamp, rebuilt for whole documents:** header and footer with left / center / right text, fonts, thin rules; number styles (1, i, I, a, A, Page 1 of N, Bates, custom); every stamp on all / odd / even / chosen pages, skipping the first or last pages, mirrored for books; numbering can start at the first numbered page.
 - **Bates across documents:** continue one series through every open tab; save them all to a folder.
-- **Covers:** 8 front-cover designs and 5 last pages (back cover, colophon, about the author, notes, the end) with your details, picture and accent colour.
+- **Covers:** 8 front-cover designs and 5 last pages (back cover, colophon, about the author, notes, the end) with your details, picture and accent color.
 - **Form templates:** 10 ready forms — registration, job application, leave, expense claim, invoice, purchase requisition, feedback survey, consent, weekly timesheet, service/IT request — with real fields, formats and totals.
 - **Arrange form fields:** align to the selection, a key field or the page; distribute; match sizes; snapping guides while dragging.
-- **Form behaviour:** buttons that e-mail the filled form, open a web page, go to a page or show/hide fields; “Show only when…” rules; expert scripts per field and for the document.
-- **Protect:** find & black out words and patterns (CNIC, phone, e-mail, bank accounts, dates, money) with review before removal; hidden-information inspector; *Save a copy for sharing* that removes details, comments, attachments, scripts, links, private data and thumbnails.
+- **Form behavior:** buttons that email the filled form, open a web page, go to a page or show/hide fields; “Show only when…” rules; expert scripts per field and for the document.
+- **Protect:** find & black out words and patterns (CNIC, phone, email, bank accounts, dates, money) with review before removal; hidden-information inspector; *Save a copy for sharing* that removes details, comments, attachments, scripts, links, private data and thumbnails.
 - **What’s using space** in Optimize: images, fonts, page drawings, metadata, structure; largest images and embedded fonts.
 - **Help menu:** what’s new, User Manual, Reference Manual, keyboard shortcuts (?), About.
 - **Versioning & rulebook:** `VERSION`, `CHANGELOG.md`, `POLICY.md`, `versions/1.0.0/`.
@@ -174,7 +185,7 @@ First complete release (development rounds 1–3). Preserved in `versions/1.0.0/
 - Make Searchable: OCR with an invisible text layer that keeps the layout.
 - Tables: ruled tables in vector PDFs and scans with merged cells; per-cell OCR for scans; styled Excel, CSV, rich copy, Markdown.
 - Digitize: graphs to numbers; maps to points, lines and areas in local, UTM or WGS 84; Shapefile, GeoJSON, KML, GPX, DXF, CSV/WKT, Delft3D .ldb/.pol/.pli/.xyz/.xyn.
-- Optimize: compress, greyscale, strip metadata, paper size, page images.
+- Optimize: compress, grayscale, strip metadata, paper size, page images.
 - Stamp: page numbers (incl. Bates), header & footer, watermark.
 - Forms: draw fillable fields, formats, checks, totals, signature, buttons; fill mode; keep fillable or flatten; import existing forms; automatic field detection in Word, Excel and scanned forms.
 - Smart Name and document details.

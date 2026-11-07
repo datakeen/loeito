@@ -6,7 +6,7 @@
   const G = (L.geo = {});
 
   /* ——— Coordinate systems ——— crs = { type: 'local' | 'utm' | 'wgs84', zone, south } */
-  G.crsLabel = c => c.type === 'utm' ? `UTM zone ${c.zone}${c.south ? 'S' : 'N'} (WGS 84), metres` : c.type === 'wgs84' ? 'WGS 84 longitude / latitude' : 'Local / unknown';
+  G.crsLabel = c => c.type === 'utm' ? `UTM zone ${c.zone}${c.south ? 'S' : 'N'} (WGS 84), meters` : c.type === 'wgs84' ? 'WGS 84 longitude / latitude' : 'Local / unknown';
   G.epsg = c => c.type === 'utm' ? (c.south ? 32700 : 32600) + +c.zone : c.type === 'wgs84' ? 4326 : null;
   const GEOGCS = 'GEOGCS["GCS_WGS_1984",DATUM["D_WGS_1984",SPHEROID["WGS_1984",6378137.0,298.257223563]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]]';
   G.prj = c => {
@@ -48,7 +48,7 @@
   const fx = (v, geo) => (geo ? v.toFixed(8) : v.toFixed(3));
   const tekalName = (n, i, prefix) => (String(n || '').trim().replace(/\s+/g, '_').replace(/[^\w.\-]/g, '') || `${prefix}${String(i + 1).padStart(3, '0')}`);
   const header = (title, crs) => [
-    '*', `* ${title}`, `* Digitised with Loeito PDF on ${new Date().toISOString().slice(0, 19).replace('T', ' ')}`,
+    '*', `* ${title}`, `* Digitized with Loeito PDF on ${new Date().toISOString().slice(0, 19).replace('T', ' ')}`,
     `* Coordinate System = ${crs.type === 'wgs84' ? 'Spherical' : 'Cartesian'}${crs.type === 'utm' ? ` (UTM zone ${crs.zone}${crs.south ? 'S' : 'N'}, WGS 84)` : ''}`, '*'];
   // TEKAL block file (shared by .ldb, .pol, .pli): name line, "rows 2", then x y rows.
   function tekal(blocks, crs, title, prefix) {

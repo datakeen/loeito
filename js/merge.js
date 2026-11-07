@@ -47,7 +47,7 @@
     if (!files.length) return L.toast('Merge takes PDFs, pictures, and Word, Excel or PowerPoint files.', { icon: 'info' });
     M.busy = true; paint();
     let pos = at === 'start' ? 0 : typeof at === 'number' ? at : M.files.length;
-    const t = files.some(f => OFFICE.test(f.name)) ? L.task('Converting with Microsoft Office', { cancellable: false }) : null;
+    const t = files.some(f => OFFICE.test(f.name)) ? L.task('Converting with Microsoft Office', { cancelable: false }) : null;
     for (const f of files) {
       try {
         let bytes, size = f.size;
@@ -228,7 +228,7 @@
       close();
       await L.openFiles([file]);
       L.toast(`Merged ${pages.length} pages · ${L.fmtBytes(bytes.length)}`, { kind: 'ok', ms: 6000, action: savedTo ? { label: 'Show in folder', fn: () => L.fs.reveal(savedTo) } : null });
-    } catch (e) { t.done(); M.busy = false; paint(); if (e.message !== 'Cancelled') L.error('Couldn’t merge', e); }
+    } catch (e) { t.done(); M.busy = false; paint(); if (e.message !== 'Canceled') L.error('Couldn’t merge', e); }
   }
   const success = (n, size) => new Promise(res => {
     if (!root) return res();

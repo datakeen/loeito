@@ -13,6 +13,14 @@
   /* ——— creating fields ——— */
   async function create(kind, rUser) {
     const p = page();
+    if (F.KINDS[kind].deco) {
+      const f = F.make(kind, rUser);
+      change('add ' + F.KINDS[kind].label.toLowerCase(), () => fieldsOf(p).push(f));
+      FS.sel = new Set([f.id]); FS.key = f.id; FS.tool = 'select'; L.setCursor('');
+      L.renderInspector();
+      if (kind === 'label') setTimeout(() => { const i = L.$('#inspector [data-focus="name"]'); if (i) { i.focus(); i.select(); } }, 30);
+      return;
+    }
     const label = await L.formdetect.labelFor(p, rUser).catch(() => '');
     const inferred = L.formdetect.infer(label, rUser.h);
     let f;
@@ -35,8 +43,10 @@
   function screenBox(f, view) { return view.rectToScreen(f.r); }
   function hit(view, sx, sy) {
     const fs = fieldsOf(page());
-    for (let i = fs.length - 1; i >= 0; i--) { const b = screenBox(fs[i], view); if (sx >= b.x - 3 && sx <= b.x + b.w + 3 && sy >= b.y - 3 && sy <= b.y + b.h + 3) return fs[i]; }
-    return null;
+    const inside = f => { const b = screenBox(f, view); return sx >= b.x - 3 && sx <= b.x + b.w + 3 && sy >= b.y - 3 && sy <= b.y + b.h + 3; };
+    for (let i = fs.length - 1; i >= 0; i--) if (!F.isDeco(fs[i]) && inside(fs[i])) return fs[i]; // fields first,
+    const deco = fs.filter(f => F.isDeco(f) && inside(f)).sort((a, b) => a.r.w * a.r.h - b.r.w * b.r.h); // then the smallest label or shape
+    return deco[0] || null;
   }
 
   /* ——— pointer (design mode) ——— */
@@ -63,7 +73,8 @@
         if (ev.e.altKey && FS.sel.has(f.id)) { FS.key = f.id; L.drawOverlay(); refresh(); return; } // Alt-click: this one is the key field
         if (ev.e.shiftKey || ev.e.ctrlKey || ev.e.metaKey) { FS.sel.has(f.id) ? FS.sel.delete(f.id) : FS.sel.add(f.id); if (!FS.sel.has(FS.key)) FS.key = FS.sel.has(f.id) ? f.id : [...FS.sel][0] || null; }
         else if (!FS.sel.has(f.id)) { FS.sel = new Set([f.id]); FS.key = f.id; }
-        const sel = selected(), mine = new Set(sel.map(x => x.id));
+        const picked = selected(), pickedIds = new Set(picked.map(x => x.id));
+        const sel = [...picked, ...fieldsOf(p).filter(x => x.of && pickedIds.has(x.of) && !pickedIds.has(x.id))], mine = new Set(sel.map(x => x.id)); // its labels come along
         FS.drag = { kind: 'move', s0: [ev.sx, ev.sy], orig: sel.map(x => ({ f: x, r: { ...x.r }, b: view.rectToScreen(x.r) })), moved: false,
           others: fieldsOf(p).filter(x => !mine.has(x.id)).map(x => view.rectToScreen(x.r)) };
       } else { FS.sel = new Set(); FS.key = null; FS.drag = { kind: 'marquee', s: [ev.sx, ev.sy], c: [ev.sx, ev.sy] }; }
@@ -75,7 +86,7 @@
       if (d.kind === 'marquee') { d.c = [ev.sx, ev.sy]; L.drawOverlay(); return; }
       if (!d.moved) { L.checkpoint(d.kind === 'move' ? 'move field' : 'resize field'); d.moved = true; }
       if (d.kind === 'move') {
-        // move in screen space, then snap the group's edges / centres to other fields and the page (hold Alt to move freely)
+        // move in screen space, then snap the group's edges / centers to other fields and the page (hold Alt to move freely)
         const ox = ev.sx - d.s0[0], oy = ev.sy - d.s0[1];
         const bb = bounds(d.orig.map(o => ({ x: o.b.x + ox, y: o.b.y + oy, w: o.b.w, h: o.b.h })));
         const sn = ev.e.altKey ? { dx: 0, dy: 0, guides: [] } : snap(bb, view, d.others);
@@ -109,9 +120,9 @@
   /* ——— overlay ——— */
   function draw({ svg, view, page: p, html }) {
     html.replaceChildren();
-    if (FS.mode === 'fill') return drawFill(html, view, p);
+    if (FS.mode === 'fill') { const gd = L.s('g', { 'pointer-events': 'none' }); (p.fields || []).filter(F.isDeco).filter(f => { const o = F.ownerOf(f); return !o || F.showing(o); }).forEach(f => gd.append(F.toSvg(f, view))); svg.append(gd); return drawFill(html, view, p); }
     const g = L.s('g', { 'pointer-events': 'none' });
-    for (const f of p.fields || []) {
+    for (const f of [...(p.fields || [])].sort((a, b) => F.isDeco(b) - F.isDeco(a))) { // labels and shapes behind the fields
       g.append(F.toSvg(f, view, { design: true, selected: FS.sel.has(f.id) }));
       if (f.showIf) { const b = screenBox(f, view); g.append(L.s('g', { class: 'if-badge', transform: `translate(${b.x + b.w - 7},${b.y - 5})` }, L.s('rect', { x: -8, y: -6, width: 16, height: 12, rx: 6 }), L.s('text', { x: 0, y: 3.5, 'text-anchor': 'middle' }, 'if'))); }
     }
@@ -131,6 +142,7 @@
   function drawFill(html, view, p) {
     const k = view.scale, extras = [];
     for (const f of p.fields || []) {
+      if (F.isDeco(f)) continue;
       const b = screenBox(f, view), fs = Math.max(9, Math.min(b.h * 0.62, (f.fontSize || 11) * k));
       const st = { position: 'absolute', left: b.x + 'px', top: b.y + 'px', width: b.w + 'px', height: b.h + 'px', fontSize: fs + 'px', boxSizing: 'border-box' };
       const touch = () => { if (!f._touched) { L.checkpoint('fill in form'); f._touched = true; } L.state.dirty = true; };
@@ -174,11 +186,12 @@
           else if (f.action === 'link' && f.url) window.open(/^[a-z]+:/i.test(f.url) ? f.url : 'https://' + f.url, '_blank', 'noopener');
           else if (f.action === 'page') L.go((f.pageNo || 1) - 1);
           else if (f.action === 'toggle') { for (const n of f.targets || []) FS.flip.has(n) ? FS.flip.delete(n) : FS.flip.add(n); syncVisibility(html, p); }
-          else L.toast({ print: 'Print works in the saved PDF (or press Ctrl P after saving).', email: 'In the saved PDF this opens an e-mail with the filled form attached.', script: 'Scripts run in the saved PDF (Acrobat, Foxit, PDF-XChange).' }[f.action] || 'Works in the saved PDF.', { icon: 'info' });
+          else L.toast({ print: 'Print works in the saved PDF (or press Ctrl P after saving).', email: 'In the saved PDF this opens an email with the filled form attached.', script: 'Scripts run in the saved PDF (Acrobat, Foxit, PDF-XChange).' }[f.action] || 'Works in the saved PDF.', { icon: 'info' });
         } }, f.caption || 'Button');
       }
       if (!el) continue;
       Object.assign(el.style, st);
+      if (f.textColor) el.style.color = f.textColor;
       if (f.format === 'date') el.style.paddingRight = Math.min(26, b.h) + 'px';
       el.dataset.fid = f.id;
       if (F.problem(f)) el.classList.add('bad');
@@ -203,7 +216,7 @@
     try {
       let total = 0; const found = [];
       for (let i = 0; i < pages.length; i++) {
-        if (t.cancelled) break;
+        if (t.canceled) break;
         const res = await L.formdetect.detect(pages[i], { onStep: s => t.set((i + 0.5) / pages.length, `${pages.length > 1 ? `Page ${i + 1}: ` : ''}${s}`) });
         if (res.scanned && !pages[i].ocr && !(await L.pdfTextItems(pages[i])).length) L.toast('This page is a scan without text — run Make Searchable first so fields get proper names.', { icon: 'info', ms: 6000 });
         found.push({ page: pages[i], fields: res.fields }); total += res.fields.length;
@@ -224,7 +237,44 @@
 
   /* ——— property panel ——— */
   const set = (f, k, v, label = 'field settings') => change(label, () => { f[k] = v; });
+  function addLabelFor(f) {
+    const own = fieldsOf(page()).find(x => x.of === f.id && x.kind === 'label');
+    if (own) { FS.sel = new Set([own.id]); FS.key = own.id; L.drawOverlay(); L.renderInspector(); return; }
+    const lab = F.make('label', { x: f.r.x, y: f.r.y + f.r.h + 1.5, w: Math.max(f.r.w, 80), h: 11 }, { text: f.kind === 'radio' ? f.group : f.name, of: f.id });
+    change('add label', () => fieldsOf(page()).push(lab));
+    FS.sel = new Set([lab.id]); FS.key = lab.id; L.renderInspector();
+    setTimeout(() => { const i = L.$('#inspector [data-focus="name"]'); if (i) { i.focus(); i.select(); } }, 30);
+  }
+  function decoProps(f) {
+    const kids = [], owner = F.ownerOf(f);
+    const sizes = [6, 7, 7.5, 8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 28, 32];
+    if (f.kind === 'label') {
+      kids.push(ui.field('Text', h('input', { class: 'input', 'data-focus': 'name', value: f.text, oninput: e => { f.text = e.target.value; L.state.dirty = true; L.drawOverlay(); }, onchange: e => set(f, 'text', e.target.value, 'label text') })));
+      kids.push(h('div', { class: 'grid2' },
+        ui.field('Size', ui.select(sizes.map(n => ({ value: String(n), label: n + ' pt' })), String(f.fontSize || 9), v => set(f, 'fontSize', +v))),
+        ui.field('Align', ui.seg([{ value: 'left', label: 'L' }, { value: 'center', label: 'C' }, { value: 'right', label: 'R' }], f.align || 'left', v => set(f, 'align', v)))));
+      kids.push(ui.check('Bold', f.bold, v => set(f, 'bold', v)));
+      kids.push(ui.field('Color', L.swatches(f.color, c => set(f, 'color', c, 'label color'), ['#1d1d1f', '#6e6e73', '#e5484d', '#f76b15', '#30a46c', '#0071e3', '#8e4ec6', '#ffffff'])));
+      kids.push(owner
+        ? h('div', { class: 'stack' }, h('p', { class: 'muted tiny', style: { margin: 0 } }, `Belongs to “${owner.kind === 'radio' ? owner.group : owner.name}”: it moves and is deleted with that field, and shows a red * by itself when the field is Required.`),
+            h('div', { class: 'grid2' }, ui.btn('Select the field', 'cursor', () => { FS.sel = new Set([owner.id]); FS.key = owner.id; L.drawOverlay(); L.renderInspector(); }), ui.btn('Detach', 'close', () => set(f, 'of', null, 'detach label'))))
+        : h('p', { class: 'muted tiny', style: { margin: 0 } }, 'Tip: select a field and click “Add label” to give it a label that moves with it and gets a red * when the field is Required.'));
+    } else {
+      kids.push(ui.field(f.kind === 'line' ? 'Color' : 'Line color', L.swatches(f.color, c => set(f, 'color', c, 'shape color'), ['#1d1d1f', '#8e8e93', '#d1d1d6', '#e5484d', '#f76b15', '#30a46c', '#0071e3', '#8e4ec6'])));
+      kids.push(ui.field('Thickness', ui.select([...(f.kind === 'line' ? [] : [{ value: '0', label: 'No line' }]), ...[0.5, 0.75, 1, 1.5, 2, 3, 4].map(n => ({ value: String(n), label: n + ' pt' }))], String(f.lineW ?? 1), v => set(f, 'lineW', +v))));
+      if (f.kind !== 'line') {
+        kids.push(ui.field('Fill', h('div', { class: 'row wrap', style: { gap: '8px', alignItems: 'center' } },
+          L.swatches(f.fill || '#ffffff', c => set(f, 'fill', c, 'shape fill'), ['#f2f2f7', '#eef4ff', '#fff4e5', '#eafaf0', '#fdecec', '#f3ecfb', '#ffffff']),
+          h('button', { class: 'btn' + (f.fill ? '' : ' on'), style: { padding: '4px 10px' }, onclick: () => set(f, 'fill', '', 'shape fill') }, 'No fill'))));
+        if (f.kind === 'rect') kids.push(ui.field('Corners', ui.seg([{ value: '0', label: 'Square' }, { value: '3', label: 'Soft' }, { value: '8', label: 'Round' }], String(f.radius || 0), v => set(f, 'radius', +v))));
+        kids.push(h('p', { class: 'muted tiny', style: { margin: 0 } }, 'Shapes sit behind the fields. Draw a box around a group of fields to make a section.'));
+      }
+    }
+    return ui.section(F.KINDS[f.kind].label, h('div', { class: 'stack' }, kids),
+      h('div', { class: 'grid2', style: { marginTop: '12px' } }, ui.btn('Duplicate ↓', 'duplicate', duplicate), ui.btn('Delete', 'trash', removeSel, 'danger')));
+  }
   function props(f) {
+    if (F.isDeco(f)) return decoProps(f);
     const kids = [];
     kids.push(ui.field(f.kind === 'radio' ? 'Group name' : 'Name', h('input', { class: 'input', 'data-focus': 'name', value: f.kind === 'radio' ? f.group : f.name, onchange: e => {
       const v = e.target.value.trim(); if (!v) return;
@@ -237,6 +287,7 @@
       kids.push(h('div', { class: 'grid2' },
         ui.field('Kind of answer', ui.select(F.FORMATS, f.format, v => set(f, 'format', v))),
         ui.field('Size', ui.select([{ value: '0', label: 'Auto' }, ...[8, 9, 10, 11, 12, 14, 16].map(n => ({ value: String(n), label: n + ' pt' }))], String(f.fontSize || 0), v => set(f, 'fontSize', +v)))));
+      kids.push(ui.field('Text color', L.swatches(f.textColor || '#1d1d1f', c => set(f, 'textColor', c === '#1d1d1f' ? '' : c, 'text color'), ['#1d1d1f', '#6e6e73', '#e5484d', '#f76b15', '#30a46c', '#0071e3', '#8e4ec6'])));
       if (F.numeric(f)) kids.push(h('div', { class: 'grid2' },
         ui.field('Decimals', ui.select(['0', '1', '2', '3'], String(f.decimals ?? 2), v => set(f, 'decimals', +v))),
         f.format === 'currency' ? ui.field('Currency', h('input', { class: 'input', value: f.currency, onchange: e => set(f, 'currency', e.target.value) })) : h('span')));
@@ -249,7 +300,7 @@
       if (F.numeric(f)) kids.push(calcEditor(f));
       if (!f.calc) kids.push(ui.field('Pre-filled value', h('input', { class: 'input', value: f.value ?? '', onchange: e => set(f, 'value', e.target.value) })));
     }
-    if (f.kind === 'check') kids.push(ui.check('Ticked to start with', f.value, v => set(f, 'value', v)));
+    if (f.kind === 'check') kids.push(ui.check('Checked to start with', f.value, v => set(f, 'value', v)));
     if (f.kind === 'radio') kids.push(ui.check('Selected to start with', f.value === f.exportValue, v => change('field settings', () => F.all().forEach(x => { if (x.f.kind === 'radio' && x.f.group === f.group) x.f.value = v ? f.exportValue : ''; }))));
     if (f.kind === 'dropdown' || f.kind === 'list') {
       kids.push(ui.field('Choices — one per line', h('textarea', { class: 'input', rows: Math.min(8, Math.max(3, f.options.length + 1)), value: f.options.join('\n'), onchange: e => set(f, 'options', e.target.value.split('\n').map(s => s.trim()).filter(Boolean)) })));
@@ -261,11 +312,13 @@
     kids.push(ui.field('Look', ui.seg([{ value: 'box', label: 'Light box' }, { value: 'plain', label: 'Invisible until used' }], f.style, v => set(f, 'style', v))));
     if (f.kind !== 'button') kids.push(showIfEditor(f));
     if (f.kind === 'text' || f.kind === 'para') kids.push(scriptsEditor(f));
+    const hasLabel = fieldsOf(page()).some(x => x.of === f.id && x.kind === 'label');
     return ui.section(`${F.KINDS[f.kind].label} field`, h('div', { class: 'stack' }, kids),
-      h('div', { class: 'grid2', style: { marginTop: '12px' } }, ui.btn('Duplicate ↓', 'duplicate', duplicate), ui.btn('Delete', 'trash', removeSel, 'danger')));
+      h('div', { style: { marginTop: '12px' } }, ui.btn(hasLabel ? 'Select its label' : 'Add label', 'label', () => addLabelFor(f), 'block')),
+      h('div', { class: 'grid2', style: { marginTop: '8px' } }, ui.btn('Duplicate ↓', 'duplicate', duplicate), ui.btn('Delete', 'trash', removeSel, 'danger')));
   }
-  /* ——— behaviour: what buttons do, when fields appear, scripts for experts ——— */
-  const ACTIONS = [{ value: 'reset', label: 'Clear the form' }, { value: 'print', label: 'Print' }, { value: 'email', label: 'E-mail the filled form' }, { value: 'link', label: 'Open a web page' },
+  /* ——— behavior: what buttons do, when fields appear, scripts for experts ——— */
+  const ACTIONS = [{ value: 'reset', label: 'Clear the form' }, { value: 'print', label: 'Print' }, { value: 'email', label: 'Email the filled form' }, { value: 'link', label: 'Open a web page' },
     { value: 'page', label: 'Go to a page' }, { value: 'toggle', label: 'Show / hide fields' }, { value: 'script', label: 'Run a script (experts)' }];
   const ctrlName = g => (g.kind === 'radio' ? g.group : g.name);
   function buttonEditor(f) {
@@ -274,7 +327,7 @@
     return [
       h('div', { class: 'grid2' }, ui.field('Caption', inp('caption', 'Button text')), ui.field('When clicked', ui.select(ACTIONS, f.action, v => set(f, 'action', v)))),
       f.action === 'email' ? h('div', { class: 'grid2' }, ui.field('Send to', inp('mailTo', 'name@example.com', 'email')), ui.field('Subject', inp('mailSubject', L.state.name))) : null,
-      f.action === 'email' ? h('p', { class: 'muted tiny', style: { margin: 0 } }, 'Opens the person’s e-mail program with the filled PDF attached (Acrobat, Foxit).') : null,
+      f.action === 'email' ? h('p', { class: 'muted tiny', style: { margin: 0 } }, 'Opens the person’s email program with the filled PDF attached (Acrobat, Foxit).') : null,
       f.action === 'link' ? ui.field('Web address', inp('url', 'www.example.com')) : null,
       f.action === 'page' ? ui.field('Page number', ui.num(f.pageNo || 1, v => set(f, 'pageNo', L.clamp(Math.round(v) || 1, 1, L.state.pages.length)), { min: 1, max: L.state.pages.length })) : null,
       f.action === 'toggle' ? ui.field('Fields to show or hide', names.length ? h('div', { class: 'list', style: { maxHeight: '140px', overflow: 'auto' } }, names.map(n => h('label', { class: 'list-item' },
@@ -292,7 +345,7 @@
     if (!r) return h('div', null, ui.btn('Show only when…', 'eyeoff', () => (ctrls.length ? setRule({ field: ctrls[0].name, op: defOp(ctrls[0].kind), value: '' }) : L.toast('Add the field it depends on first', { icon: 'info' })), 'block'),
       h('p', { class: 'muted tiny', style: { margin: '6px 0 0' } }, 'e.g. show “Other details” only when “Other” is chosen.'));
     const c = ctrls.find(x => x.name === r.field) || ctrls[0]; if (!c) return null;
-    const ops = c.kind === 'check' ? [['checked', 'is ticked'], ['unchecked', 'is not ticked']] : [['is', 'is'], ['not', 'is not'], ['filled', 'has an answer'], ['empty', 'is empty']];
+    const ops = c.kind === 'check' ? [['checked', 'is checked'], ['unchecked', 'is not checked']] : [['is', 'is'], ['not', 'is not'], ['filled', 'has an answer'], ['empty', 'is empty']];
     const choices = c.kind === 'radio' ? F.all().map(x => x.f).filter(g => g.kind === 'radio' && g.group === c.name).map(g => g.exportValue) : c.kind === 'dropdown' || c.kind === 'list' ? c.f.options : null;
     return h('div', { class: 'rule-box' },
       h('div', { class: 'row between' }, h('span', { class: 'label', style: { margin: 0 } }, 'Show only when'), h('button', { class: 'linkish', onclick: () => setRule(null) }, 'Remove')),
@@ -329,11 +382,11 @@
     change('duplicate field', () => fieldsOf(page()).push(...copies));
     FS.sel = new Set(copies.map(c => c.id)); refresh();
   }
-  function removeSel() { const ids = new Set(FS.sel); if (!ids.size) return; change('delete field', () => { page().fields = fieldsOf(page()).filter(f => !ids.has(f.id)); }); FS.sel = new Set(); }
+  function removeSel() { const ids = new Set(FS.sel); if (!ids.size) return; change('delete', () => { page().fields = fieldsOf(page()).filter(f => !ids.has(f.id) && !(f.of && ids.has(f.of))); }); FS.sel = new Set(); }
   /* ——— Arrange: align to the selection, a key field or the page; distribute; match sizes ———
      Worked out in screen space, so "left" and "top" mean what you see, even on a rotated page. */
   const bounds = rs => { const x = Math.min(...rs.map(r => r.x)), y = Math.min(...rs.map(r => r.y)); return { x, y, w: Math.max(...rs.map(r => r.x + r.w)) - x, h: Math.max(...rs.map(r => r.y + r.h)) - y }; };
-  // Smart guides: snap the moving group's edges or centre to other fields and to the page (5 px reach).
+  // Smart guides: snap the moving group's edges or center to other fields and to the page (5 px reach).
   function snap(bb, view, others) {
     const T = 5, xs = [0, view.width / 2, view.width], ys = [0, view.height / 2, view.height];
     for (const r of others) { xs.push(r.x, r.x + r.w / 2, r.x + r.w); ys.push(r.y, r.y + r.h / 2, r.y + r.h); }
@@ -357,7 +410,7 @@
       f.r = view.rectToPdf(b);
     }));
   }
-  // Equal gaps between neighbours; the first and last stay where they are.
+  // Equal gaps between neighbors; the first and last stay where they are.
   function distribute(axis) {
     const s = selected(), view = L.viewer.view; if (s.length < 3 || !view) return;
     const X = axis === 'h', items = s.map(f => ({ f, b: view.rectToScreen(f.r) })).sort((a, b) => (X ? a.b.x - b.b.x : a.b.y - b.b.y));
@@ -380,15 +433,15 @@
         to, v => { FS.alignTo = v; if (v === 'key' && !keyF) FS.key = s[0].id; L.drawOverlay(); L.renderInspector(); }))
         : h('p', { class: 'muted tiny', style: { margin: '0 0 8px' } }, 'Aligns to the page. Select several fields to align them with each other or with a key field.'),
       h('div', { class: 'align-bar' },
-        btn('left', 'alignL', 'Align left edges'), btn('center', 'alignC', 'Centre horizontally'), btn('right', 'alignR', 'Align right edges'),
+        btn('left', 'alignL', 'Align left edges'), btn('center', 'alignC', 'Center horizontally'), btn('right', 'alignR', 'Align right edges'),
         h('span', { class: 'align-sep' }),
-        btn('top', 'alignT', 'Align top edges'), btn('middle', 'alignM', 'Centre vertically'), btn('bottom', 'alignB', 'Align bottom edges'),
+        btn('top', 'alignT', 'Align top edges'), btn('middle', 'alignM', 'Center vertically'), btn('bottom', 'alignB', 'Align bottom edges'),
         many ? h('span', { class: 'align-sep' }) : null,
         many ? btn('', 'distH', 'Distribute horizontally — equal gaps (3 or more)', () => distribute('h')) : null,
         many ? btn('', 'distV', 'Distribute vertically — equal gaps (3 or more)', () => distribute('v')) : null),
       many ? h('div', { class: 'grid3', style: { marginTop: '8px' } }, ui.btn('Same width', null, () => match('w')), ui.btn('Same height', null, () => match('h')), ui.btn('Same size', null, () => match('wh'))) : null,
       many && to === 'key' ? h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, `Key field: “${keyF ? keyF.name : '—'}” stays put; Alt-click another selected field to change it.`) : null,
-      h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'Dragging snaps to other fields and the page centre — hold Alt to move freely. Arrow keys nudge (Shift = 10 pt).'));
+      h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'Dragging snaps to other fields and the page center — hold Alt to move freely. Arrow keys nudge (Shift = 10 pt).'));
   }
   function sortTabOrder() { change('tab order', () => L.state.pages.forEach(p => { if (p.fields) p.fields.sort((a, b) => Math.abs((b.r.y + b.r.h) - (a.r.y + a.r.h)) > 6 ? (b.r.y + b.r.h) - (a.r.y + a.r.h) : a.r.x - b.r.x); })); L.toast('Tab order now runs top to bottom, left to right', { kind: 'ok' }); }
   function exportData(kind) {
@@ -431,7 +484,8 @@
       if (e.key === 'Escape') { FS.sel = new Set(); FS.tool = 'select'; FS.sugg = null; L.setCursor(''); L.drawOverlay(); refresh(); return true; }
       if (s.length && /^Arrow/.test(e.key)) {
         const st = e.shiftKey ? 10 : 1, dx = e.key === 'ArrowLeft' ? -st : e.key === 'ArrowRight' ? st : 0, dy = e.key === 'ArrowUp' ? st : e.key === 'ArrowDown' ? -st : 0;
-        change('nudge field', () => s.forEach(f => { f.r = { ...f.r, x: f.r.x + dx, y: f.r.y + dy }; })); return true;
+        const ids = new Set(s.map(f => f.id)), all = [...s, ...fieldsOf(page()).filter(f => f.of && ids.has(f.of) && !ids.has(f.id))];
+        change('nudge', () => all.forEach(f => { f.r = { ...f.r, x: f.r.x + dx, y: f.r.y + dy }; })); return true;
       }
     },
     inspector() {
@@ -456,10 +510,14 @@
       return [head, modeSeg,
         h('div', { class: 'section', style: { paddingTop: '4px' } }, ui.btn('Start from a template…', 'template', () => L.openFormTemplates(), 'block')),
         ui.section('Add a field',
-          h('div', { class: 'toolgrid' }, [['select', 'Select', 'cursor'], ...Object.entries(F.KINDS).map(([k, d]) => [k, d.label, d.icon])].map(([k, label, icon]) =>
+          h('div', { class: 'toolgrid' }, [['select', 'Select', 'cursor'], ...Object.entries(F.KINDS).filter(([, d]) => !d.deco).map(([k, d]) => [k, d.label, d.icon])].map(([k, label, icon]) =>
             h('button', { class: 'tool' + (FS.tool === k ? ' on' : ''), title: label, onclick: () => { FS.tool = k; if (k === 'radio') FS.newGroup = true; L.setCursor(k === 'select' ? '' : 'crosshair'); L.renderInspector(); } }, L.icon(icon), label))),
           h('p', { class: 'muted tiny', style: { margin: '10px 0 0' } }, FS.tool === 'select' ? 'Click a field to set it up · drag to move · corner to resize · Shift-click or drag a box to pick several · Ctrl D duplicates below.'
-            : FS.tool === 'radio' ? 'Click to place each choice of one question. Pick the tool again to start a new question.' : 'Drag on the page to draw the field — or just click for a standard size. The name comes from the nearby label.')),
+            : FS.tool === 'radio' ? 'Click to place each choice of one question. Pick the tool again to start a new question.' : F.KINDS[FS.tool] && F.KINDS[FS.tool].deco ? 'Pick Select to go back to the fields.' : 'Drag on the page to draw the field — or just click for a standard size. The name comes from the nearby label.')),
+        ui.section('Add text & shapes',
+          h('div', { class: 'toolgrid' }, Object.entries(F.KINDS).filter(([, d]) => d.deco).map(([k, d]) =>
+            h('button', { class: 'tool' + (FS.tool === k ? ' on' : ''), title: d.label, onclick: () => { FS.tool = k; L.setCursor('crosshair'); L.renderInspector(); } }, L.icon(d.icon), d.label))),
+          h('p', { class: 'muted tiny', style: { margin: '10px 0 0' } }, F.KINDS[FS.tool] && F.KINDS[FS.tool].deco ? 'Click on the page — or drag to draw it the size you want.' : 'Headings, notes and labels, boxes around sections, lines — saved as part of the page, so every PDF reader shows them.')),
         ui.section('Make a flat form fillable',
           pageSugg ? h('div', { class: 'stack' },
             ui.callout(`<b>Found ${pageSugg.length} field${pageSugg.length > 1 ? 's' : ''}</b> — ${tally}. Purple boxes on the page; click one to leave it out.`, '', 'sparkles'),

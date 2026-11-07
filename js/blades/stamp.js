@@ -1,5 +1,5 @@
 /* Loeito - free and open-source PDF workbench. Copyright (C) 2026 Ahmed Bilal and contributors. SPDX-License-Identifier: AGPL-3.0-or-later (see LICENSE) */
-/* Stamp blade: page numbers (incl. Bates), header and footer with left / centre / right text, watermark —
+/* Stamp blade: page numbers (incl. Bates), header and footer with left / center / right text, watermark —
    each on all, odd, even or chosen pages, skipping the first or last pages. Previewed live, written on save. */
 (() => {
   const L = window.Loeito, h = L.h, ui = L.ui;
@@ -158,7 +158,7 @@
     return h('div', { class: 'token-chips' }, TOKENS.map(([t, tip]) => h('button', {
       class: 'chip', title: tip, onmousedown: e => e.preventDefault(),
       onclick: () => {
-        const inp = lastInput && lastInput.isConnected ? lastInput : null; if (!inp) return L.toast('Click into Left, Centre or Right first', { icon: 'info' });
+        const inp = lastInput && lastInput.isConnected ? lastInput : null; if (!inp) return L.toast('Click into Left, Center or Right first', { icon: 'info' });
         const a = inp.selectionStart ?? inp.value.length, b = inp.selectionEnd ?? a;
         inp.value = inp.value.slice(0, a) + t + inp.value.slice(b); inp.dispatchEvent(new Event('change'));
       },
@@ -168,7 +168,7 @@
     const slot = (key, label) => h('label', { class: 'field' }, h('span', null, label),
       h('input', { class: 'input', value: c[key] || '', onfocus: e => { lastInput = e.target; }, onchange: e => edit(kind, { [key]: e.target.value }) }));
     return [
-      h('div', { class: 'grid3 slots' }, slot('left', 'Left'), slot('center', 'Centre'), slot('right', 'Right')),
+      h('div', { class: 'grid3 slots' }, slot('left', 'Left'), slot('center', 'Center'), slot('right', 'Right')),
       tokenChips(),
       fontRow(kind, c),
       h('div', { class: 'row between' },
@@ -205,7 +205,7 @@
     const t = L.task('Saving documents'); let n = 0, lastPath = null;
     try {
       for (const d of docs) {
-        if (t.cancelled) break;
+        if (t.canceled) break;
         t.set(n / docs.length, d.state.name);
         const bytes = await L.buildPdf({ state: d.state, pages: d.state.pages, ocrLayer: true });
         if (folder) lastPath = (await L.files.writeFree(folder, nameFor(d), 'pdf', bytes)).path; else L.download(bytes, nameFor(d) + '.pdf', 'application/pdf');

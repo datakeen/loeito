@@ -92,7 +92,7 @@
           h('div', { class: 'stack' },
             ui.btn('Copy text of this page', 'copy', async () => L.copyText(await L.pageText(L.page())), 'block'),
             ui.btn('Export all text (.txt)', 'download', async () => {
-              const t = L.task('Collecting text', { cancellable: false }), s = L.state;
+              const t = L.task('Collecting text', { cancelable: false }), s = L.state;
               try { const text = await L.documentText(s.pages, s); await L.saveFile(new Blob([text], { type: 'text/plain' }), L.safeName(s.name) + '.txt', 'text/plain', 'txt'); }
               finally { t.done(); }
             }, 'block'),

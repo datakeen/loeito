@@ -20,24 +20,24 @@
   L.outputSummary = () => {
     const o = L.output, bits = [];
     if (o.preset !== 'none') bits.push(PRESETS[o.preset].label.toLowerCase() + ' compression');
-    if (o.gray) bits.push('greyscale');
+    if (o.gray) bits.push('grayscale');
     if (o.paper !== 'original') bits.push(o.paper === 'custom' ? `${o.custom[0]}×${o.custom[1]} mm` : o.paper);
     return bits.join(' · ');
   };
   const R = { result: null, running: false, img: { fmt: 'png', dpi: 150, scope: 'all' } };
 
-  async function analyse(save) {
+  async function analyze(save) {
     if (R.running) return;
     R.running = true; L.renderInspector();
-    const t = L.task(save ? 'Optimising' : 'Measuring'), S = L.state;
+    const t = L.task(save ? 'Optimizing' : 'Measuring'), S = L.state;
     try {
       const { compress, pageSize } = L.outputOptions();
-      const built = await L.buildPdf({ state: S, pageSize, task: { get cancelled() { return t.cancelled; }, set: (f, s) => t.set(f * 0.5, s) } });
+      const built = await L.buildPdf({ state: S, pageSize, task: { get canceled() { return t.canceled; }, set: (f, s) => t.set(f * 0.5, s) } });
       let bytes = built, stats = null;
       if (compress) { const r = await L.compressPdf(built, compress, t); bytes = r.bytes; stats = r.stats; }
       R.result = { size: bytes.length, before: S.fileSize, stats, key: JSON.stringify(L.output) };
       if (save) await L.saveFile(bytes, L.safeName(S.name) + '.pdf', 'application/pdf', 'pdf');
-    } catch (e) { if (e.message !== 'Cancelled') L.error('Optimisation failed', e); }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Optimization failed', e); }
     finally { t.done(); R.running = false; L.renderInspector(); }
   }
   async function exportImages() {
@@ -45,17 +45,17 @@
     const t = L.task('Exporting images'); const files = [];
     try {
       for (let i = 0; i < pages.length; i++) {
-        if (t.cancelled) throw new Error('Cancelled');
+        if (t.canceled) throw new Error('Canceled');
         t.set(i / pages.length, `Page ${i + 1} of ${pages.length}`);
         const blob = await L.renderPageImage(pages[i], R.img.dpi, R.img.fmt, 0.9, S);
         files.push({ name: `${L.safeName(S.name)} — page ${String(L.pageIndex(pages[i].id, S) + 1).padStart(3, '0')}.${R.img.fmt}`, data: blob, mime: R.img.fmt === 'jpg' ? 'image/jpeg' : 'image/png' });
       }
       await L.zipAndSave(files, `${L.safeName(S.name)} — images.zip`);
-    } catch (e) { if (e.message !== 'Cancelled') L.error('Image export failed', e); } finally { t.done(); }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Image export failed', e); } finally { t.done(); }
   }
 
   /* ——— What's using space ——— */
-  const CAT = [['images', 'Images', '#0a84ff'], ['fonts', 'Fonts', '#bf5af2'], ['content', 'Page drawings & text', '#30a46c'], ['meta', 'Metadata', '#ff9f0a'], ['attachments', 'Attached files', '#ff375f'], ['structure', 'File structure', '#8e8e93'], ['other', 'Other (colour profiles, maps…)', '#c7c7cc']];
+  const CAT = [['images', 'Images', '#0a84ff'], ['fonts', 'Fonts', '#bf5af2'], ['content', 'Page drawings & text', '#30a46c'], ['meta', 'Metadata', '#ff9f0a'], ['attachments', 'Attached files', '#ff375f'], ['structure', 'File structure', '#8e8e93'], ['other', 'Other (color profiles, maps…)', '#c7c7cc']];
   async function audit() {
     R.auditing = true; L.renderInspector();
     try { R.audit = await L.spaceAudit(); R.audit.doc = L.doc; } catch (e) { L.error('Couldn’t look inside the file', e); }
@@ -100,7 +100,7 @@
         ui.section('File size',
           h('div', { class: 'stack' }, Object.entries(PRESETS).map(([k, p]) => h('button', { class: 'name-chip' + (o.preset === k ? ' on' : ''), onclick: () => set('preset', k) }, h('b', null, p.label), h('span', null, p.sub)))),
           h('div', { class: 'stack', style: { marginTop: '12px' } },
-            ui.check('Convert colour images to greyscale', o.gray, v => set('gray', v)),
+            ui.check('Convert color images to grayscale', o.gray, v => set('gray', v)),
             ui.check('Remove hidden metadata', o.strip, v => set('strip', v)))),
         ui.section('Paper size',
           h('div', { class: 'grid2' },
@@ -109,15 +109,15 @@
           o.paper === 'custom' ? h('div', { class: 'grid2', style: { marginTop: '8px' } },
             ui.field('Width (mm)', ui.num(o.custom[0], v => { o.custom[0] = v || 210; })), ui.field('Height (mm)', ui.num(o.custom[1], v => { o.custom[1] = v || 297; }))) : null,
           o.paper !== 'original' ? h('div', { style: { marginTop: '8px' } }, ui.field('Margin (mm)', ui.num(o.margin, v => { o.margin = Math.max(0, v || 0); }, { min: 0 }))) : null,
-          h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'Every page is scaled to fit the new sheet, centred, without distortion.')),
+          h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'Every page is scaled to fit the new sheet, centered, without distortion.')),
         ui.section('Result',
           R.result && !stale ? h('div', { class: 'grid2' },
             h('div', { class: 'stat' }, h('span', { class: 'v' }, L.fmtBytes(R.result.size)), h('span', { class: 'k' }, 'new size')),
             h('div', { class: 'stat' }, h('span', { class: 'v', style: { color: saved > 0.02 ? 'var(--ok)' : '' } }, saved > 0 ? `−${Math.round(saved * 100)}%` : '±0%'), h('span', { class: 'k' }, `from ${L.fmtBytes(R.result.before)}`))) : null,
           R.result && !stale && R.result.stats && R.result.stats.images && !R.result.stats.recompressed ? h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'The images in this file are already compactly encoded (e.g. black-and-white fax compression), so there’s little left to squeeze.') : null,
           h('div', { class: 'grid2', style: { marginTop: R.result && !stale ? '12px' : 0 } },
-            ui.btn(R.running ? 'Working…' : 'Measure', 'search', () => analyse(false)),
-            ui.btn('Save copy', 'save', () => analyse(true), 'primary')),
+            ui.btn(R.running ? 'Working…' : 'Measure', 'search', () => analyze(false)),
+            ui.btn('Save copy', 'save', () => analyze(true), 'primary')),
           h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'These settings are also used by the main Save button.')),
         ui.section('Save pages as images',
           h('div', { class: 'grid3' },

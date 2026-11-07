@@ -15,7 +15,16 @@
     list: { label: 'List', icon: 'list', size: [150, 60] },
     sign: { label: 'Signature', icon: 'signature', size: [170, 42] },
     button: { label: 'Button', icon: 'cursor', size: [90, 22] },
+    // text and shapes on the page around the fields (saved as normal page content, so every reader shows them)
+    label: { label: 'Label', icon: 'label', size: [120, 13], deco: true },
+    rect: { label: 'Box', icon: 'square', size: [180, 50], deco: true },
+    ellipse: { label: 'Oval', icon: 'circle', size: [60, 40], deco: true },
+    line: { label: 'Line', icon: 'line', size: [180, 6], deco: true },
   };
+  F.isDeco = f => !!(F.KINDS[f.kind] && F.KINDS[f.kind].deco);
+  // a label that belongs to a field shows a red * by itself when that field is required
+  F.ownerOf = (f, S = L.state) => { if (!f.of) return null; for (const p of S.pages) for (const g of p.fields || []) if (g.id === f.of) return g; return null; };
+  F.labelStar = (f, S = L.state) => { const o = F.ownerOf(f, S); return !!(o && o.required); };
   F.FORMATS = [
     { value: 'none', label: 'Any text' }, { value: 'number', label: 'Number' }, { value: 'currency', label: 'Money' },
     { value: 'percent', label: 'Percent' }, { value: 'date', label: 'Date' }, { value: 'email', label: 'Email' },
@@ -23,12 +32,14 @@
   ];
   F.numeric = f => ['number', 'currency', 'percent'].includes(f.format);
   F.make = (kind, r, extra = {}) => ({
+    ...(F.KINDS[kind] && F.KINDS[kind].deco ? { text: kind === 'label' ? 'Label' : '', color: kind === 'label' ? '#6e6e73' : '#8e8e93', fill: '', bold: false, lineW: 1, radius: 0, of: null } : {}),
+    textColor: '',
     id: L.uid('f'), kind, name: '', r, value: kind === 'check' ? false : '', tip: '', required: false, readOnly: false,
     fontSize: 0, align: 'left', format: 'none', decimals: 2, currency: 'Rs', dateFmt: 'dd/mm/yyyy', mask: '', maxLen: 0, comb: false,
     options: kind === 'dropdown' || kind === 'list' ? ['Option 1', 'Option 2', 'Option 3'] : [], editable: false, multi: false,
     group: '', exportValue: '', calc: null, action: 'reset', caption: kind === 'button' ? 'Reset form' : '', style: 'box', ...extra,
   });
-  F.all = (S = L.state) => S.pages.flatMap((p, pi) => (p.fields || []).map(f => ({ f, page: p, pi })));
+  F.all = (S = L.state) => S.pages.flatMap((p, pi) => (p.fields || []).filter(f => !F.isDeco(f)).map(f => ({ f, page: p, pi }))); // real fields only
   F.names = (S = L.state) => new Set(F.all(S).map(x => x.f.name));
   F.uniqueName = (base, S = L.state, except) => {
     base = String(base || 'Field').replace(/[.\[\]]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60) || 'Field';
@@ -109,7 +120,23 @@
 
   /* ——— painting ——— */
   const BLUE = '#0a84ff';
+  F.decoSvg = (f, view, { design = false, selected = false } = {}) => {
+    const s = L.s, b = view.rectToScreen(f.r), g = s('g', { 'data-fid': f.id || '' }), k = view.scale;
+    const lw = Math.max(0.6, (f.lineW ?? 1) * k), col = f.color || '#8e8e93';
+    if (f.kind === 'label') {
+      const fs = (f.fontSize || 9) * k, x = f.align === 'center' ? b.x + b.w / 2 : f.align === 'right' ? b.x + b.w : b.x;
+      const t = s('text', { x, y: b.y + b.h * 0.76, 'font-size': fs, fill: col, 'font-weight': f.bold ? 700 : 400, 'font-family': 'Helvetica, Arial, sans-serif', 'text-anchor': f.align === 'center' ? 'middle' : f.align === 'right' ? 'end' : 'start' }, f.text || '');
+      if (F.labelStar(f)) t.append(s('tspan', { fill: '#e5484d', 'font-weight': 700 }, ' *'));
+      g.append(t);
+    } else if (f.kind === 'rect') g.append(s('rect', { x: b.x, y: b.y, width: b.w, height: b.h, rx: (f.radius || 0) * k, fill: f.fill || 'none', stroke: lw ? col : 'none', 'stroke-width': lw }));
+    else if (f.kind === 'ellipse') g.append(s('ellipse', { cx: b.x + b.w / 2, cy: b.y + b.h / 2, rx: b.w / 2, ry: b.h / 2, fill: f.fill || 'none', stroke: col, 'stroke-width': lw }));
+    else if (f.kind === 'line') g.append(b.w >= b.h ? s('line', { x1: b.x, x2: b.x + b.w, y1: b.y + b.h / 2, y2: b.y + b.h / 2, stroke: col, 'stroke-width': lw })
+      : s('line', { x1: b.x + b.w / 2, x2: b.x + b.w / 2, y1: b.y, y2: b.y + b.h, stroke: col, 'stroke-width': lw }));
+    if (design && (selected || (f.kind === 'label' && !f.text))) g.append(s('rect', { x: b.x - 1.5, y: b.y - 1.5, width: b.w + 3, height: b.h + 3, rx: 2, fill: 'transparent', stroke: selected ? BLUE : 'rgba(142,142,147,.5)', 'stroke-width': selected ? 1.4 : 0.8, 'stroke-dasharray': selected ? '' : '3 3' }));
+    return g;
+  };
   F.toSvg = (f, view, { design = false, selected = false, suggestion = false } = {}) => {
+    if (F.isDeco(f)) return F.decoSvg(f, view, { design, selected });
     const s = L.s, b = view.rectToScreen(f.r), g = s('g', { 'data-fid': f.id || '' });
     const stroke = suggestion ? '#8e4ec6' : selected ? BLUE : 'rgba(10,132,255,.55)';
     const fill = suggestion ? 'rgba(142,78,198,.10)' : f.style === 'plain' && !design ? 'rgba(10,132,255,.05)' : 'rgba(10,132,255,.09)';
@@ -125,13 +152,14 @@
       const txt = F.display(f);
       if (txt) {
         const lines = f.kind === 'para' || f.kind === 'list' ? String(txt).split('\n') : [String(txt)];
-        const t = s('text', { 'font-size': fs, fill: '#1d1d1f', 'font-family': 'Helvetica, Arial, sans-serif' });
+        const t = s('text', { 'font-size': fs, fill: f.textColor || '#1d1d1f', 'font-family': 'Helvetica, Arial, sans-serif' });
         lines.slice(0, Math.max(1, Math.floor(b.h / (fs * 1.2)))).forEach((ln, i) => t.append(s('tspan', { x: f.align === 'center' ? b.x + b.w / 2 : f.align === 'right' ? b.x + b.w - 3 : b.x + 3, y: (lines.length > 1 ? b.y + fs * (1 + i * 1.2) : b.y + b.h / 2 + fs * 0.35), 'text-anchor': f.align === 'center' ? 'middle' : f.align === 'right' ? 'end' : 'start' }, ln)));
         g.append(t);
       }
       if (f.kind === 'dropdown') g.append(s('path', { d: `M${b.x + b.w - 11} ${b.y + b.h / 2 - 2}l4 4 4-4`, fill: 'none', stroke: BLUE, 'stroke-width': 1.3 }));
     }
-    if (design && (f.name || suggestion)) {
+    const labeled = design && !suggestion && f.id && ((L.page() && L.page().fields) || []).some(x => x.of === f.id); // its own label already says it
+    if (design && (f.name || suggestion) && !labeled) {
       const label = (f.required ? '* ' : '') + (f.name || '') + (f.calc ? ' = ' + f.calc.op.toLowerCase() : '');
       const lw = Math.min(260, label.length * 5.6 + 8);
       g.append(s('rect', { x: b.x, y: b.y - 13, width: lw, height: 12, rx: 3, fill: suggestion ? '#8e4ec6' : selected ? BLUE : 'rgba(10,132,255,.75)' }));
@@ -141,9 +169,16 @@
   };
   // canvas painter (thumbnails, reader, images): just the filled-in values and light boxes
   F.paint = (ctx, page, view) => {
-    for (const f of page.fields || []) {
+    for (const f of [...(page.fields || [])].sort((a, b) => F.isDeco(b) - F.isDeco(a))) {
       const b = view.rectToScreen(f.r);
       ctx.save();
+      if (F.isDeco(f)) {
+        const k = view.scale; ctx.strokeStyle = ctx.fillStyle = f.color || '#8e8e93'; ctx.lineWidth = Math.max(0.5, (f.lineW ?? 1) * k);
+        if (f.kind === 'label') { const fs = (f.fontSize || 9) * k; ctx.font = `${f.bold ? 'bold ' : ''}${fs}px Helvetica, Arial, sans-serif`; ctx.textAlign = f.align || 'left'; ctx.fillText(f.text || '', f.align === 'center' ? b.x + b.w / 2 : f.align === 'right' ? b.x + b.w : b.x, b.y + b.h * 0.76); }
+        else if (f.kind === 'line') { ctx.beginPath(); if (b.w >= b.h) { ctx.moveTo(b.x, b.y + b.h / 2); ctx.lineTo(b.x + b.w, b.y + b.h / 2); } else { ctx.moveTo(b.x + b.w / 2, b.y); ctx.lineTo(b.x + b.w / 2, b.y + b.h); } ctx.stroke(); }
+        else { ctx.beginPath(); if (f.kind === 'ellipse') ctx.ellipse(b.x + b.w / 2, b.y + b.h / 2, b.w / 2, b.h / 2, 0, 0, Math.PI * 2); else ctx.rect(b.x, b.y, b.w, b.h); if (f.fill) { ctx.fillStyle = f.fill; ctx.fill(); } if (f.lineW !== 0) ctx.stroke(); }
+        ctx.restore(); continue;
+      }
       ctx.fillStyle = 'rgba(10,132,255,.07)'; ctx.strokeStyle = 'rgba(10,132,255,.35)'; ctx.lineWidth = 0.75;
       if (f.kind === 'radio') { ctx.beginPath(); ctx.ellipse(b.x + b.w / 2, b.y + b.h / 2, b.w / 2, b.h / 2, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); if (f.value && f.value === f.exportValue) { ctx.fillStyle = '#1d1d1f'; ctx.beginPath(); ctx.arc(b.x + b.w / 2, b.y + b.h / 2, Math.min(b.w, b.h) * 0.25, 0, Math.PI * 2); ctx.fill(); } }
       else {
@@ -203,7 +238,8 @@
   // out: pdf-lib document; items: [{ pg (pdf-lib page), page (Loeito page), rotation }]
   F.build = async (out, items, { flatten = false, script = '', S = L.state } = {}) => {
     const P = PDFLib, { PDFName, PDFHexString, PDFString, rgb, degrees, TextAlignment } = P, ctx = out.context;
-    const form = out.getForm(), helv = await out.embedFont(P.StandardFonts.Helvetica);
+    const form = out.getForm(), helv = await out.embedFont(P.StandardFonts.Helvetica), helvB = await out.embedFont(P.StandardFonts.HelveticaBold);
+    const hex = c => rgb(...L.hexToRgb(c));
     const used = new Set(), radios = new Map(), calcs = [], hasSig = { v: false };
     const unique = n => { let base = String(n || 'Field').replace(/\./g, '_').trim() || 'Field', name = base, k = 2; while (used.has(name)) name = `${base} ${k++}`; used.add(name); return name; };
     const js = code => ctx.obj({ Type: 'Action', S: 'JavaScript', JS: PDFHexString.fromText(code) });
@@ -214,7 +250,25 @@
     const buttons = [];
     for (const { pg, page, rotation } of items) {
       for (const f of page.fields || []) {
-        const rect = { x: f.r.x, y: f.r.y, width: f.r.w, height: f.r.h, rotate: degrees(rotation || 0), font: helv, textColor: rgb(0.07, 0.07, 0.09), ...look(f) };
+        if (F.isDeco(f)) { // labels and shapes: ordinary page content
+          const r = f.r, col = hex(f.color || '#8e8e93'), lw = f.lineW ?? 1;
+          if (f.kind === 'label') {
+            const font = f.bold ? helvB : helv, size = f.fontSize || 9, s1 = L.winAnsi(f.text || ''), star = F.labelStar(f, S);
+            const w = font.widthOfTextAtSize(s1, size) + (star ? helvB.widthOfTextAtSize(' *', size) : 0);
+            const x = f.align === 'center' ? r.x + r.w / 2 - w / 2 : f.align === 'right' ? r.x + r.w - w : r.x, by = r.y + r.h * 0.24;
+            if (s1) pg.drawText(s1, { x, y: by, size, font, color: col });
+            if (star) pg.drawText(' *', { x: x + font.widthOfTextAtSize(s1, size), y: by, size, font: helvB, color: rgb(0.9, 0.28, 0.3) });
+          } else if (f.kind === 'line') {
+            const hz = r.w >= r.h;
+            pg.drawLine({ start: hz ? { x: r.x, y: r.y + r.h / 2 } : { x: r.x + r.w / 2, y: r.y }, end: hz ? { x: r.x + r.w, y: r.y + r.h / 2 } : { x: r.x + r.w / 2, y: r.y + r.h }, thickness: Math.max(0.25, lw), color: col });
+          } else if (f.kind === 'ellipse') {
+            pg.drawEllipse({ x: r.x + r.w / 2, y: r.y + r.h / 2, xScale: r.w / 2, yScale: r.h / 2, ...(f.fill ? { color: hex(f.fill) } : {}), ...(lw ? { borderColor: col, borderWidth: lw } : {}) });
+          } else {
+            pg.drawRectangle({ x: r.x, y: r.y, width: r.w, height: r.h, ...(f.fill ? { color: hex(f.fill) } : {}), ...(lw ? { borderColor: col, borderWidth: lw } : {}) });
+          }
+          continue;
+        }
+        const rect = { x: f.r.x, y: f.r.y, width: f.r.w, height: f.r.h, rotate: degrees(rotation || 0), font: helv, textColor: f.textColor ? hex(f.textColor) : rgb(0.07, 0.07, 0.09), ...look(f) };
         const val = v => L.winAnsi(String(v ?? ''));
         let field = null;
         if (f.kind === 'text' || f.kind === 'para') {
@@ -313,7 +367,7 @@
       form.acroForm.dict.set(PDFName.of('CO'), ctx.obj(order));
     }
     const q = s => JSON.stringify(s);
-    // buttons: clear, print, e-mail the filled form, open a web page, go to a page, show / hide fields, or an own script
+    // buttons: clear, print, email the filled form, open a web page, go to a page, show / hide fields, or an own script
     for (const { f, field } of buttons) {
       let act;
       if (f.action === 'print') act = js('print({ bUI: true });');
@@ -341,7 +395,7 @@
       const val = button ? 'event.target.value' : 'event.value';
       const cond = r => { const v = q(String(r.value ?? '')); return r.op === 'checked' ? `(v != "Off" && v != "")` : r.op === 'unchecked' ? `(v == "Off" || v == "")` : r.op === 'filled' ? `(String(v) != "")` : r.op === 'empty' ? `(String(v) == "")` : r.op === 'not' ? `(String(v) != ${v})` : `(String(v) == ${v})`; };
       const code = `var v = ${val};\n` + deps.map(({ dep, rule }) => `var g = this.getField(${q(written.get(dep).name)}); if (g) g.display = ${cond(rule)} ? display.visible : display.hidden;`).join('\n');
-      if (button) for (const wd of c.widgets) { const aa = wd.get(PDFName.of('AA')) || ctx.obj({}); aa.set(PDFName.of('U'), js(code)); wd.set(PDFName.of('AA'), aa); } // a tick or choice reacts on click
+      if (button) for (const wd of c.widgets) { const aa = wd.get(PDFName.of('AA')) || ctx.obj({}); aa.set(PDFName.of('U'), js(code)); wd.set(PDFName.of('AA'), aa); } // a check or choice reacts on click
       else { // a text or choice field reacts when its new value is committed (Validate)
         const fld = form.getField(c.name).acroField.dict, aa = fld.get(PDFName.of('AA')) || ctx.obj({});
         const prev = aa.get(PDFName.of('V')), prevJs = prev ? ctx.lookup(prev)?.get?.(PDFName.of('JS'))?.decodeText?.() || '' : '';

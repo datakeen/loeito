@@ -129,7 +129,7 @@
     for (const [id, set] of want) { const idxs = [...set], cps = await out.copyPages(await load(id), idxs); idxs.forEach((ix, k) => batch.set(`${id}:${ix}`, cps[k])); }
     for (let i = 0; i < pages.length; i++) {
       const page = pages[i];
-      if (opts.task) { if (opts.task.cancelled) throw new Error('Cancelled'); opts.task.set(i / pages.length, `Page ${i + 1} of ${pages.length}`); }
+      if (opts.task) { if (opts.task.canceled) throw new Error('Canceled'); opts.task.set(i / pages.length, `Page ${i + 1} of ${pages.length}`); }
       const idx = L.pageIndex(page.id, S);
       if (flat(page)) { await rasterPage(out, page, S, 200, opts.ocrLayer !== false ? stampFonts.reg : null); continue; } // burn redactions in for real
       const key = `${page.src}:${page.index}`;
@@ -371,7 +371,7 @@
         else if (sub === '/XML' || type === '/Metadata') cats.meta += size;
         else if (type === '/EmbeddedFile') cats.attachments += size;
         else if (type === '/XRef' || type === '/ObjStm') cats.structure += size;
-        else cats.other += size; // colour profiles, character maps, thumbnails…
+        else cats.other += size; // color profiles, character maps, thumbnails…
       }
     }
     // what the counting can't see (cross-reference tables, compression of object streams) is file structure too

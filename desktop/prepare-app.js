@@ -19,7 +19,7 @@ const FILES = [
   ['https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js', 'jszip/jszip.min.js'],
   ['https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', 'sheetjs/xlsx.full.min.js'],
   ['https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js', 'sheetjs/xlsx.bundle.js'],
-  // licence texts that travel with the copies
+  // license texts that travel with the copies
   ['https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/LICENSE', 'pdfjs/LICENSE'],
   ['https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/LICENSE.md', 'pdf-lib/LICENSE.md'],
   ['https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/LICENSE.md', 'tesseract/LICENSE.md'],

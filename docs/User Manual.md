@@ -29,7 +29,7 @@ Loeito asks one short question:
 
 - **Save to Original** is the default, so pressing **Enter** saves.
 - **Save a Copy Instead…** opens Save As.
-- Tick *Don’t ask again for this document* if you’re saving often.
+- Check *Don’t ask again for this document* if you’re saving often.
 
 Loeito keeps the previous version as a **safety copy** for 30 days. You can find it under *Safety copies* in the Save As sheet. If the file is open in another program (for example Acrobat), Loeito tells you and offers to save a copy.
 
@@ -142,7 +142,7 @@ These sit on the page bar at the bottom:
 | Text (I-beam) | T | Select text anywhere, even while Edit or Forms is open. |
 | Hand | H | Drag to move the page: open hand, closed while dragging. Hold **Space** for a moment of Hand. |
 
-Dragging the grey area around the page always moves it.
+Dragging the gray area around the page always moves it.
 
 When you select text, a small bar offers **Copy**, **Highlight** (a real highlight saved in the PDF), **Find** (every place it appears) and **Speak**.
 
@@ -163,7 +163,7 @@ The **Read** tool scrolls through the whole document. You get themes (Paper, Sep
 | **Optimize** | What’s using space; smaller files; paper sizes; page images |
 | **Stamp** | Page numbers, Bates numbers, headers, footers, watermarks |
 | **Covers** | Front covers and last pages for books, reports and theses |
-| **Forms** | Fillable forms: templates, drawing, finding blanks automatically, behaviour, fill in |
+| **Forms** | Fillable forms: templates, drawing, finding blanks automatically, behavior, fill in |
 | **Protect** | Find & black out private details; remove hidden information |
 
 ## Stamp: numbers, headers and footers on many pages
@@ -174,9 +174,9 @@ Each stamp has a switch. Every change is previewed on the page and written when 
   - the position (six spots);
   - the first number;
   - *Count from*: the first numbered page or the very first page;
-  - font (Sans / Serif / Mono, bold), size and colour.
-- **Header** and **Footer.** Type text into Left, Centre and Right. The chips insert live fields: {name}, {title}, {author}, {date}, {n} page number, {N} last number, {page}, {pages}. You can add a thin line under the header or above the footer and set the distance from the edge.
-- **Watermark.** Text, size, angle, strength and colour.
+  - font (Sans / Serif / Mono, bold), size and color.
+- **Header** and **Footer.** Type text into Left, Center and Right. The chips insert live fields: {name}, {title}, {author}, {date}, {n} page number, {N} last number, {page}, {pages}. You can add a thin line under the header or above the footer and set the distance from the edge.
+- **Watermark.** Text, size, angle, strength and color.
 - **On pages** (every stamp has its own rule):
   - which pages: All, Odd, Even, or Choose (e.g. `3-10, 15`);
   - **Skip first** and **Skip last**, e.g. no number on the cover and the contents pages;
@@ -193,7 +193,7 @@ The panel shows which pages are affected, e.g. “137 of 140 · 3–139”.
 3. Pick a design:
    - Front covers: Classic, Swiss, Nordic, Midnight, Thesis, Report, Bold or Picture.
    - Last pages: Back cover, Colophon, About the author, Notes or The end.
-4. Choose an accent colour, a paper size (*Same as this document* keeps covers upright) and, if you like, a picture or logo.
+4. Choose an accent color, a paper size (*Same as this document* keeps covers upright) and, if you like, a picture or logo.
 5. **Add as first page** / **Add as last page**, or replace the existing one. Undo works as always.
 
 Covers are real PDF text and shapes, so they stay sharp and searchable.
@@ -218,23 +218,33 @@ Forms → **Start from a template…** (also on the welcome screen). There are t
 - Registration, Job Application, Leave Application, Expense Claim, Invoice;
 - Purchase Requisition, Feedback Survey, Consent & Release, Weekly Timesheet, Service / IT Request.
 
-Type your organisation’s name, pick the paper and an accent colour, then **Create form**. The form opens in a new tab with its fields, formats and totals ready. The Invoice works out Qty × Rate per line, the subtotal and the total. Change anything you like.
+Type your organization’s name, pick the paper and an accent color, then **Create form**. The form opens in a new tab with its fields, formats and totals ready. The Invoice works out Qty × Rate per line, the subtotal and the total. Change anything you like.
 
 ### Make or convert a form
 - **Draw fields:** text, paragraph, checkbox, choice, dropdown, list, signature, button. Click for a standard size or drag to draw. The name comes from the nearby label.
 - **Find fields** turns blanks in a flat PDF into fields: lines, `____`, ☐ boxes, empty table cells and “Label:” gaps. It works on Word, Excel and scanned forms too. Run Make Searchable on a scan first.
 - **Settings in plain words:** required, help text, kind of answer (number, money, percent, date, email, phone, CNIC, pattern), character boxes and automatic totals.
 
-### Arrange
+### Labels, boxes and lines
+Everything around the fields is made in Forms too. Under **Add text & shapes** pick **Label**, **Box**, **Oval** or **Line**, then click on the page (or drag to set the size).
+
+- **Label:** type the text, then choose size, bold, alignment and color.
+- **A field's own label:** select a field and click **Add label**. The label moves with the field (mouse and arrow keys), is deleted with it, and shows a **red \*** by itself when the field is **Required**. Switch Required on or off and the star follows.
+- **Box, Oval, Line:** line color, thickness, fill and (for boxes) rounded corners. Draw a box around a group of fields to make a section. Shapes always sit behind the fields, and a click on a field always picks the field.
+- In the templates, every label, heading and line is one of these, so you can edit, recolor, move or delete any of them.
+- They are saved as ordinary page content, so every PDF reader shows them.
+
+**Text color of answers:** select a text field and pick a **Text color**.
+
 Select one or more fields. **Arrange** aligns them:
 
 - **Align to:** *Selection* (to each other), *Key field* (one field stays put; it has a thick outline, and Alt-click picks another) or *Page*.
-- Align left, centre, right, top, middle or bottom; distribute with equal gaps; make them the same width, height or size.
-- While you drag, fields **snap** to other fields and to the page centre (red guide lines). Hold **Alt** to move freely. The arrow keys nudge by 1 pt (Shift = 10 pt).
+- Align left, center, right, top, middle or bottom; distribute with equal gaps; make them the same width, height or size.
+- While you drag, fields **snap** to other fields and to the page center (red guide lines). Hold **Alt** to move freely. The arrow keys nudge by 1 pt (Shift = 10 pt).
 
-### Behaviour
-- **Buttons:** clear the form, print, **e-mail the filled form**, open a web page, go to a page, show/hide fields, or run your own script.
-- **Show only when…:** a field appears only when another one has a certain answer. For example, show “Other details” only when “Other” is chosen, or “Supervisor’s phone” only when a box is ticked. Conditional fields carry a small blue *if* badge.
+### Behavior
+- **Buttons:** clear the form, print, **email the filled form**, open a web page, go to a page, show/hide fields, or run your own script.
+- **Show only when…:** a field appears only when another one has a certain answer. For example, show “Other details” only when “Other” is chosen, or “Supervisor’s phone” only when a box is checked. Conditional fields carry a small blue *if* badge.
 - **Scripts (for experts):** Format, Keystroke, Validate and Calculate scripts per field, plus a document script. These are Acrobat JavaScript, run by Acrobat, Foxit and PDF-XChange, but not by browsers or phone apps (see below).
 
 ### Dates
@@ -265,7 +275,7 @@ So never make a form depend on a script alone. Loeito's own totals, formats and 
 ```js
 event.value = Number(this.getField("A").value) + Number(this.getField("B").value) + Number(this.getField("C").value);
 ```
-**Show a field only when a box is ticked** (Calculate script of the hidden field):
+**Show a field only when a box is checked** (Calculate script of the hidden field):
 ```js
 event.target.display = this.getField("Has car").value !== "Off" ? display.visible : display.hidden;
 ```
@@ -288,13 +298,13 @@ function fullName() { return this.getField("First").value + " " + this.getField(
 Test scripted forms in Acrobat Reader or Foxit before you send them.
 
 ### Fill in and save
-**Fill in** lets you try the form exactly as people will: CNIC dashes appear by themselves, wrong e-mails are flagged, totals update and conditional fields appear. Answers can be saved and loaded as CSV or JSON. When saving, keep the form fillable or flatten the answers into the page.
+**Fill in** lets you try the form exactly as people will: CNIC dashes appear by themselves, wrong emails are flagged, totals update and conditional fields appear. Answers can be saved and loaded as CSV or JSON. When saving, keep the form fillable or flatten the answers into the page.
 
 ## Protect: share without leaking
 
 ### Find & black out
-1. Type names, numbers or phrases (one per line), and/or pick kinds of information: **CNIC numbers, phone numbers, e-mail addresses, bank accounts & IBAN, dates, money amounts**.
-2. **Find.** Every match is outlined in red and listed. Untick any you want to keep, and click a match to see its page.
+1. Type names, numbers or phrases (one per line), and/or pick kinds of information: **CNIC numbers, phone numbers, email addresses, bank accounts & IBAN, dates, money amounts**.
+2. **Find.** Every match is outlined in red and listed. Uncheck any you want to keep, and click a match to see its page.
 3. **Black out.** The boxes can be changed or removed in Edit until you save.
 
 When you save, pages with black boxes become pictures, so the covered text is truly gone. The words you didn’t black out stay searchable as invisible text.
@@ -327,7 +337,7 @@ Each row says whether it is kept. Switch items on to remove them every time this
 - attached files;
 - file structure.
 
-It also lists the largest images (pixels, compression, colour) and the embedded fonts, with a suggestion on what would help most. Then pick *Original, Tidy, Balanced* or *Smallest*, greyscale or metadata removal, and a paper size. The main Save uses these settings too.
+It also lists the largest images (pixels, compression, color) and the embedded fonts, with a suggestion on what would help most. Then pick *Original, Tidy, Balanced* or *Smallest*, grayscale or metadata removal, and a paper size. The main Save uses these settings too.
 
 ## Other tools in brief
 
@@ -337,7 +347,7 @@ It also lists the largest images (pixels, compression, colour) and the embedded 
   2. Place two or more reference points.
   3. Trace points, lines and areas.
   4. Export to Shapefile, GeoJSON, KML, GPX, DXF, CSV/WKT or Delft3D (.ldb land boundary, .pol, .pli, .xyz, .xyn).
-- **Make Searchable:** OCR in English and other Latin-script languages; Urdu and Arabic are recognised for copying.
+- **Make Searchable:** OCR in English and other Latin-script languages; Urdu and Arabic are recognized for copying.
 - **Smart Name:** click the document name for name suggestions and the details stored in the PDF.
 
 ## Keyboard shortcuts

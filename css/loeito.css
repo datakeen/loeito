@@ -197,7 +197,7 @@ svg { display: block; }
 .stage.tool-move .overlay { cursor: move; }
 .stage.tool-pick .overlay { cursor: copy; }
 /* Pointer tools — the cursor always tells the truth: arrow, I-beam, open hand, closed hand */
-.stage, .reader { cursor: grab; }                                  /* the grey backdrop always moves the page */
+.stage, .reader { cursor: grab; }                                  /* the gray backdrop always moves the page */
 .sheet { cursor: default; }
 #sheet > .textLayer { z-index: auto; }                             /* under the tool overlay */
 .sheet.zooming > .textLayer { visibility: hidden; }
@@ -747,7 +747,7 @@ kbd { font: 11.5px var(--font); padding: 1px 6px; border-radius: 5px; background
 .about p { margin: 4px 0; max-width: 380px; }
 @media (max-width: 760px) { .manual-wrap { grid-template-columns: 1fr; } .manual-toc { display: none; } .keys { grid-template-columns: 1fr; } }
 
-/* ——— 1.1 · Toolbar with twelve blades: the sides take what they need, the blades centre in the rest and never overlap ——— */
+/* ——— 1.1 · Toolbar with twelve blades: the sides take what they need, the blades center in the rest and never overlap ——— */
 .toolbar { grid-template-columns: minmax(150px, 1fr) minmax(0, auto) minmax(min-content, 1fr); }
 .tb-right { flex: none; }
 .blades { min-width: 0; overflow-x: auto; scrollbar-width: none; }

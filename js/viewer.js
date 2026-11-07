@@ -173,7 +173,7 @@
   /* ——— Pointer tools ———
      Select: the active tool acts; over text the I-beam selects it; empty paper drags like a hand.
      Text: select text anywhere, even inside tools. Hand: always moves the page (open hand, closed while dragging).
-     Space = temporary hand; dragging the grey backdrop always moves the page. */
+     Space = temporary hand; dragging the gray backdrop always moves the page. */
   V.tool = 'select'; V.hand = false; V.space = false;
   const wrap = () => L.$('#stage-wrap');
   const paintPan = () => wrap().classList.toggle('pan-ready', V.hand || V.space);
@@ -249,7 +249,7 @@
     ctx.moveTo(0, size / 2); ctx.lineTo(size / 2 - 6, size / 2); ctx.moveTo(size / 2 + 6, size / 2); ctx.lineTo(size, size / 2); ctx.stroke();
     ctx.beginPath(); ctx.arc(size / 2, size / 2, 2, 0, Math.PI * 2); ctx.stroke();
   };
-  // Colour of the rendered page at a screen point.
+  // Color of the rendered page at a screen point.
   L.pixelAt = (sx, sy) => {
     const c = L.$('#page-canvas'), dpr = c.width / V.view.width;
     const d = c.getContext('2d').getImageData(Math.round(sx * dpr), Math.round(sy * dpr), 1, 1).data;

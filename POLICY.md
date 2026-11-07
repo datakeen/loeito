@@ -23,7 +23,7 @@ The look and feel aims at the standard of Apple’s own apps: clarity, deference
 
 ## 2 · Design principles
 
-1. **The document is the hero.** Chrome is light, quiet and grey. Colour is reserved for meaning (the active tool, a primary action, a warning).
+1. **The document is the hero.** Chrome is light, quiet and gray. Color is reserved for meaning (the active tool, a primary action, a warning).
 2. **One obvious next step.** Every panel starts with what it is for, then the main action, then options. Rare options are under “More” or an advanced disclosure.
 3. **Plain words.** “Make Searchable”, not “Run OCR”. “Save to original”, not “Overwrite”. Name things by what they do for the user. Units are always shown (mm, pt, %, MB).
 4. **Safe defaults; Enter does the common, safe thing.** Destructive choices are never the default button. Escape always cancels.
@@ -41,7 +41,7 @@ The look and feel aims at the standard of Apple’s own apps: clarity, deference
 | Type | Inter (system fallback). Sizes: 11 tiny · 12 secondary · 13 body · 15 titles · 22+ hero. Weights 400/500/600/700 only. |
 | Spacing | 4-pt base grid; panels use 12/14/16/24 px rhythm. |
 | Shape | Radii `--r-sm` 6 (controls) · `--r` 10 (cards) · `--r-lg` 14 (sheets). Hairline borders `var(--sep)`; soft shadows only for floating things. |
-| Colour | Use the tokens in `css/loeito.css` (`--accent`, `--accent-soft`, `--ok`, `--warn`, `--danger`, `--text`, `--text-2`, `--text-3`, `--sep`, `--bg`, `--surface`, `--surface-2`, `--glass`). Every new colour must also work in dark mode. |
+| Color | Use the tokens in `css/loeito.css` (`--accent`, `--accent-soft`, `--ok`, `--warn`, `--danger`, `--text`, `--text-2`, `--text-3`, `--sep`, `--bg`, `--surface`, `--surface-2`, `--glass`). Every new color must also work in dark mode. |
 | Icons | 24-unit grid, 1.6 stroke, round caps and joins, drawn in the `L.icon` set. No emoji in the UI. |
 | Motion | 120–220 ms, ease-out; nothing bounces; nothing moves without a reason. |
 | Feedback | Every action answers: a toast (≤ 1 line), a progress HUD with Cancel for anything longer than ~1 s, a live preview where possible. |
@@ -67,7 +67,7 @@ The look and feel aims at the standard of Apple’s own apps: clarity, deference
 2. **Find out** what the code and the test files actually show (“Findings”).
 3. **Plan** each item: how it will be built and how it will be verified.
 4. **Implement one item at a time**; verify it in the browser with the real files in `../Input` (and `samples/`), read outputs back with Python where possible.
-5. **Tick** the item in `private/PLAN.md` with a short verification note; record known limits honestly.
+5. **Check** the item in `private/PLAN.md` with a short verification note; record known limits honestly.
 6. **Release** (section 7).
 
 ## 6 · Versioning
@@ -103,23 +103,23 @@ Each release also:
 
 Public direction: `ROADMAP.md`. Detailed plan: `private/ROADMAP (detailed).md`. History: Phase 1 = 1.1.0; Merge workspace = 1.2.0; fluid pages & motion = 1.3.0; keyboard page moving = 1.4.0; merge from the open document = 1.5.0 (milestone, archived); Phases 2–5 = 1.6.0 … 1.9.0. The next preserved milestone after 1.5.0 is 2.0.0. 
 
-## 6b · Licence (every release)
+## 6b · License (every release)
 
 Loeito is **free and open-source software** under the **GNU Affero General Public License v3** (AGPL-3.0-or-later).
 
-- `LICENSE` (the full AGPL text) and `NOTICE.md` (copyright and third-party licences) ship with every release and every archive in `versions/`.
+- `LICENSE` (the full AGPL text) and `NOTICE.md` (copyright and third-party licenses) ship with every release and every archive in `versions/`.
 - Every source file starts with the one-line notice `SPDX-License-Identifier: AGPL-3.0-or-later`. New files get it too.
 - README and About say clearly that Loeito is free and open source.
-- New third-party libraries must have an AGPL-compatible licence and be listed in `NOTICE.md`.
+- New third-party libraries must have an AGPL-compatible license and be listed in `NOTICE.md`.
 - `sourceforge/` is kept current, so each release can be published by copy and paste.
 
 ## 7 · Definition of done (release checklist)
 
-- [ ] Every planned item ticked in `private/PLAN.md` with how it was verified.
+- [ ] Every planned item checked in `private/PLAN.md` with how it was verified.
 - [ ] Works in light and dark mode, at small window sizes, with the keyboard.
 - [ ] Undo/redo covers every new change; Save output re-opens correctly.
 - [ ] No console errors on the test files; background jobs run with the window hidden.
 - [ ] Plain-language review of every new label, tooltip, toast and error.
 - [ ] `README.md`, Help, About, tutorials, User Manual, Reference Manual and `CHANGELOG.md` updated; `VERSION` and `L.VERSION` bumped.
-- [ ] Licence: `LICENSE`, `NOTICE.md`, SPDX line in new files, `sourceforge/` texts updated.
+- [ ] License: `LICENSE`, `NOTICE.md`, SPDX line in new files, `sourceforge/` texts updated.
 - [ ] Milestone? Archive it in `versions/`.

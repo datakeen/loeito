@@ -6,6 +6,6 @@ _About 2 minutes._
 2. Click **Highlight** and drag across a line.
 3. Use **White-out** to cover a mistake, then add new text on top.
 4. Click **Signature**, draw or type your signature once, then click where it goes.
-5. Click any mark to change its colour or size; **Delete** removes it. **Ctrl Z** undoes everything.
+5. Click any mark to change its color or size; **Delete** removes it. **Ctrl Z** undoes everything.
 
 **Tip:** to remove private text for good, use **Protect** (Find & black out), not white-out.

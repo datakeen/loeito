@@ -95,7 +95,7 @@ A **check** points out what's missing or untidy and fixes it with one click.
 
 ## Make searchable (OCR)
 
-**What it does:** recognises the text in scans, so you can search, select and copy it.
+**What it does:** recognizes the text in scans, so you can search, select and copy it.
 
 **How it works:** runs OCR (Tesseract) on your computer and saves the text as an invisible layer. The page looks unchanged.
 
@@ -103,7 +103,7 @@ A **check** points out what's missing or untidy and fixes it with one click.
 
 ## Tables
 
-**What it does:** finds tables, including in scans, and exports them to Excel (merged cells and colours kept), CSV, Word or Markdown.
+**What it does:** finds tables, including in scans, and exports them to Excel (merged cells and colors kept), CSV, Word or Markdown.
 
 **How it works:** reads the ruling lines of the grid, then reads the text cell by cell.
 
@@ -127,7 +127,7 @@ A **check** points out what's missing or untidy and fixes it with one click.
 
 ## Stamp
 
-**What it does:** adds page numbers (including Bates), headers and footers with left / centre / right text, and watermarks. Each can go on all, odd, even or chosen pages, skipping the first or last pages.
+**What it does:** adds page numbers (including Bates), headers and footers with left / center / right text, and watermarks. Each can go on all, odd, even or chosen pages, skipping the first or last pages.
 
 **How it works:** you see a live preview, and the stamps are written as real text when you save.
 
@@ -150,7 +150,9 @@ A **check** points out what's missing or untidy and fixes it with one click.
 
 - start from 10 templates, draw fields, or let Loeito find the blanks in Word, Excel and scanned forms;
 - arrange and align fields;
-- make fields appear only after certain answers, and add buttons that e-mail the form;
+- add **labels, boxes, ovals and lines** right in Forms. A field's own label moves and is deleted with it, and shows a red * by itself when the field is Required;
+- set the text color of answers;
+- make fields appear only after certain answers, and add buttons that email the form;
 - try the form in Fill in.
 
 **How it works:** saves standard PDF form fields with Acrobat-compatible formats and totals. They work in Acrobat, Edge, Chrome and Foxit.
@@ -165,13 +167,13 @@ A **check** points out what's missing or untidy and fixes it with one click.
 
 **Passwords:** Protect → *Password* locks the file with AES-256 and lets you choose what others may do (print, copy, fill forms, edit). Protected files stay protected when you save; *Remove password* unlocks them for good. This needs Start Loeito.cmd (or the desktop app) and the free pypdf + cryptography packages.
 
-**What it does:** finds and blacks out private details (names, CNIC, phone, e-mail, accounts, dates, money). It also inspects and removes hidden information before you share.
+**What it does:** finds and blacks out private details (names, CNIC, phone, email, accounts, dates, money). It also inspects and removes hidden information before you share.
 
 **How it works:** pages with black boxes are saved as pictures, so the covered text is gone. The words you didn't black out stay searchable.
 
 > Tutorial: **14 Protect**
 
-## Licence
+## License
 
 Loeito is free and open-source software under the GNU AGPL v3. See Help → About, `LICENSE` and `NOTICE.md`.
 

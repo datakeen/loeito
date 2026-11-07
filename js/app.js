@@ -30,7 +30,7 @@
     files = [...files].filter(f => isPdf(f) || isImg(f) || isOffice(f));
     if (!files.length) return L.toast('Loeito opens PDFs, images, and Word / Excel / PowerPoint files.', { kind: 'err' });
     append = append && L.hasDoc();
-    const t = files.length > 1 || files[0].size > 8e6 || files.some(isOffice) ? L.task('Opening', { cancellable: false }) : null;
+    const t = files.length > 1 || files[0].size > 8e6 || files.some(isOffice) ? L.task('Opening', { cancelable: false }) : null;
     const loaded = []; // [{ file, pages, size, pdfDoc }]
     try {
       for (let i = 0; i < files.length; i++) {

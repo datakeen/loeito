@@ -39,7 +39,7 @@
   };
   /* ——— Moving pages with the keyboard, and a page clipboard that works across tabs ——— */
   const selIds = () => { const s = L.state; return s.sel.size ? new Set(s.sel) : new Set(s.pages[s.cur] ? [s.pages[s.cur].id] : []); };
-  // One step: every selected page swaps with its unselected neighbour (scattered pages each move, a range moves as a block).
+  // One step: every selected page swaps with its unselected neighbor (scattered pages each move, a range moves as a block).
   function stepPages(arr, ids, dir) {
     let moved = false;
     const order = dir > 0 ? [...arr.keys()].reverse() : [...arr.keys()];
@@ -101,7 +101,7 @@
       const bytes = await L.buildPdf({ state: S, pages, task: t });
       const nums = pages.map(p => L.pageIndex(p.id, S) + 1);
       await L.saveFile(bytes, `${L.safeName(S.name)} — p${nums.length > 3 ? nums[0] + '–' + nums[nums.length - 1] : nums.join(',')}.pdf`, 'application/pdf', 'pdf');
-    } catch (e) { if (e.message !== 'Cancelled') L.error('Couldn’t extract', e); } finally { t.done(); }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Couldn’t extract', e); } finally { t.done(); }
   };
 
   async function splitDialog() {
@@ -142,14 +142,14 @@
     try {
       const files = [];
       for (let i = 0; i < g.length; i++) {
-        if (t.cancelled) throw new Error('Cancelled');
+        if (t.canceled) throw new Error('Canceled');
         t.set(i / g.length, `Part ${i + 1} of ${g.length}`);
         const label = g[i].label || `part ${String(i + 1).padStart(String(g.length).length, '0')}`;
         files.push({ name: `${L.safeName(s.name)} — ${label}.pdf`, data: await L.buildPdf({ state: s, pages: g[i].pages }), mime: 'application/pdf' });
       }
       await L.zipAndSave(files, `${L.safeName(s.name)} — split.zip`);
       L.toast(`Split into ${files.length} files`, { kind: 'ok' });
-    } catch (e) { if (e.message !== 'Cancelled') L.error('Split failed', e); } finally { t.done(); }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Split failed', e); } finally { t.done(); }
   }
 
   /* ——— Grid (contact sheet) ———

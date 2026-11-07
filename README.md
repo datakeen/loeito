@@ -4,7 +4,7 @@ A free, private PDF workbench for everyday work: read, merge, edit, sign, fill a
 
 Your files never leave your computer. No account, no upload, no subscription. The installed app works without internet from the very first start.
 
-**Version 1.7.0** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
+**Version 1.8.0** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
 
 ## Download and install
 
@@ -44,6 +44,6 @@ Inside Loeito, click **Help (?)**: quick help, 14 short tutorials, the User Manu
 
 Found a problem or have an idea? Open an **[Issue](../../issues)**. See [ROADMAP.md](ROADMAP.md) for what is coming and [CONTRIBUTING.md](CONTRIBUTING.md) to help, or to run Loeito from the source code.
 
-## Licence
+## License
 
 Copyright (C) 2026 Ahmed Bilal and contributors. Loeito is free software under the GNU Affero General Public License, version 3 or later. It comes with **no warranty**. See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md).

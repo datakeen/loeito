@@ -356,7 +356,7 @@
     footer: { on: true, left: '', center: '', right: '{date}', size: 9, color: '#6e6e73', font: 'Helvetica', bold: false, margin: 28, rule: false, pages: RULE() },
     watermark: { on: true, text: 'DRAFT', size: 80, opacity: 0.12, angle: 45, color: '#e5484d', font: 'Helvetica', pages: RULE() },
   };
-  // v1.0 documents had one centred header + footer and "skip first page"; bring them into the 1.1 model, same result.
+  // v1.0 documents had one centered header + footer and "skip first page"; bring them into the 1.1 model, same result.
   L.normStamps = S => {
     const st = S.stamps || (S.stamps = {});
     if (st._v === 2) return st;

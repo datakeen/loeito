@@ -1,6 +1,6 @@
 /* Loeito - free and open-source PDF workbench. Copyright (C) 2026 Ahmed Bilal and contributors. SPDX-License-Identifier: AGPL-3.0-or-later (see LICENSE) */
 /* Protect blade: share without leaking.
-   Find & black out — words and patterns (CNIC, phone, e-mail, accounts, dates, money), reviewed before anything is removed;
+   Find & black out — words and patterns (CNIC, phone, email, accounts, dates, money), reviewed before anything is removed;
    removal is real on save (the page becomes a picture; the words you didn't black out stay searchable).
    Hidden information — an inspector for what travels unseen inside a PDF, and what Loeito removes when saving. */
 (() => {
@@ -8,7 +8,7 @@
   const PATTERNS = {
     cnic: { label: 'CNIC numbers', re: /\b\d{5}[- ]?\d{7}[- ]?\d\b/g },
     phone: { label: 'Phone numbers', re: /(?:\+|00)?\d[\d ()-]{8,}\d/g },
-    email: { label: 'E-mail addresses', re: /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g },
+    email: { label: 'Email addresses', re: /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g },
     account: { label: 'Bank accounts & IBAN', re: /\b[A-Z]{2}\d{2}(?: ?[A-Z0-9]{4}){3,7}(?: ?[A-Z0-9]{1,4})?\b|\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{2,6}\b/g },
     date: { label: 'Dates', re: /\b\d{1,2}[/.-]\d{1,2}[/.-](?:19|20)?\d{2}\b|\b\d{1,2}(?:st|nd|rd|th)?\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?,?\s(?:19|20)\d{2}\b/gi },
     money: { label: 'Money amounts', re: /(?:Rs\.?|PKR|USD|US\$|\$|€|£)\s?\d[\d,]*(?:\.\d+)?/gi },
@@ -43,7 +43,7 @@
     const out = [], t = S.pages.length > 6 ? L.task('Looking through the pages') : null;
     try {
       for (let i = 0; i < S.pages.length; i++) {
-        if (t) { if (t.cancelled) break; t.set(i / S.pages.length, `Page ${i + 1} of ${S.pages.length}`); }
+        if (t) { if (t.canceled) break; t.set(i / S.pages.length, `Page ${i + 1} of ${S.pages.length}`); }
         const p = S.pages[i];
         const pdf = await L.pageWords(p, { prefer: 'pdf' }).catch(() => []), words = pdf.length ? pdf : p.ocr?.words || [];
         let str = ''; const starts = [];
@@ -128,19 +128,19 @@
   function reportView(R) {
     const S = L.state, c = S.sanitize || {};
     const row = (icon, title, detail, control) => h('div', { class: 'insp-row' }, L.icon(icon, 18), h('div', { class: 'grow' }, h('b', null, title), detail ? h('span', null, detail) : null), control || null);
-    const tick = k => h('label', { class: 'switch', title: 'Remove when saving' }, h('input', { type: 'checkbox', checked: !!c[k], onchange: e => setClean(k, e.target.checked) }), h('span'));
+    const keepBox = k => h('label', { class: 'switch', title: 'Remove when saving' }, h('input', { type: 'checkbox', checked: !!c[k], onchange: e => setClean(k, e.target.checked) }), h('span'));
     const auto = () => h('span', { class: 'pill ok', title: 'Loeito doesn’t carry this into the saved file' }, 'Not kept');
     const layerFlat = S.pages.filter(p => R.layerPages.has(p.id)).every(p => p.flatten);
     const rows = [
-      row('tag', 'Document details', R.details.length ? R.details.map(([k, v]) => `${k}: ${String(v).slice(0, 40)}`).join(' · ') : 'None set', tick('details')),
+      row('tag', 'Document details', R.details.length ? R.details.map(([k, v]) => `${k}: ${String(v).slice(0, 40)}`).join(' · ') : 'None set', keepBox('details')),
       row('doc', 'Hidden metadata (XMP)', R.xmp ? `${L.fmtBytes(R.xmp)} in the original — Loeito’s save doesn’t carry it over` : 'None', auto()),
-      row('comment', 'Comments & markups', R.comments ? `${R.comments} on the pages` : 'None', R.comments ? tick('comments') : auto()),
-      row('clip', 'Attached files', [R.attachments.length ? `${R.attachments.length} attached to the document (${R.attachments.slice(0, 3).join(', ')}) — not kept` : '', R.pageAttachments ? `${R.pageAttachments} pinned to pages` : ''].filter(Boolean).join(' · ') || 'None', R.pageAttachments ? tick('attachments') : auto()),
-      row('code', 'Scripts', [R.docScripts ? `${R.docScripts} document script(s) — not kept` : '', R.pageScripts ? `${R.pageScripts} on pages or links` : ''].filter(Boolean).join(' · ') || 'None', R.pageScripts ? tick('scripts') : auto()),
-      row('link', 'Web links', R.links ? `${R.links} clickable link(s)` : 'None', R.links ? tick('links') : null),
+      row('comment', 'Comments & markups', R.comments ? `${R.comments} on the pages` : 'None', R.comments ? keepBox('comments') : auto()),
+      row('clip', 'Attached files', [R.attachments.length ? `${R.attachments.length} attached to the document (${R.attachments.slice(0, 3).join(', ')}) — not kept` : '', R.pageAttachments ? `${R.pageAttachments} pinned to pages` : ''].filter(Boolean).join(' · ') || 'None', R.pageAttachments ? keepBox('attachments') : auto()),
+      row('code', 'Scripts', [R.docScripts ? `${R.docScripts} document script(s) — not kept` : '', R.pageScripts ? `${R.pageScripts} on pages or links` : ''].filter(Boolean).join(' · ') || 'None', R.pageScripts ? keepBox('scripts') : auto()),
+      row('link', 'Web links', R.links ? `${R.links} clickable link(s)` : 'None', R.links ? keepBox('links') : null),
       row('layers', 'Hidden layers', R.hiddenLayers.length ? `${R.hiddenLayers.join(', ')} — would become visible in a copy` : R.layers.length ? `${R.layers.length} layer(s), all visible` : 'None',
         R.hiddenLayers.length ? (layerFlat ? h('span', { class: 'pill ok' }, 'Flattened') : ui.btn('Flatten pages', null, () => { L.mutate('flatten layered pages', () => S.pages.forEach(p => { if (R.layerPages.has(p.id)) p.flatten = true; })); L.renderInspector(); }, 'small')) : null),
-      row('gear', 'Private app data & thumbnails', R.private || R.thumbs ? `${R.private ? R.private + ' private data block(s)' : ''}${R.private && R.thumbs ? ' · ' : ''}${R.thumbs ? R.thumbs + ' thumbnail(s)' : ''}` : 'None', R.private || R.thumbs ? h('div', { class: 'row', style: { gap: '6px' } }, tick('private'), tick('thumbs')) : auto()),
+      row('gear', 'Private app data & thumbnails', R.private || R.thumbs ? `${R.private ? R.private + ' private data block(s)' : ''}${R.private && R.thumbs ? ' · ' : ''}${R.thumbs ? R.thumbs + ' thumbnail(s)' : ''}` : 'None', R.private || R.thumbs ? h('div', { class: 'row', style: { gap: '6px' } }, keepBox('private'), keepBox('thumbs')) : auto()),
       row('form', 'Form answers', R.fields ? `${R.answers} of ${R.fields} fields filled in` : 'No form', R.answers ? ui.btn('Clear', null, () => { L.mutate('clear answers', () => L.forms.all().forEach(({ f }) => { if (!f.calc && f.kind !== 'button') f.value = f.kind === 'check' ? false : ''; })); L.forms.recalc(); inspect(); }, 'small') : null),
       row('list', 'Bookmarks', R.bookmarks ? `${R.bookmarks} — not kept by Loeito 1.1 (coming in 1.2)` : 'None', null),
       row('ocr', 'Searchable text from OCR', R.ocrPages ? `${R.ocrPages} page(s) — invisible text Loeito added so search works; kept` : 'None', null),

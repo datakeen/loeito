@@ -11,11 +11,11 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 
 ## Third-party components
 
-Loeito uses the work of these projects. They are not modified, and each stays under its own licence, all compatible with the AGPL. The browser version loads them from public CDNs; the desktop installers carry copies, together with their licence texts (in `vendor/`).
+Loeito uses the work of these projects. They are not modified, and each stays under its own license, all compatible with the AGPL. The browser version loads them from public CDNs; the desktop installers carry copies, together with their license texts (in `vendor/`).
 
 ### Libraries in the app
 
-| Component | Version | Authors | Licence | Used for |
+| Component | Version | Authors | License | Used for |
 |---|---|---|---|---|
 | [pdf.js](https://github.com/mozilla/pdf.js) | 3.11.174 | Mozilla and contributors | Apache-2.0 | Showing PDF pages, text and forms |
 | [pdf-lib](https://github.com/Hopding/pdf-lib) | 1.17.1 | Andrew Dillon and contributors | MIT | Writing and changing PDF files |
@@ -28,7 +28,7 @@ Loeito uses the work of these projects. They are not modified, and each stays un
 
 ### Fonts
 
-| Font | Designer | Licence | Used for |
+| Font | Designer | License | Used for |
 |---|---|---|---|
 | [Inter](https://rsms.me/inter/) | Rasmus Andersson | SIL Open Font License 1.1 | The interface |
 | [Caveat](https://fonts.google.com/specimen/Caveat) | Impallari Type | SIL Open Font License 1.1 | Typed signatures |
@@ -36,7 +36,7 @@ Loeito uses the work of these projects. They are not modified, and each stays un
 
 ### Desktop app and helpers
 
-| Component | Licence | Used for |
+| Component | License | Used for |
 |---|---|---|
 | [Electron](https://www.electronjs.org/) (includes Chromium and Node.js) | MIT (Chromium: BSD-3-Clause and others, listed in the app's `LICENSES.chromium.html`) | The desktop app window |
 | [electron-builder](https://www.electron.build/) | MIT | Building the installers (not shipped) |

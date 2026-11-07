@@ -103,7 +103,7 @@
     if (announce) {
       if (!T.found.length) { // a scan? look at the pixels of the whole page
         const v = L.makeView(await L.proxy(p), p, 1), full = { x: 0, y: 0, w: v.width, h: v.height };
-        const t = L.task('Looking for tables', { cancellable: false });
+        const t = L.task('Looking for tables', { cancelable: false });
         try { T.found = TG.findTables(await TG.rasterRulings(p, full)); } finally { t.done(); }
       }
       if (T.found.length) { T.pageId = p.id; T.region = T.found[0]; T.cols = null; await extract(true); L.toast(T.found.length === 1 ? 'Found 1 table' : `Found ${T.found.length} tables — pick one below`, { kind: 'ok', icon: 'table' }); }
@@ -116,7 +116,7 @@
     const t = L.task('Reading the table across pages'); let all = null;
     try {
       for (let i = from; i <= to; i++) {
-        if (t.cancelled) break;
+        if (t.canceled) break;
         t.set((i - from) / (to - from + 1), `Page ${i + 1}`);
         const r = await analysePage(s.pages[i], T.region, { quiet: true });
         all = TG.append(all, r.grid, T.header);
@@ -128,11 +128,11 @@
   /* ——— Export ——— */
   const fileBase = () => `${L.safeName(L.state.name)} — table p${L.state.cur + 1}`;
   async function saveXlsx() {
-    const t = L.task('Preparing Excel workbook', { cancellable: false });
+    const t = L.task('Preparing Excel workbook', { cancelable: false });
     try {
       const { data, styled } = await TG.xlsx(T.grid, { header: T.header, sheet: `Page ${L.state.cur + 1}` });
       await L.saveFile(new Blob([data]), fileBase() + '.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'xlsx');
-      if (!styled) L.toast('Saved without colours (the styling add-on couldn’t load).', { icon: 'info' });
+      if (!styled) L.toast('Saved without colors (the styling add-on couldn’t load).', { icon: 'info' });
     } catch (e) { L.error('Couldn’t create the Excel file', e); } finally { t.done(); }
   }
   async function openReview() {
@@ -221,7 +221,7 @@
           ui.btn('CSV', 'download', () => L.saveFile(new Blob([TG.csv(g, T.repeat)], { type: 'text/csv' }), fileBase() + '.csv', 'text/csv', 'csv')),
           ui.btn('Markdown', 'copy', () => L.copyText(TG.markdown(g)))),
         h('div', { style: { marginTop: '10px' } }, ui.check('Repeat merged values in CSV / copy', T.repeat, v => { T.repeat = v; })),
-        h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'Excel keeps merged cells, colours, borders and column widths. “Copy” pastes into Excel or Word with merges intact.')),
+        h('p', { class: 'muted tiny', style: { margin: '8px 0 0' } }, 'Excel keeps merged cells, colors, borders and column widths. “Copy” pastes into Excel or Word with merges intact.')),
       ui.section('Table continues on other pages?',
         h('div', { class: 'grid2' },
           ui.field('From page', ui.num(T.from ?? L.state.cur + 1, v => { T.from = L.clamp(Math.round(v), 1, n); }, { min: 1, max: n })),
