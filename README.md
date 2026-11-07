@@ -17,7 +17,7 @@ In the browser, everything works except folder browsing, opening Word / Excel / 
 1. Open the **[Releases](../../releases/latest)** page.
 2. Download the file for your computer:
    - **Windows:** `Loeito-Setup-….exe`
-   - **macOS:** `Loeito-….dmg`
+   - **macOS:** `Loeito-…-arm64.dmg` for Apple chips (M1 and newer, 2020 onward), `Loeito-…-x64.dmg` for older Intel Macs
    - **Linux:** `Loeito-….AppImage`
 3. Open the downloaded file and follow the steps. Then start **Loeito** like any other program.
 
