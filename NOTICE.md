@@ -47,4 +47,6 @@ Loeito uses the work of these projects. They are not modified, and each stays un
 
 Icons, the Loeito logo, the cover designs and the form templates were made for Loeito and are under the AGPL like the rest of it.
 
+**How their licenses are honored.** None of these components ships a NOTICE file. Their licenses ask for credit and for the license text to travel with any copy. So the components stay unmodified, with their own copyright lines kept inside each file. The desktop installers carry every license text next to its component in `vendor/` (see `vendor/README.txt`), including the font licenses. Electron adds its own and Chromium's license files to every installed app.
+
 Thank you to everyone who built these.

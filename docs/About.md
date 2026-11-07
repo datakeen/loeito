@@ -17,3 +17,5 @@ It follows three ideas:
 **Built with thanks to** pdf.js (Mozilla), pdf-lib, Tesseract.js and the Tesseract OCR engine and language data, JSZip, SheetJS and xlsx-js-style; the Inter, Caveat and Homemade Apple fonts; and Electron for the desktop app. Full credits and licenses are in `NOTICE.md`.
 
 **Versions.** Changes are listed in `CHANGELOG.md`. Every release is on the GitHub Releases page. Loeito is made to the Loeito Rulebook (`POLICY.md`).
+
+<sub>Made by Ahmed Bilal · [LinkedIn](https://www.linkedin.com/in/abilal)</sub>

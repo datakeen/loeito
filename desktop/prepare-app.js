@@ -24,7 +24,13 @@ const FILES = [
   ['https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/LICENSE.md', 'pdf-lib/LICENSE.md'],
   ['https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/LICENSE.md', 'tesseract/LICENSE.md'],
   ['https://cdn.jsdelivr.net/npm/jszip@3.10.1/LICENSE.markdown', 'jszip/LICENSE.markdown'],
-  ['https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/LICENSE', 'sheetjs/LICENSE'],
+  ['https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/LICENSE', 'sheetjs/LICENSE-xlsx-js-style'],
+  ['https://cdn.jsdelivr.net/npm/xlsx@0.18.5/LICENSE', 'sheetjs/LICENSE-SheetJS'],
+  ['https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1/LICENSE', 'tesseract/core/LICENSE'],
+  // fonts travel with their licenses (SIL OFL 1.1 requires it; Apache-2.0 too)
+  ['https://raw.githubusercontent.com/rsms/inter/master/LICENSE.txt', 'fonts/LICENSE-Inter-OFL.txt'],
+  ['https://raw.githubusercontent.com/google/fonts/main/ofl/caveat/OFL.txt', 'fonts/LICENSE-Caveat-OFL.txt'],
+  ['https://raw.githubusercontent.com/google/fonts/main/apache/homemadeapple/LICENSE.txt', 'fonts/LICENSE-HomemadeApple-Apache.txt'],
 ];
 // The OCR engine comes in several builds; Tesseract.js picks the fastest one the computer supports.
 const CORE = 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1/';
@@ -33,7 +39,7 @@ for (const f of ['tesseract-core.wasm.js', 'tesseract-core-simd.wasm.js', 'tesse
 // OCR languages built into the installer (others still download once, when first chosen)
 const LANGS = ['eng', 'urd', 'ara', 'swe', 'chi_sim', 'chi_tra', 'jpn'];
 for (const l of LANGS) FILES.push([`https://cdn.jsdelivr.net/npm/@tesseract.js-data/${l}/4.0.0_best_int/${l}.traineddata.gz`, `tessdata/${l}.traineddata.gz`]);
-FILES.push(['https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/LICENSE', 'tessdata/LICENSE', 'optional']);
+FILES.push(['https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/LICENSE', 'tessdata/LICENSE']);
 const FONTS_CSS = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@500&family=Homemade+Apple&display=swap';
 
 const UA = { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36' };
@@ -73,6 +79,18 @@ const swap = (s, a, b) => { if (!s.includes(a)) throw new Error('prepare-app: co
     const b = await get(u); put('fonts/' + name, b); bytes += b.length; css = css.split(u).join(name);
   }
   put('fonts/fonts.css', css);
+  // a short guide next to the copies: what each folder is, and where its license is
+  put('README.txt', [
+    'Third-party components bundled with Loeito. Each is unmodified and keeps its own license, found next to it.',
+    'Full credits: NOTICE.md in the Loeito folder, or Help > About in the app.', '',
+    'pdfjs/      pdf.js 3.11.174, Mozilla and contributors, Apache-2.0 (pdfjs/LICENSE)',
+    'pdf-lib/    pdf-lib 1.17.1, Andrew Dillon and contributors, MIT (pdf-lib/LICENSE.md)',
+    'tesseract/  Tesseract.js 5.1.1 and tesseract.js-core 5.1.1 (Tesseract OCR engine), Apache-2.0 (LICENSE.md, core/LICENSE)',
+    'tessdata/   Tesseract language data 4.0.0 best_int, Google and contributors, Apache-2.0 (tessdata/LICENSE)',
+    'jszip/      JSZip 3.10.1, Stuart Knightley and contributors, MIT or GPL-3.0, used under MIT (jszip/LICENSE.markdown)',
+    'sheetjs/    SheetJS Community Edition 0.18.5 and xlsx-js-style 1.2.0, Apache-2.0 (sheetjs/LICENSE-*)',
+    'fonts/      Inter (Rasmus Andersson) and Caveat (Impallari Type): SIL OFL 1.1; Homemade Apple (Font Diner): Apache-2.0',
+  ].join('\r\n') + '\r\n');
 
   // 3. point the copied app at vendor/
   edit('index.html', s => {

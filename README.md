@@ -40,10 +40,17 @@ Handy everywhere: several documents in tabs, **Ctrl K** to find any command, **C
 
 ## Help
 
-Inside Loeito, click **Help (?)**: quick help, 14 short tutorials, the User Manual and keyboard shortcuts.
+Inside Loeito, click **Help (?)**: quick help, short tutorials, the User Manual and keyboard shortcuts. The same documents are here:
+
+- **[Help](docs/Help.md)**: what each tool does, in short
+- **[User Manual](docs/User%20Manual.md)**: how to use everything, step by step
+- **[Tutorials](docs/tutorials/)**: 15 short hands-on lessons, one per tool
+- **[Reference Manual](docs/Reference%20Manual.md)**: how Loeito works inside, for developers
 
 Found a problem or have an idea? Open an **[Issue](../../issues)**. See [ROADMAP.md](ROADMAP.md) for what is coming and [CONTRIBUTING.md](CONTRIBUTING.md) to help, or to run Loeito from the source code.
 
 ## License
 
-Copyright (C) 2026 Ahmed Bilal and contributors. Loeito is free software under the GNU Affero General Public License, version 3 or later. It comes with **no warranty**. See [LICENSE](LICENSE) and [NOTICE.md](NOTICE.md).
+Copyright (C) 2026 Ahmed Bilal and contributors. Loeito is free software under the GNU Affero General Public License, version 3 or later. It comes with **no warranty**. See [LICENSE](LICENSE), and [NOTICE.md](NOTICE.md) for the open-source components Loeito is built on.
+
+<sub>Made by Ahmed Bilal · [LinkedIn](https://www.linkedin.com/in/abilal)</sub>
