@@ -2,6 +2,12 @@
 
 All notable changes to Loeito, newest first. Version rules: `POLICY.md` § 6. Milestones (x.0.0, x.5.0) are preserved in `versions/`.
 
+## 1.8.1 — 2026-11-07
+
+### Changed
+- **Complete credits in the installers:** every bundled library and font now travels with its license text (`vendor/`, listed in `vendor/README.txt`), as their licenses ask.
+- **README** links straight to Help, the User Manual, the tutorials and the Reference Manual.
+
 ## 1.8.0 — 2026-11-07
 
 ### Added

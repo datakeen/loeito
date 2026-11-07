@@ -4,7 +4,7 @@ A free, private PDF workbench for everyday work: read, merge, edit, sign, fill a
 
 Your files never leave your computer. No account, no upload, no subscription. The installed app works without internet from the very first start.
 
-**Version 1.8.0** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
+**Version 1.8.1** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
 
 ## Download and install
 
