@@ -1,10 +1,16 @@
-# Loeito — PDF, just right
+<p align="center"><img src="desktop/build/icon.png" width="96" alt="Loeito logo"></p>
 
-A free, private PDF workbench for everyday work: read, merge, edit, sign, fill and make forms, OCR scans, pull tables into Excel, and protect files with passwords.
+<h1 align="center">Loeito — PDF, just right</h1>
+
+<p align="center">A free, private PDF workbench for everyday work: read, merge, edit, sign, fill and make forms, OCR scans, pull tables into Excel, and protect files with passwords.</p>
+
+<p align="center"><b><a href="../../releases/latest">Download</a></b> · <b><a href="https://datakeen.github.io/loeito/">Try it in your browser</a></b></p>
 
 Your files never leave your computer. No account, no upload, no subscription. The installed app works without internet from the very first start.
 
 **Version 1.8.1** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
+
+In the browser, everything works except folder browsing, opening Word / Excel / PowerPoint files and passwords; those need the desktop app.
 
 ## Download and install
 
@@ -48,6 +54,18 @@ Inside Loeito, click **Help (?)**: quick help, short tutorials, the User Manual 
 - **[Reference Manual](docs/Reference%20Manual.md)**: how Loeito works inside, for developers
 
 Found a problem or have an idea? Open an **[Issue](../../issues)**. See [ROADMAP.md](ROADMAP.md) for what is coming and [CONTRIBUTING.md](CONTRIBUTING.md) to help, or to run Loeito from the source code.
+
+## Support Loeito
+
+Loeito is free and open-source software. If you enjoy working with it, it has done what it was made for, and you owe nothing in return. Still, every kind of help is welcome. See the [roadmap](ROADMAP.md); if you like where Loeito is going, you can:
+
+1. **Share it:** tell others about Loeito, or show what you made with it.
+2. **Support the projects it stands on:** [pdf.js](https://github.com/mozilla/pdf.js) · [pdf-lib](https://github.com/Hopding/pdf-lib) · [Tesseract.js](https://github.com/naptha/tesseract.js) · [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) · [JSZip](https://github.com/Stuk/jszip) · [SheetJS](https://github.com/SheetJS/sheetjs) · [Inter](https://github.com/rsms/inter) · [Electron](https://github.com/electron/electron).
+3. **Help build it:** code, translations or documents ([CONTRIBUTING.md](CONTRIBUTING.md)).
+4. **Sponsor a feature:** something from the roadmap sooner, or something new.
+5. **Become a sponsor:** organizations can support Loeito as a Gold, Silver or Bronze sponsor and be thanked here.
+
+**Get in touch:** [send me a message](https://tally.so/r/7XbpbP). It's a short form for individuals and organizations alike.
 
 ## License
 
