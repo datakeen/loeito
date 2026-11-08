@@ -17,7 +17,9 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 - **Page craft:** booklets and several pages per sheet with a live preview; find blank and repeated pages and remove them after you confirm.
 - **Repair and archive:** fix damaged PDFs, make long-term PDF/A files, and prepare files for fast web viewing.
 - **Scan cleanup:** straighten, brighten and clean scans, or turn pages gray or negative, before OCR.
-- **Compare, including scans:** see text and visual differences between two versions, even when one is a scan.
+- **Compare two versions:** see exactly what changed, in text and appearance, even after re-export from Word or when one is a scan; save a report. [The plan](docs/plans/Compare,%20Preferences%20and%20Measure.md).
+- **Preferences:** one place to set your defaults for every tool.
+- **Measure:** calibrate to any scale, then measure length, area and angles, with fine adjustment.
 - **More formats:** EPUB in and out, Markdown in and out, and PDF to editable Word.
 - **Smoother working:** a Before/After switch on every tool that changes pages, recent files you can send to any tool, and a command finder that understands plain requests such as "remove footer".
 
