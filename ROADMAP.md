@@ -19,7 +19,6 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 - **Scan cleanup:** straighten, brighten and clean scans, or turn pages gray or negative, before OCR.
 - **Compare, including scans:** see text and visual differences between two versions, even when one is a scan.
 - **More formats:** EPUB in and out, Markdown in and out, and PDF to editable Word.
-
 - **Smoother working:** a Before/After switch on every tool that changes pages, recent files you can send to any tool, and a command finder that understands plain requests such as "remove footer".
 
 ## Later
