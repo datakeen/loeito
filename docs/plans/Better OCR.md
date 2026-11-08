@@ -86,6 +86,10 @@ You don't need to know how models work. A guide walks you through it, one small 
 4. **Test page:** Loeito reads a sample page with the new engine and shows the text and how long it took, next to Standard for comparison.
 5. Click **Finish**. The engine appears in the **Engine** list with its score badge.
 
+For every model, the guide's steps cover three things: **where to download** (the exact page and button), **which files** to get (and which to skip), and **how to connect them to Loeito**. That is the only part that differs between models.
+
+**After setup, Loeito does all the talking to the model.** You never open the model's own program, type commands or handle its output. Working with scans and pictures stays exactly the same whatever engine you choose: open the file, click **Searchable** (or **Tables**), click **Make searchable**. The only difference is the name in the **Engine** list.
+
 Any time later, **Settings → OCR engines** shows each engine with **Test**, **Repair** (runs the checks again and fixes what it can) and **Remove**.
 
 **Other model** (advanced): pick the program, choose its output kind (hOCR, ALTO, or JSON with word boxes), then **Test** and **Finish**.
