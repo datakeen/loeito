@@ -44,6 +44,16 @@ Windows or macOS may warn that the app is from an unknown publisher, because it 
 
 Handy everywhere: several documents in tabs, **Ctrl K** to find any command, **Ctrl S** to save, and **?** for all keyboard shortcuts.
 
+## What "free" means here
+
+Free software usually means two things. Here it means three.
+
+1. Free as in bread: it takes nothing from your pocket.
+2. Free to go: use it for any purpose, and share it with anyone.
+3. Free from friction: your work flows the way you like to work. One task, many paths, from different tools, by mouse or by keyboard.
+
+The third freedom is still growing. Each new version is one more step toward it, and that's a commitment.
+
 ## Help
 
 Inside Loeito, click **Help (?)**: quick help, short tutorials, the User Manual and keyboard shortcuts. The same documents are here:
