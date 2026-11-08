@@ -14,7 +14,8 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 - **Urdu, Arabic and Persian, first class:** every tool working right to left with joined letters, plus vertical Chinese and Japanese. [The plan](docs/plans/Urdu,%20Arabic,%20Persian%20and%20vertical%20scripts.md).
 - **Better OCR, your choice of engine:** a more accurate engine (PaddleOCR) next to today's, a score that shows whether your computer can run each one, comparing both, and bringing your own model. [The plan](docs/plans/Better%20OCR.md).
 - **More languages:** Loeito's menus in more languages.
-- **Page craft:** booklets and several pages per sheet with a live preview; find blank and repeated pages and remove them after you confirm.
+- **Professional print management, made visual:** folded booklets and books printed in the right order, right way up, with a 3D preview and a guide for your own printer; several pages per sheet, cards, posters, print-shop marks and checks before printing. [The plan](docs/plans/Print%20and%20booklets.md).
+- **Page cleanup:** find blank and repeated pages and remove them after you confirm.
 - **Repair and archive:** fix damaged PDFs, make long-term PDF/A files, and prepare files for fast web viewing.
 - **Scan cleanup:** straighten, brighten and clean scans, or turn pages gray or negative, before OCR.
 - **Compare two versions:** see exactly what changed, in text and appearance, even after re-export from Word or when one is a scan; save a report. [The plan](docs/plans/Compare,%20Preferences%20and%20Measure.md).
@@ -38,6 +39,7 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 
 - Private by design: files never leave your computer.
 - Free and open source under the GNU AGPL v3.
+- Friction-free workflow: one task, many paths, by mouse or by keyboard. Still growing, and each new version is one more step toward it.
 - Simple first, powerful when you need it.
 
 Ideas and feedback are welcome. Open an issue on GitHub.
