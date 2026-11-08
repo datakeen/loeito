@@ -23,6 +23,7 @@ Developer documents: `docs/Reference Manual.md` (architecture, saving, server AP
 
 - Keep Loeito plain, calm and complete: the document comes first, every tool explains itself in everyday words, and nothing is uploaded.
 - Versions: a fix raises the last number (1.8.0 → 1.8.1), a new feature the middle one (1.8 → 1.9). Keep `VERSION`, `js/core.js` (`L.VERSION`) and `desktop/package.json` in step, and add the change to `CHANGELOG.md`.
+- Friction free: no task should depend on one option in one tool. Make new actions reachable from wherever the user already is, by mouse and by keyboard.
 - Give every new source file the one-line license notice (`SPDX-License-Identifier: AGPL-3.0-or-later`).
 - Update the user documents your change touches: `docs/Help.md`, the matching tutorial in `docs/tutorials/`, the User Manual and `CHANGELOG.md`.
 - New libraries must have an AGPL-compatible license and be listed in `NOTICE.md`.

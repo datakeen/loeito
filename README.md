@@ -25,22 +25,22 @@ Windows or macOS may warn that the app is from an unknown publisher, because it 
 
 ## What it does
 
-| Tool | For |
-|---|---|
-| **Merge PDFs** | Put PDFs, pictures and Office files together in the order you want |
-| **Read** | A calm reader with themes, focus mode, contents and read-aloud |
-| **Pages** | Rotate, reorder, delete, extract and split pages |
-| **Edit** | Add or fix text, highlight, white-out, draw, sign, add pictures |
-| **Crop** | Trim margins on one, odd/even or all pages |
-| **Searchable** | Make scans searchable and copyable (OCR) |
-| **Tables** | Tables, even from scans, to Excel, CSV, Word or Markdown |
-| **Digitize** | Graphs to numbers; maps to Shapefile, GeoJSON, KML, DXF and more |
-| **Optimize** | Make files smaller; change the paper size |
-| **Stamp** | Page numbers, Bates numbers, headers, footers, watermarks |
-| **Covers** | Designed front covers and last pages for books, reports and theses |
-| **Forms** | 10 templates, draw fields or find them automatically, dates with a calendar, totals, fill in |
-| **Properties** | Title, author, keywords and other document details |
-| **Protect** | Black out private details for real, remove hidden data, add passwords |
+| Tool           | For                                                                                          |
+| -------------- | -------------------------------------------------------------------------------------------- |
+| **Merge PDFs** | Put PDFs, pictures and Office files together in the order you want                           |
+| **Read**       | A calm reader with themes, focus mode, contents and read-aloud                               |
+| **Pages**      | Rotate, reorder, delete, extract and split pages                                             |
+| **Edit**       | Add or fix text, highlight, white-out, draw, sign, add pictures                              |
+| **Crop**       | Trim margins on one, odd/even or all pages                                                   |
+| **Searchable** | Make scans searchable and copyable (OCR)                                                     |
+| **Tables**     | Tables, even from scans, to Excel, CSV, Word or Markdown                                     |
+| **Digitize**   | Graphs to numbers; maps to Shapefile, GeoJSON, KML, DXF and more                             |
+| **Optimize**   | Make files smaller; change the paper size                                                    |
+| **Stamp**      | Page numbers, Bates numbers, headers, footers, watermarks                                    |
+| **Covers**     | Designed front covers and last pages for books, reports and theses                           |
+| **Forms**      | 10 templates, draw fields or find them automatically, dates with a calendar, totals, fill in |
+| **Properties** | Title, author, keywords and other document details                                           |
+| **Protect**    | Black out private details for real, remove hidden data, add passwords                        |
 
 Handy everywhere: several documents in tabs, **Ctrl K** to find any command, **Ctrl S** to save, and **?** for all keyboard shortcuts.
 
@@ -48,9 +48,9 @@ Handy everywhere: several documents in tabs, **Ctrl K** to find any command, **C
 
 Free software usually means two things. Here it means three.
 
-1. Free as in bread: it takes nothing from your pocket.
-2. Free to go: use it for any purpose, and share it with anyone.
-3. Free from friction: your work flows the way you like to work. One task, many paths, from different tools, by mouse or by keyboard.
+1. Free as in "free bread": it takes nothing from your pocket.
+2. Free as in "free to control": use it for any purpose, and share it with anyone.
+3. Free as in "friction free": your work flows the way you like to work. One task, many paths, from different tools, by mouse or by keyboard.
 
 The third freedom is still growing. Each new version is one more step toward it, and that's a commitment.
 
