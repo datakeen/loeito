@@ -11,7 +11,9 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 
 - **Review & print:** compare two versions of a document; check a file before it goes to print; keep bookmarks when saving.
 - **Accessible PDFs:** check and repair documents so screen readers can read them.
-- **More languages:** Loeito itself in more languages; better support for right-to-left scripts such as Urdu and Arabic.
+- **Urdu, Arabic and Persian, first class:** every tool working right to left with joined letters, plus vertical Chinese and Japanese. [The plan](docs/plans/Urdu,%20Arabic,%20Persian%20and%20vertical%20scripts.md).
+- **Better OCR, your choice of engine:** a more accurate engine (PaddleOCR) next to today's, a score that shows whether your computer can run each one, comparing both, and bringing your own model. [The plan](docs/plans/Better%20OCR.md).
+- **More languages:** Loeito's menus in more languages.
 
 ## Later
 
