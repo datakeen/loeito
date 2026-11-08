@@ -20,6 +20,8 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 - **Compare, including scans:** see text and visual differences between two versions, even when one is a scan.
 - **More formats:** EPUB in and out, Markdown in and out, and PDF to editable Word.
 
+- **Smoother working:** a Before/After switch on every tool that changes pages, recent files you can send to any tool, and a command finder that understands plain requests such as "remove footer".
+
 ## Later
 
 - **Repeatable work:** save a sequence of steps and run it over many files.
