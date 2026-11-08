@@ -64,14 +64,31 @@ The check reads only general facts about your hardware. Nothing is sent anywhere
 4. For each page click **Use left** or **Use right**, or click **Best of both** to let Loeito keep, word by word, the version its engine was more sure of.
 5. Click **Done**.
 
-### Add your own model (desktop app)
+### Add your own model (desktop app): the guided setup
 
-1. Install the model's program as its authors describe (for example Surya needs Python).
-2. In Loeito, open **Settings → OCR engines → Add my own engine**.
-3. Click **Browse** and pick the program (for example `surya_ocr`).
-4. Pick the output kind it gives (Loeito offers the common ones: hOCR, ALTO, or JSON with word boxes).
-5. Click **Test**. Loeito reads a sample page and shows the result and the time it took.
-6. Click **Save**. The engine now appears in the **Engine** list.
+You don't need to know how models work. A guide walks you through it, one small step at a time, and checks each step for you.
+
+1. Open **Settings → OCR engines → Add my own engine**. The guide opens.
+2. **Pick the model** from a list of cards. Each card says in plain words what the model is good at, its license, the download size, and your computer's score against what it needs:
+   - **Surya**: best on complex layouts and many languages; large; a graphics card helps a lot.
+   - **docTR**: good on business documents and receipts; medium size.
+   - **EasyOCR**: simple, 80+ languages; medium size.
+   - **Other model**: for anything else (advanced).
+3. The guide now shows **steps for that model only**, and for your system (Windows, macOS or Linux). Every step has:
+   - what to click or type, with a picture;
+   - a **Copy** button for any command, so nothing needs typing;
+   - a **Check** button: Loeito tests that the step worked and shows ✓, or says in plain words what went wrong and how to fix it.
+
+   For example, for Surya on Windows:
+   1. *Install Python.* Click **Open Python download page**, click the yellow **Download** button, run the file, tick **Add to PATH**, click **Install**. Then click **Check** in Loeito.
+   2. *Install Surya.* Click **Copy**, open the Start menu, type `PowerShell`, press Enter, right-click to paste, press Enter. Wait until it finishes (a few minutes). Click **Check**.
+   3. *Download the model files.* Click **Download models** in Loeito (about 1–2 GB, once). Click **Check**.
+4. **Test page:** Loeito reads a sample page with the new engine and shows the text and how long it took, next to Standard for comparison.
+5. Click **Finish**. The engine appears in the **Engine** list with its score badge.
+
+Any time later, **Settings → OCR engines** shows each engine with **Test**, **Repair** (runs the checks again and fixes what it can) and **Remove**.
+
+**Other model** (advanced): pick the program, choose its output kind (hOCR, ALTO, or JSON with word boxes), then **Test** and **Finish**.
 
 ## Things to know
 
@@ -87,4 +104,4 @@ The check reads only general facts about your hardware. Nothing is sent anywhere
 2. Redo a single page with another engine.
 3. Compare engines side by side.
 4. Best of both.
-5. Your own model (desktop).
+5. Your own model with the guided setup (desktop).
