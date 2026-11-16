@@ -22,6 +22,7 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 - **Preferences:** one place to set your defaults for every tool.
 - **Measure:** calibrate to any scale, then measure length, area and angles, with fine adjustment.
 - **More formats:** EPUB in and out, Markdown in and out, and PDF to editable Word.
+- **Smart annotations and clean copy:** one-click line and sentence highlight, hold-and-drag marking, margin notes, quick stamps, freehand circle and bracket, links between pages, clean copy without stray line breaks, and an annotation summary you can export. [The plan](docs/plans/Smart%20annotations%20and%20copy.md).
 - **Smoother working:** a Before/After switch on every tool that changes pages, recent files you can send to any tool, and a command finder that understands plain requests such as "remove footer".
 
 ## Later
