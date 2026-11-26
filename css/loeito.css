@@ -776,7 +776,7 @@ kbd { font: 11.5px var(--font); padding: 1px 6px; border-radius: 5px; background
 .mh-title span { font-size: 12px; color: var(--text-2); }
 .mh-out { flex: 1; display: flex; align-items: center; gap: 8px; justify-content: center; min-width: 0; }
 .mh-name { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.mh-name > span { font-size: 12px; color: var(--text-2); }
+.mh-name > span { font-size: 12px; color: var(--text-2); white-space: nowrap; }
 .mh-name .input { width: min(320px, 30vw); font-weight: 600; }
 .mh-name i { color: var(--text-3); font-style: normal; }
 .mh-folder { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--sep-strong); background: var(--surface); border-radius: 8px; height: 30px; padding: 0 10px; font: inherit; font-size: 12.5px; color: var(--text); max-width: 220px; cursor: pointer; }
@@ -995,3 +995,6 @@ body.full-window #sidebar, body.full-window #tabbar { display: none !important; 
 .guide.remove::after { background: #ff3b30; opacity: .6; }
 .guide.hidden { display: none; }
 .guide-tip { position: absolute; z-index: 7; background: var(--text); color: var(--surface); font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 5px; pointer-events: none; white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* toolbar families (1.10) */
+.blade-sep { flex: none; width: 1px; align-self: stretch; margin: 8px 4px; background: var(--sep); }

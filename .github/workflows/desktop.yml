@@ -1,5 +1,5 @@
 # Loeito - free and open-source PDF workbench. SPDX-License-Identifier: AGPL-3.0-or-later
-# Builds the installers on GitHub: Windows (setup + portable .exe), macOS (.dmg), Linux (AppImage + .deb).
+# Builds the installers on GitHub: Windows (setup .exe + portable .zip), macOS (.dmg), Linux (AppImage + .deb).
 # Runs on every push of a version tag (e.g. v1.6.0) and creates a GitHub Release with the files;
 # can also be started by hand from the Actions tab ("Run workflow") — then the files are under the run's Artifacts.
 name: Desktop installers
@@ -39,6 +39,7 @@ jobs:
           name: loeito-${{ matrix.os }}
           path: |
             desktop/dist/*.exe
+            desktop/dist/*-portable-*.zip
             desktop/dist/*.dmg
             desktop/dist/*.AppImage
             desktop/dist/*.deb

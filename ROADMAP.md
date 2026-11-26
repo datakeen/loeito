@@ -5,7 +5,7 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 ## Now
 
 - Polishing what is there: clearer wording, smoother motion, fewer clicks, better results on difficult scans.
-- Desktop installers for Windows, macOS and Linux.
+- Automated checks that open, edit, merge, save and read a page before every release.
 
 ## Next
 
@@ -23,6 +23,8 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 - **Measure:** calibrate to any scale, then measure length, area and angles, with fine adjustment.
 - **More formats:** EPUB in and out, Markdown in and out, and PDF to editable Word.
 - **Smart annotations and clean copy:** one-click line and sentence highlight, hold-and-drag marking, margin notes, quick stamps, freehand circle and bracket, links between pages, clean copy without stray line breaks, and an annotation summary you can export. [The plan](docs/plans/Smart%20annotations%20and%20copy.md).
+- **Office essentials:** dated “Received” and “Approved” stamps with your initials, initials on every page, scanning straight from a scanner, a letterhead behind every page, splitting by size for email, and filling one form per row of an Excel list.
+- **Research essentials:** search a whole folder of PDFs, cite a paper from its DOI (BibTeX, RIS), and save figures as pictures at full quality.
 - **Smoother working:** a Before/After switch on every tool that changes pages, recent files you can send to any tool, and a command finder that understands plain requests such as "remove footer".
 
 ## Later
@@ -35,6 +37,7 @@ Loeito aims to be the calm, complete, private PDF workbench: every everyday task
 - **Safe to share:** one click that finds private details, hidden data and metadata, shows them, then removes them and compares the result.
 - **Forms from a scan:** turn a scanned paper form into a fillable one, with Urdu, Arabic and Persian labels.
 - **Picture layouts:** place several pictures or pages on a sheet with templates, shared with Covers.
+- **Lighter and trusted:** code-signed installers, an optional check for new versions, and a much smaller desktop app that uses the system’s own web view.
 
 ## Always
 

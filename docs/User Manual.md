@@ -88,6 +88,19 @@ You need the desktop app and, for now, Python with two free packages: `py -m pip
 - **Scroll on to the next page:** in any tool, keep scrolling past the end of a page and the next one opens. You can switch it off in the same menu.
 - **Snapshot** (Ctrl Shift C): drag a box on the page, or click for the whole page. Copy the picture, or save it as PNG. The picture is sharp, about 3000 pixels on the long side.
 
+## Print
+
+Press **Ctrl P**, or choose **Print…** in the menu next to Save. Loeito prepares the document as it is now, with all edits, and opens your computer's print window, where you pick the printer, pages and copies.
+
+## Rulers and guides
+
+1. Press **Ctrl Alt R**, or open the zoom menu at the bottom and choose **Rulers and guides**.
+2. Rulers appear along the top and left, measured from the page's top-left corner. Right-click a ruler (or click the small corner box) to switch between millimeters, centimeters, inches and points.
+3. To make a guide, press on a ruler and drag onto the page. A label shows the position; hold **Shift** to snap to whole units.
+4. Drag a guide to move it. Drag it back onto its ruler, or double-click it, to remove it. *Clear all guides* is in the ruler menu and in Ctrl K.
+
+Guides belong to the document while it is open; they are not printed or saved into the PDF.
+
 ## Merge PDFs
 
 Click **Merge PDFs** on the welcome screen to start fresh. To start from the document you have open, use **Pages → Merge this with other files…** or the Save button's menu. The open document comes in first, **with all your edits** (page order, rotation, crop, highlights, form fields, OCR text), and Loeito asks for the files to add. Its card says *open tab · edited*. If you keep editing the tab, **Update from the open tab** on the card takes the newest version.
@@ -368,6 +381,8 @@ Press **?** in Loeito for the full list.
 | Select · Text · Hand | V · T · H (Space = Hand for a moment) |
 | Pages | → ← · Home · End |
 | Rotate | Ctrl L · Ctrl R |
+| Print | Ctrl P |
+| Rulers and guides | Ctrl Alt R |
 | Focus mode | F · Esc |
 
 ## Good to know

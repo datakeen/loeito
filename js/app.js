@@ -11,6 +11,13 @@
   // The desktop app (or the local server) converts Office files with Microsoft Office or LibreOffice on this computer.
   L.server = null;
   L.serverReady = (location.protocol.startsWith('http') ? fetch('/api/status').then(r => (r.ok ? r.json() : null)).catch(() => null) : Promise.resolve(null)).then(s => (L.server = s));
+  // The try-it version on the website: a friendly word that the installed app does more.
+  L.serverReady.then(s => {
+    if (s || !/\/try\//.test(location.pathname)) return;
+    let seen = false; try { seen = sessionStorage.getItem('loeito.tryNote') === '1'; sessionStorage.setItem('loeito.tryNote', '1'); } catch {}
+    if (!seen) setTimeout(() => L.toast('You’re trying Loeito in the browser. Everything stays on your computer. For the best experience (folders, Office files, passwords, offline), install the desktop app.',
+      { icon: 'info', ms: 12000, action: { label: 'Get the app', fn: () => window.open('https://sourceforge.net/projects/loeito/files/latest/download', '_blank', 'noopener') } }), 1500);
+  });
   L.convertOffice = (f, t) => convertOffice(f, t);
   async function convertOffice(f, t) {
     const srv = await L.serverReady;
@@ -102,7 +109,12 @@
     L.$('#btn-zoom-in').append(L.icon('plus')); L.$('#btn-zoom-out').append(L.icon('minus'));
     for (const [t, ic] of [['select', 'cursor'], ['text', 'ibeam'], ['hand', 'hand']]) L.$(`#hud-tools [data-tool="${t}"]`).append(L.icon(ic));
     const nav = L.$('#blades');
-    for (const b of L.blades) nav.append(h('button', { class: 'blade', 'data-blade': b.id, title: b.desc, onclick: () => { if (L.hasDoc()) L.setBlade(b.id); else { pendingBlade = b.id; L.pickFiles(false); } } }, L.icon(b.icon), h('span', null, b.label)));
+    const GROUPS = [['view'], ['pages', 'crop', 'compress'], ['edit', 'stamp', 'covers', 'forms'], ['ocr', 'tables', 'digitize'], ['protect']];
+    const rank = id => { const g = GROUPS.findIndex(x => x.includes(id)); return g < 0 ? 99 : g * 10 + GROUPS[g].indexOf(id); };
+    L.blades.sort((a, b) => rank(a.id) - rank(b.id));
+    let lastGroup = -1;
+    for (const b of L.blades) { const g = Math.floor(rank(b.id) / 10); if (lastGroup >= 0 && g !== lastGroup) nav.append(h('span', { class: 'blade-sep', 'aria-hidden': 'true' })); lastGroup = g;
+      nav.append(h('button', { class: 'blade', 'data-blade': b.id, title: b.desc, onclick: () => { if (L.hasDoc()) L.setBlade(b.id); else { pendingBlade = b.id; L.pickFiles(false); } } }, L.icon(b.icon), h('span', null, b.label))); }
     L.$('#btn-sidebar').onclick = () => { const ws = L.$('#workspace'); if (ws.classList.contains('grid-nosb')) return L.showSidebarAnyway(); ws.classList.toggle('no-sidebar'); };
     L.$('#doc-title').onclick = () => (L.hasDoc() ? L.openNameSheet() : L.pickFiles());
     L.$('#btn-undo').onclick = L.undo; L.$('#btn-redo').onclick = L.redo;
@@ -119,6 +131,9 @@
         'sep',
         { label: 'Open…', icon: 'upload', kbd: 'Ctrl O', fn: () => L.pickFiles(false) },
         { label: 'Merge with other files…', icon: 'merge', fn: () => L.openMerge({ withCurrent: true }) },
+        L.hasLastMerge && L.hasLastMerge() ? { label: 'Change the last merge…', icon: 'merge', fn: () => L.reopenMerge() } : null,
+        'sep',
+        { label: 'Print…', icon: 'doc', kbd: 'Ctrl P', fn: () => L.print() },
       ]);
     };
     L.$('#btn-add-files').onclick = () => L.pickFiles(true);
@@ -188,6 +203,19 @@
   L.on('cleared', () => { L.$('#thumbs').replaceChildren(); L.$('#inspector').replaceChildren(); L.$('#grid-view').hidden = true; L.$('#sheet').hidden = false; L.$('#stage-hud').hidden = false; document.body.classList.remove('has-doc'); updateChrome(); });
 
   /* ——— Keyboard ——— */
+  // Print the document as it is now (edits, forms, stamps included) through the computer's own print dialog.
+  L.print = async () => {
+    if (!L.hasDoc()) return L.toast('Open a document first (Ctrl O), then print it.', { icon: 'info' });
+    const t = L.task('Preparing to print', { cancelable: false });
+    try {
+      const bytes = await L.buildPdf({ state: L.state, pages: L.state.pages });
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+      L.$('#print-frame')?.remove();
+      const fr = h('iframe', { id: 'print-frame', title: 'Print', style: { position: 'fixed', right: '0', bottom: '0', width: '1px', height: '1px', border: '0', opacity: '0' } });
+      fr.onload = () => { t.done(); setTimeout(() => { try { fr.contentWindow.focus(); fr.contentWindow.print(); } catch { window.open(url, '_blank'); L.toast('Your browser opened the PDF in a new tab. Print it from there with Ctrl P.', { icon: 'info', ms: 7000 }); } }, 400); setTimeout(() => URL.revokeObjectURL(url), 120000); };
+      fr.src = url; document.body.append(fr);
+    } catch (e) { t.done(); L.error('Couldn’t prepare the document for printing', e); }
+  };
   function onKey(e) {
     if (L.$('#modal-root').children.length) return;
     const mod = e.ctrlKey || e.metaKey, k = e.key.toLowerCase(), typing = !!e.target.closest('input,textarea,[contenteditable="true"]');
@@ -196,6 +224,7 @@
     if (!L.hasDoc()) return;
     if (mod && k === 's') { e.preventDefault(); return e.shiftKey ? L.saveAs() : L.save(); }
     if (mod && k === 'f') { e.preventDefault(); return L.openSearch(); }
+    if (mod && k === 'p' && !e.shiftKey) { e.preventDefault(); return L.print(); }
     if (mod && !typing && (k === 'z' || k === 'y')) { e.preventDefault(); return (k === 'y' || e.shiftKey) ? L.redo() : L.undo(); }
     if (mod && (k === '=' || k === '+')) { e.preventDefault(); return L.zoomStep(1); }
     if (mod && k === '-') { e.preventDefault(); return L.zoomStep(-1); }

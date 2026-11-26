@@ -1,0 +1,70 @@
+<!doctype html>
+<!-- Loeito website. SPDX-License-Identifier: AGPL-3.0-or-later -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found · Loeito</title>
+<meta name="robots" content="noindex">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="https://datakeen.github.io/loeito/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Caveat:wght@600;700&display=swap">
+<script data-goatcounter="https://abilal.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<style>
+  :root { --paper: #f7f6f2; --ink: #14181f; --ink-2: #4d5563; --grid: rgba(47,114,189,.08); --blue: #2f72bd; --sky: #a9d1f4; --card: #fff; --btn: #0a66d9; --line: rgba(20,24,31,.1); color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root { --paper: #101318; --ink: #eef1f6; --ink-2: #b3bac7; --grid: rgba(127,178,255,.07); --blue: #7fb2ff; --sky: #2c4f7a; --card: #1b2029; --btn: #2f7df0; --line: rgba(255,255,255,.1); color-scheme: dark; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; overflow: hidden; padding: 24px 16px; background: var(--paper); color: var(--ink);
+    font: 17px/1.55 Inter, "Segoe UI", system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; text-align: center;
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size: 24px 24px; }
+  main { position: relative; max-width: 560px; z-index: 2; }
+  .big { font: 800 clamp(110px, 26vw, 190px)/0.9 Inter, system-ui, sans-serif; letter-spacing: -.06em; margin: 0; position: relative; display: inline-flex; gap: .02em; }
+  .big span { display: inline-block; animation: bob 3.2s ease-in-out infinite; }
+  .big span:nth-child(2) { color: var(--blue); animation-delay: -.6s; }
+  .big span:nth-child(3) { animation-delay: -1.2s; }
+  @keyframes bob { 50% { transform: translateY(-10px) rotate(-2deg); } }
+  h1 { font-size: clamp(26px, 5vw, 36px); letter-spacing: -.02em; margin: 6px 0 10px; }
+  p { color: var(--ink-2); margin: 0 auto 26px; max-width: 46ch; }
+  .note { font: 700 25px/1.2 Caveat, "Segoe Print", cursive; color: var(--blue); transform: rotate(-3deg); margin: -6px 0 26px; }
+  .row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  a.btn { display: inline-block; background: var(--btn); color: #fff; text-decoration: none; font-weight: 600; padding: 12px 22px; border-radius: 999px; transition: transform .15s; }
+  a.btn:hover { transform: translateY(-2px); }
+  a.btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  a:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+  /* a paper airplane made of page 404, looping the room */
+  .plane { position: fixed; left: 0; top: 0; width: 64px; z-index: 1; offset-path: path("M -80 420 C 200 120, 420 620, 700 300 S 1200 80, 1500 380 S 1900 700, 2100 200"); offset-rotate: auto; animation: fly 11s linear infinite; }
+  @keyframes fly { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+  .trail { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .trail path { fill: none; stroke: var(--blue); stroke-width: 2; stroke-dasharray: 2 10; stroke-linecap: round; opacity: .35; }
+  /* pages fluttering down */
+  .leaf { position: fixed; top: -60px; width: 34px; height: 44px; border-radius: 3px; background: var(--card); box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 8px 18px -8px rgba(20,40,80,.3);
+    background-image: linear-gradient(var(--line) 2px, transparent 2px); background-size: 100% 7px; background-clip: content-box; padding: 9px 6px; animation: fall linear infinite; z-index: 0; }
+  @keyframes fall { to { transform: translate(var(--dx), 115vh) rotate(var(--r)); } }
+  @media (prefers-reduced-motion: reduce) { .plane, .leaf, .big span { animation: none; } .plane { display: none; } }
+</style>
+</head>
+<body>
+<svg class="trail" viewBox="0 0 2000 800" preserveAspectRatio="none" aria-hidden="true"><path d="M -80 420 C 200 120, 420 620, 700 300 S 1200 80, 1500 380 S 1900 700, 2100 200"/></svg>
+<svg class="plane" viewBox="0 0 64 40" aria-hidden="true"><path d="M2 20 L62 2 L40 38 L30 24 Z" fill="var(--card)" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round"/><path d="M30 24 L62 2" stroke="var(--blue)" stroke-width="2"/><path d="M30 24 L34 34" stroke="var(--blue)" stroke-width="2" stroke-linecap="round"/></svg>
+<main>
+  <p class="big" aria-hidden="true"><span>4</span><span>0</span><span>4</span></p>
+  <h1>This page folded itself into a paper plane.</h1>
+  <p class="note">It's out there somewhere, doing loops. We tried a ruler, OCR and a magnifier.</p>
+  <p>The link may be old, or the address may have a small typo. Everything about Loeito is one click away.</p>
+  <div class="row">
+    <a class="btn" href="https://datakeen.github.io/loeito/">Take me home</a>
+    <a class="btn ghost" href="https://datakeen.github.io/loeito/try/">Open Loeito in the browser</a>
+  </div>
+</main>
+<script>
+  // a few pages drift down, each a little different
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) for (let i = 0; i < 9; i++) {
+    const d = document.createElement('div'); d.className = 'leaf'; d.setAttribute('aria-hidden', 'true');
+    d.style.left = (Math.random() * 100) + 'vw'; d.style.animationDuration = (9 + Math.random() * 9) + 's'; d.style.animationDelay = (-Math.random() * 18) + 's';
+    d.style.setProperty('--dx', (Math.random() * 200 - 100) + 'px'); d.style.setProperty('--r', (Math.random() * 720 - 360) + 'deg'); d.style.opacity = (0.5 + Math.random() * 0.5).toFixed(2);
+    document.body.append(d);
+  }
+</script>
+</body>
+</html>

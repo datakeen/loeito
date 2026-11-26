@@ -26,7 +26,7 @@ Developer documents: `docs/Reference Manual.md` (architecture, saving, server AP
 - Friction free: no task should depend on one option in one tool. Make new actions reachable from wherever the user already is, by mouse and by keyboard.
 - Give every new source file the one-line license notice (`SPDX-License-Identifier: AGPL-3.0-or-later`).
 - Update the user documents your change touches: `docs/Help.md`, the matching tutorial in `docs/tutorials/`, the User Manual and `CHANGELOG.md`.
-- New libraries must have an AGPL-compatible license and be listed in `NOTICE.md`.
+- New libraries, fonts, installer tools and website services must have an AGPL-compatible license and be listed in `NOTICE.md` with their authors and license; their license texts must travel with the installers.
 
 ## Reporting problems
 

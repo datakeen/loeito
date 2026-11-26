@@ -8,6 +8,7 @@
       { t: 'Open a file', k: 'Ctrl O', i: 'upload', f: () => L.pickFiles(false) },
       { t: 'Save', k: 'Ctrl S', i: 'save', f: need(() => L.save()) },
       { t: 'Save As…', k: 'Ctrl Shift S', i: 'folder', f: need(() => L.saveAs()) },
+      { t: 'Print', k: 'Ctrl P', i: 'doc', f: need(() => L.print()) },
       { t: 'Save a copy for sharing (clean)', i: 'shield', f: need(() => L.saveAs({ clean: true })) },
       { t: 'Merge PDFs', i: 'merge', f: () => L.openMerge(L.hasDoc() ? { withCurrent: true } : undefined) },
       { t: 'Change the last merge (merge again)', i: 'merge', f: () => L.reopenMerge() },

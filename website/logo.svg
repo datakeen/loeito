@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="1024" height="1024">
+  <title>Loeito</title>
+  <!-- Loeito — two pages joined by a seam. SPDX-License-Identifier: AGPL-3.0-or-later -->
+  <polygon points="92,20 184,20 226,62 226,198 92,198" fill="#a9d1f4"/>
+  <polygon points="184,20 226,62 184,62" fill="#2f72bd"/>
+  <polygon points="30,74 164,74 164,236 72,236 30,194" fill="#a9d1f4"/>
+  <polygon points="30,194 72,194 72,236" fill="#2f72bd"/>
+  <polygon points="92,74 164,74 164,198 92,198" fill="#5e9fe3"/>
+  <polygon points="92,74 118,74 118,108 164,148 164,198 138,198 138,164 92,124" fill="#1f5596"/>
+  <g stroke="#ffffff" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round">
+    <line x1="105" y1="80" x2="105" y2="112"/>
+    <line x1="151" y1="160" x2="151" y2="194"/>
+  </g>
+</svg>

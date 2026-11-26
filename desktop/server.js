@@ -15,7 +15,9 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; cha
 const MAX = 500 * 1024 * 1024;
 const BAD = /[\\/:*?"<>|]/;
 
-function create({ root, getPath, reveal }) {
+function create({ root, getPath, reveal, ocrDir }) {
+  // OCR languages installed next to the app (the installer lets people leave some out)
+  const ocrLangs = () => { try { return fs.readdirSync(ocrDir).filter(f => f.endsWith('.traineddata.gz')).map(f => f.replace('.traineddata.gz', '')); } catch { return null; } };
   const safetyDir = path.join(getPath('userData'), 'Safety copies');
   const which = cmd => spawnSync(process.platform === 'win32' ? 'where' : 'which', [cmd], { encoding: 'utf8' }).status === 0;
   const python = ['py', 'python3', 'python'].find(p => spawnSync(p, ['-c', 'import pypdf, cryptography'], { encoding: 'utf8' }).status === 0) || null;
@@ -53,7 +55,7 @@ function create({ root, getPath, reveal }) {
 
   async function api(req, res, port) {
     const url = new URL(req.url, 'http://x'), r = url.pathname, q = Object.fromEntries(url.searchParams);
-    if (r === '/api/status') return json(res, { ok: true, app: 'loeito', root, office: msOffice || !!soffice, apps: { microsoft: msOffice, libreoffice: !!soffice }, types: [...OFFICE], fs: true, crypto: !!python, desktop: true });
+    if (r === '/api/status') return json(res, { ok: true, app: 'loeito', root, office: msOffice || !!soffice, apps: { microsoft: msOffice, libreoffice: !!soffice }, types: [...OFFICE], ocrLangs: ocrLangs(), fs: true, crypto: !!python, desktop: true });
     if (!fromLoeito(req, port)) return json(res, { error: 'Not allowed' }, 403);
     try {
       if (r === '/api/fs/places') return json(res, { places: [['desktop', 'Desktop'], ['documents', 'Documents'], ['downloads', 'Downloads']].map(([id, name]) => ({ id, name, path: getPath(id) })), drives: drives(), home: os.homedir(), safety: safetyDir, sep: path.sep });
@@ -109,6 +111,8 @@ function create({ root, getPath, reveal }) {
     const port = server.address().port;
     if (req.url.startsWith('/api/')) return api(req, res, port);
     let rel = decodeURIComponent(new URL(req.url, 'http://x').pathname); if (rel === '/') rel = '/index.html';
+    const tess = rel.match(/^\/vendor\/tessdata\/([a-z_]+\.traineddata\.gz)$/);
+    if (tess && ocrDir) return fs.readFile(path.join(ocrDir, tess[1]), (err, data) => (err ? send(res, 404, 'Not installed', 'text/plain') : send(res, 200, data, 'application/gzip')));
     const file = path.join(root, path.normalize(rel).replace(/^([/\\])+/, ''));
     if (!file.startsWith(root)) return send(res, 403, 'Forbidden', 'text/plain');
     fs.readFile(file, (err, data) => (err ? send(res, 404, 'Not found', 'text/plain') : send(res, 200, data, MIME[path.extname(file).toLowerCase()] || 'application/octet-stream')));

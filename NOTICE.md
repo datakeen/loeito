@@ -21,7 +21,7 @@ Loeito uses the work of these projects. They are not modified, and each stays un
 | [pdf-lib](https://github.com/Hopding/pdf-lib) | 1.17.1 | Andrew Dillon and contributors | MIT | Writing and changing PDF files |
 | [Tesseract.js](https://github.com/naptha/tesseract.js) | 5.1.1 | Jerome Wu, Kevin Kwok and contributors | Apache-2.0 | OCR (Make Searchable, scanned tables and forms) |
 | [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) engine (tesseract.js-core) | 5 | Google, Ray Smith and contributors | Apache-2.0 | The recognition engine inside Tesseract.js |
-| [Tesseract language data](https://github.com/tesseract-ocr/tessdata) (via @tesseract.js-data) | 4.0.0 best_int | Google and contributors | Apache-2.0 | Language models for OCR |
+| [Tesseract language data](https://github.com/tesseract-ocr/tessdata) (via @tesseract.js-data) | 4.0.0 best_int | Google and contributors | Apache-2.0 | Language models for OCR (English, Urdu, Arabic, Persian, Swedish, Chinese, Japanese in the installers) |
 | [JSZip](https://github.com/Stuk/jszip) | 3.10.1 | Stuart Knightley and contributors | MIT (dual MIT / GPL-3.0) | Shapefile and Office file packages |
 | [SheetJS Community Edition](https://github.com/SheetJS/sheetjs) | 0.18.5 | SheetJS LLC | Apache-2.0 | Reading and writing Excel files |
 | [xlsx-js-style](https://github.com/gitbrent/xlsx-js-style) | 1.2.0 | Brent Ely, based on SheetJS | Apache-2.0 | Excel cell styles |
@@ -40,10 +40,19 @@ Loeito uses the work of these projects. They are not modified, and each stays un
 |---|---|---|
 | [Electron](https://www.electronjs.org/) (includes Chromium and Node.js) | MIT (Chromium: BSD-3-Clause and others, listed in the app's `LICENSES.chromium.html`) | The desktop app window |
 | [electron-builder](https://www.electron.build/) | MIT | Building the installers (not shipped) |
+| [NSIS](https://nsis.sourceforge.io/) | zlib/libpng License | The Windows installer program |
+| [7-Zip](https://www.7-zip.org/) plugin for NSIS (nsis7z) | GNU LGPL 2.1 | Unpacking Loeito during Windows installation; its source is available from 7-zip.org |
 | [Python](https://www.python.org/) | PSF License | Running `loeito_server.py` when you start Loeito from the source code (not shipped) |
 | [pypdf](https://github.com/py-pdf/pypdf) | BSD-3-Clause | Password protection (AES-256) |
 | [cryptography](https://github.com/pyca/cryptography) | Apache-2.0 or BSD-3-Clause | Encryption for pypdf |
 | Microsoft Office (yours, if installed) | Proprietary, not included | Opening Word, Excel and PowerPoint files |
+
+### Website
+
+| Component | License | Used for |
+|---|---|---|
+| [Inter](https://rsms.me/inter/) and [Caveat](https://fonts.google.com/specimen/Caveat), via Google Fonts | SIL Open Font License 1.1 | Website type |
+| [GoatCounter](https://www.goatcounter.com/) | EUPL 1.2 (service) | Counting website visits without cookies; not used in the app |
 
 Icons, the Loeito logo, the cover designs and the form templates were made for Loeito and are under the AGPL like the rest of it.
 

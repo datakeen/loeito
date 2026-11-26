@@ -61,7 +61,7 @@
       actions: [{ label: 'User manual', value: 'manual' }, { label: 'Got it', primary: true, value: true }] }).then(v => v === 'manual' && showDoc('docs/User Manual.md', 'Loeito User Manual'));
   };
   const KEYS = [
-    ['Files', [['Do anything (command palette)', 'Ctrl K'], ['Open', 'Ctrl O'], ['Save (to the original)', 'Ctrl S'], ['Save As…', 'Ctrl Shift S'], ['Find', 'Ctrl F'], ['Undo / Redo', 'Ctrl Z / Ctrl Shift Z']]],
+    ['Files', [['Do anything (command palette)', 'Ctrl K'], ['Open', 'Ctrl O'], ['Save (to the original)', 'Ctrl S'], ['Save As…', 'Ctrl Shift S'], ['Print', 'Ctrl P'], ['Rulers and guides', 'Ctrl Alt R'], ['Find', 'Ctrl F'], ['Undo / Redo', 'Ctrl Z / Ctrl Shift Z']]],
     ['Viewing', [['Zoom in / out', 'Ctrl + / Ctrl −, Ctrl-wheel'], ['Fine zoom', 'Shift while zooming'], ['Fit width ↔ fit page', 'Ctrl 0'], ['Next / previous page', '→ ←'], ['Focus mode', 'F · Esc to leave'], ['Full window', 'Ctrl Shift F'], ['Full screen', 'F11'], ['Snapshot of a page area', 'Ctrl Shift C'], ['Scroll on to the next page', 'wheel past the page end'], ['Show / hide pages', 'Ctrl \\']]],
     ['Pointer', [['Select', 'V'], ['Text', 'T'], ['Hand', 'H · or hold Space'], ['Move the page', 'drag the gray backdrop']]],
     ['Pages & forms', [['Rotate', 'Ctrl L / Ctrl R'], ['Delete selected', 'Delete'], ['Duplicate field', 'Ctrl D'], ['Nudge field', 'Arrows · Shift = 10 pt'], ['Make key field', 'Alt-click'], ['Move without snapping', 'hold Alt while dragging']]],

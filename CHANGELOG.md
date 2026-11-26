@@ -2,6 +2,28 @@
 
 All notable changes to Loeito, newest first. Every release is on the GitHub Releases page.
 
+## 1.10.0 — 2026-11-26
+
+### Added
+- **Print** (Ctrl P, the Save menu or Ctrl K): prints the document as it is now, with every edit, form and stamp.
+- **Rulers and guides** (Ctrl Alt R or the View menu): millimeters, centimeters, inches or points; drag a guide out of a ruler, move it, drag it back to remove it.
+- **Change the merge:** after Merge & Open, bring the same files and order back, fix something and merge again; the earlier result is replaced.
+- **Website:** a home page with the tools, a before-and-after slider and downloads from SourceForge; the browser version moved to /try/.
+- **Windows installer:** an Optional parts page for the text-recognition languages, with what each is for and its size. Persian text recognition added.
+- **Portable Windows app** as a zip: starts faster than the old single file, and keeps its settings in a folder beside it.
+
+### Improved
+- **The file window:** sort by name, date, type or size; a preview of the first page; scrolls with the mouse wheel, touchpad and scrollbar; arrow keys, Page Up/Down, Home/End and typing a name stay instant in big folders; Save As shows the full folder.
+- **Merge:** shows exactly which folder it saves in; names the result after the files, such as “Annual Report and Budget Plan_merged”.
+- **Messages:** every problem now says what to do about it, in plain words; the technical details are one click away.
+- **The toolbar** is arranged in families: Read · Organize · Create and edit · Extract · Secure.
+- **Smaller install:** about 55 MB less on disk (one interface language for the window engine, only the OCR builds Loeito uses).
+- The version is shown next to the name on the start screen, in the Help menu and in About.
+
+### Fixed
+- The file window list could not scroll and froze on the Down key in large folders.
+- Suggested names no longer carry leftovers such as “(1) (1)” or “+ 0 more”.
+
 ## 1.9.0 — 2026-11-08
 
 ### Added

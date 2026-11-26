@@ -4,11 +4,11 @@
 
 <p align="center">A free, private PDF workbench for everyday work: read, merge, edit, sign, fill and make forms, OCR scans, pull tables into Excel, and protect files with passwords.</p>
 
-<p align="center"><b><a href="../../releases/latest">Download</a></b> · <b><a href="https://datakeen.github.io/loeito/">Try it in your browser</a></b></p>
+<p align="center"><b><a href="../../releases/latest">Download</a></b> · <b><a href="https://datakeen.github.io/loeito/try/">Try it in your browser</a></b></p>
 
-Your files never leave your computer. No account, no upload, no subscription. The installed app works without internet from the very first start.
+Your files never leave your computer. No account, no upload, no subscription, no analytics. The installed app works without internet from the very first start. ([The website](https://datakeen.github.io/loeito/) counts visits without cookies and stores nothing about you.)
 
-**Version 1.9.0** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
+**Version 1.10.0** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
 
 In the browser, everything works except folder browsing, opening Word / Excel / PowerPoint files and passwords; those need the desktop app.
 
@@ -16,7 +16,7 @@ In the browser, everything works except folder browsing, opening Word / Excel / 
 
 1. Open the **[Releases](../../releases/latest)** page.
 2. Download the file for your computer:
-   - **Windows:** `Loeito-Setup-….exe`
+   - **Windows:** `Loeito-Setup-….exe`, or `Loeito-…-portable-x64.zip` to run without installing
    - **macOS:** `Loeito-…-arm64.dmg` for Apple chips (M1 and newer, 2020 onward), `Loeito-…-x64.dmg` for older Intel Macs
    - **Linux:** `Loeito-….AppImage`
 3. Open the downloaded file and follow the steps. Then start **Loeito** like any other program.

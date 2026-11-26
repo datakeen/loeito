@@ -1,5 +1,5 @@
 # Loeito - free and open-source PDF workbench. Copyright (C) 2026 Ahmed Bilal and contributors. SPDX-License-Identifier: AGPL-3.0-or-later (see LICENSE)
-# Publishes the browser version of Loeito to GitHub Pages (https://datakeen.github.io/loeito/) on every push to main.
+# Publishes the website (https://datakeen.github.io/loeito/) and the browser version of Loeito (/try/) on every push to main.
 name: Publish website
 run-name: Publish website
 on:
@@ -21,10 +21,12 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - name: Keep only what the web app needs
+      - name: Website at the root, the browser version of Loeito in /try/
         run: |
-          mkdir site
-          cp -r index.html css js docs samples LICENSE NOTICE.md site/
+          mkdir -p site/try
+          cp -r website/. site/
+          cp -r index.html css js docs samples LICENSE NOTICE.md site/try/
+          rm -rf site/try/samples/source
           touch site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

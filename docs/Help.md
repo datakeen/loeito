@@ -34,7 +34,8 @@ A **check** points out what's missing or untidy and fixes it with one click.
 - Drag cards to reorder the files. Under **Show pages**, drag pages to move them; Ctrl-drag copies them.
 - Cut / Copy / Paste work through the bar at the bottom. Whole files can be copied, pasted or duplicated too.
 - Word, Excel, PowerPoint and OpenDocument files can be added in the desktop app (it uses Microsoft Office or the free LibreOffice), and **Cover…** adds a designed cover or last page.
-- **Merge & Open** saves the result (in the first file's folder unless you choose another) and opens it for checking.
+- **Merge & Open** saves the result and opens it for checking. The folder is shown at the top; click it to choose another.
+- Need to fix something? **Change the merge** (in the message after merging, the Save menu or Ctrl K) brings the same files back; merging again replaces the earlier result.
 
 > Tutorial: **01 Merge PDFs**
 
@@ -45,7 +46,15 @@ A **check** points out what's missing or untidy and fixes it with one click.
 - **Ctrl S** saves back into the original after one question (Enter = yes) and keeps a safety copy.
 - **Ctrl Shift S** is Save As: choose a name and folder, make a new folder, choose *Replace* or *Keep both*.
 
-**How it works:** Loeito's own file sheet uses its local helper to browse folders. Without it, your browser's save window is used.
+**How it works:** Loeito's own file window lists folders with a preview of the first page. Click a column title to sort by name, date, type or size; type a name to jump to it. Without the desktop app, your browser's window is used.
+
+## Print
+
+**Ctrl P** (or the Save menu, or Ctrl K → Print) prints the document as it is now, with every edit, form and stamp, through your computer's print window.
+
+## Rulers and guides
+
+**Ctrl Alt R** (or the View menu) shows rulers. Drag from a ruler onto the page to make a guide; drag a guide to move it, back onto the ruler to remove it, or double-click it. Hold Shift to snap to whole units. Right-click a ruler to change units.
 
 > Tutorial: **02 Open and save**
 

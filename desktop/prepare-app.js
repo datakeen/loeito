@@ -34,10 +34,10 @@ const FILES = [
 ];
 // The OCR engine comes in several builds; Tesseract.js picks the fastest one the computer supports.
 const CORE = 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5.1.1/';
-for (const f of ['tesseract-core.wasm.js', 'tesseract-core-simd.wasm.js', 'tesseract-core-lstm.wasm.js', 'tesseract-core-simd-lstm.wasm.js',
-  'tesseract-core-relaxedsimd.wasm.js', 'tesseract-core-relaxedsimd-lstm.wasm.js']) FILES.push([CORE + f, 'tesseract/core/' + f, 'optional']);
+// Loeito always uses the LSTM engine (OEM 1), so only those builds travel with it (about 9 MB less).
+for (const f of ['tesseract-core-lstm.wasm.js', 'tesseract-core-simd-lstm.wasm.js', 'tesseract-core-relaxedsimd-lstm.wasm.js']) FILES.push([CORE + f, 'tesseract/core/' + f, 'optional']);
 // OCR languages built into the installer (others still download once, when first chosen)
-const LANGS = ['eng', 'urd', 'ara', 'swe', 'chi_sim', 'chi_tra', 'jpn'];
+const LANGS = ['eng', 'urd', 'ara', 'fas', 'swe', 'chi_sim', 'chi_tra', 'jpn'];
 for (const l of LANGS) FILES.push([`https://cdn.jsdelivr.net/npm/@tesseract.js-data/${l}/4.0.0_best_int/${l}.traineddata.gz`, `tessdata/${l}.traineddata.gz`]);
 FILES.push(['https://raw.githubusercontent.com/tesseract-ocr/tessdata/main/LICENSE', 'tessdata/LICENSE']);
 const FONTS_CSS = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Caveat:wght@500&family=Homemade+Apple&display=swap';

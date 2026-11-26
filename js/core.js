@@ -2,7 +2,7 @@
 /* Loeito core: DOM helpers, icons, state, history, feedback (toasts, tasks, dialogs), file utilities. */
 (() => {
   const L = (window.Loeito = window.Loeito || {});
-  L.VERSION = '1.9.0'; L.CODENAME = 'Hantverk'; // keep in step with VERSION, desktop/package.json and CHANGELOG.md
+  L.VERSION = '1.10.0'; L.CODENAME = 'Hantverk'; // keep in step with VERSION, desktop/package.json and CHANGELOG.md
 
   /* ——— Motion: a just-rotated page turns into place wherever it is shown (grid, sidebar, page, reader) ——— */
   L.spins = new Map(); // page id -> { delta, until }
@@ -405,7 +405,8 @@
   L.tessOptions = (lang, extra = {}) => {
     const o = L.OFFLINE && L.OFFLINE.tess;
     if (!o) return extra;
-    const local = lang.split('+').every(l => o.langs.includes(l));
+    const have = (L.server && L.server.ocrLangs) || o.langs;
+    const local = lang.split('+').every(l => have.includes(l));
     const abs = p => new URL(p, location.href).href;
     return { workerPath: abs(o.workerPath), corePath: abs(o.corePath), ...(local ? { langPath: abs(o.langPath) } : {}), ...extra };
   };

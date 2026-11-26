@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /try/docs/
+
+Sitemap: https://datakeen.github.io/loeito/sitemap.xml
