@@ -300,7 +300,7 @@
       if (id === 'csv') return save(L.geo.csv(fs, crs, props), 'csv', 'text/csv');
       if (id === 'dxf') return save(L.geo.dxf(fs), 'dxf', 'application/dxf');
       if (['ldb', 'pol', 'pli', 'xyz', 'xyn'].includes(id)) return save(L.geo[id](fs, crs), id, 'text/plain');
-    } catch (e) { L.error('Export failed', e); }
+    } catch (e) { L.error('Exporting didn’t finish', e); }
   }
   L.digitizeExportData = () => { const m = dig().map, tf = mapTransform(m); return tf ? { fs: mapFeatures(m, tf), crs: crsOf(m), props: measureProps(m, tf) } : null; }; // used by tests
 

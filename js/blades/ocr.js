@@ -91,7 +91,7 @@
       L.invalidateSearch();
       O.last = { done, total: list.length, lang };
       L.toast(t.canceled ? `Stopped — ${done} page(s) made searchable` : `${done} page${done === 1 ? '' : 's'} now searchable`, { kind: 'ok', icon: 'ocr' });
-    } catch (e) { L.error('Text recognition failed', e); }
+    } catch (e) { L.error('Text recognition didn’t finish', e); }
     finally { t.done(); O.running = null; if (worker) worker.terminate(); L.renderInspector(); }
   }
 

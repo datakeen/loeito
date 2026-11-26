@@ -37,7 +37,7 @@
       if (compress) { const r = await L.compressPdf(built, compress, t); bytes = r.bytes; stats = r.stats; }
       R.result = { size: bytes.length, before: S.fileSize, stats, key: JSON.stringify(L.output) };
       if (save) await L.saveFile(bytes, L.safeName(S.name) + '.pdf', 'application/pdf', 'pdf');
-    } catch (e) { if (e.message !== 'Canceled') L.error('Optimization failed', e); }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Making it smaller didn’t finish', e); }
     finally { t.done(); R.running = false; L.renderInspector(); }
   }
   async function exportImages() {
@@ -51,7 +51,7 @@
         files.push({ name: `${L.safeName(S.name)} — page ${String(L.pageIndex(pages[i].id, S) + 1).padStart(3, '0')}.${R.img.fmt}`, data: blob, mime: R.img.fmt === 'jpg' ? 'image/jpeg' : 'image/png' });
       }
       await L.zipAndSave(files, `${L.safeName(S.name)} — images.zip`);
-    } catch (e) { if (e.message !== 'Canceled') L.error('Image export failed', e); } finally { t.done(); }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Saving the pictures didn’t finish', e); } finally { t.done(); }
   }
 
   /* ——— What's using space ——— */

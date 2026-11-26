@@ -83,7 +83,7 @@
       open: true, fresh: true, kind: 'doc', docId: doc.id, edited: !!s.dirty, pages: s.pages.map(copyPage) };
   }
   function refreshFromTab(f) {
-    const d = L.docs.find(x => x.id === f.docId); if (!d) return L.toast('That tab has been closed.', { kind: 'err' });
+    const d = L.docs.find(x => x.id === f.docId); if (!d) return L.toast('That tab was closed. Open the file again with Ctrl O.', { kind: 'err' });
     remember(); Object.assign(f, { ...docCard(d), id: f.id, fresh: false }); paint(); L.toast('Updated from the open tab', { kind: 'ok', icon: 'pages' });
   }
   /* L.openMerge(files) · L.openMerge({ withCurrent: true }) — starts with the open document and asks for the files to add.

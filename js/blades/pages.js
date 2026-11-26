@@ -149,7 +149,7 @@
       }
       await L.zipAndSave(files, `${L.safeName(s.name)} — split.zip`);
       L.toast(`Split into ${files.length} files`, { kind: 'ok' });
-    } catch (e) { if (e.message !== 'Canceled') L.error('Split failed', e); } finally { t.done(); }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Splitting didn’t finish', e); } finally { t.done(); }
   }
 
   /* ——— Grid (contact sheet) ———
@@ -281,7 +281,7 @@
       const others = L.docs.filter(d => d !== L.doc);
       let target = others.length ? others[0].id : 'new';
       const rangeIn = h('input', { class: 'input', placeholder: 'e.g. 1-3, 8, 12-', onkeydown: e => { if (e.key === 'Enter') applyRange(); e.stopPropagation(); } });
-      const applyRange = () => { const idx = new Set(L.parseRanges(rangeIn.value, s.pages.length)); if (!idx.size) return L.toast('Type pages like 1-3, 8, 12-', { kind: 'err' }); selectWhere(i => idx.has(i)); };
+      const applyRange = () => { const idx = new Set(L.parseRanges(rangeIn.value, s.pages.length)); if (!idx.size) return L.toast('Write pages like 1-3, 8, 12- (12- means 12 to the end).', { kind: 'err' }); selectWhere(i => idx.has(i)); };
       const send = move => L.transferPages(L.selectedPages().map(p => p.id), target === 'new' ? 'new' : L.docs.find(d => d.id === target), { move });
       return [
         ui.head('pages', 'Pages', 'Click a page to select it; Ctrl-click, Shift-click or drag a box for several. Drag to reorder. A page’s own buttons act on it at once.'),

@@ -35,7 +35,7 @@
   // `append` instead inserts the files' pages into the active document (Add files / drop on the page list).
   L.openFiles = async (files, { append = false, beforeId = null } = {}) => {
     files = [...files].filter(f => isPdf(f) || isImg(f) || isOffice(f));
-    if (!files.length) return L.toast('Loeito opens PDFs, images, and Word / Excel / PowerPoint files.', { kind: 'err' });
+    if (!files.length) return L.toast('Loeito opens PDFs, pictures, and Word, Excel or PowerPoint files. Save other kinds as PDF first, then open them here.', { kind: 'err' });
     append = append && L.hasDoc();
     const t = files.length > 1 || files[0].size > 8e6 || files.some(isOffice) ? L.task('Opening', { cancelable: false }) : null;
     const loaded = []; // [{ file, pages, size, pdfDoc }]
@@ -252,7 +252,7 @@
     window.addEventListener('beforeunload', e => { if (L.docs.some(d => d.state.dirty)) { e.preventDefault(); e.returnValue = ''; } });
     updateChrome();
     L.serverReady.then(paintRecent); L.on('recent', paintRecent); L.on('cleared', paintRecent);
-    if (!window.PDFLib || !window.pdfjsLib) L.toast('Loeito needs an internet connection the first time it starts (to load its PDF engine).', { kind: 'err', ms: 9000 });
+    if (!window.PDFLib || !window.pdfjsLib) L.toast('The browser version needs the internet once, to load its PDF engine. Connect and reload the page, or use the desktop app, which works offline from the start.', { kind: 'err', ms: 9000 });
   }
   boot();
 })();

@@ -70,12 +70,12 @@ function create({ root, getPath, reveal }) {
         }
         const parent = path.dirname(p); return json(res, { path: p, parent: parent === p ? null : parent, entries });
       }
-      if (r === '/api/fs/read') { const p = path.resolve(q.path || ''); if (!OPEN.has(path.extname(p).toLowerCase())) return json(res, { error: 'Loeito opens PDFs, images and Office files' }, 415); return send(res, 200, fs.readFileSync(p), 'application/octet-stream'); }
+      if (r === '/api/fs/read') { const p = path.resolve(q.path || ''); if (!OPEN.has(path.extname(p).toLowerCase())) return json(res, { error: 'Loeito opens PDFs, pictures and Office files. Save other kinds as PDF first.' }, 415); return send(res, 200, fs.readFileSync(p), 'application/octet-stream'); }
       if (r === '/api/fs/mkdir') { const name = (q.name || '').trim(); if (!name || BAD.test(name)) return json(res, { error: 'A folder name can’t contain \\ / : * ? " < > |' }, 400); const t = path.join(path.resolve(q.path), name); if (fs.existsSync(t)) return json(res, { error: `“${name}” already exists here` }, 409); fs.mkdirSync(t); return json(res, { path: t }); }
       if (r === '/api/fs/write') {
         const p = path.resolve(q.path || ''), name = path.basename(p);
-        if (!SAVE.has(path.extname(name).toLowerCase())) return json(res, { error: 'Loeito can’t save that kind of file' }, 415);
-        if (!fs.existsSync(path.dirname(p))) return json(res, { error: 'That folder no longer exists' }, 404);
+        if (!SAVE.has(path.extname(name).toLowerCase())) return json(res, { error: 'Loeito can’t save that kind of file. Choose PDF, a picture, or a table format.' }, 415);
+        if (!fs.existsSync(path.dirname(p))) return json(res, { error: 'That folder has moved or was deleted. Pick another folder.' }, 404);
         const exists = fs.existsSync(p); if (exists && q.overwrite !== '1') return json(res, { error: `“${name}” already exists`, exists: true }, 409);
         const data = await body(req), safety = exists ? keepSafety(p) : null, tmp = path.join(path.dirname(p), `.loeito-${process.pid}-${Date.now()}.tmp`);
         fs.writeFileSync(tmp, data); fs.renameSync(tmp, p);
@@ -90,12 +90,12 @@ function create({ root, getPath, reveal }) {
           let done = false;
           if (msOffice) { try { await run('powershell', ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-File', path.join(root, 'tools', 'convert.ps1'), '-In', src, '-Out', out]); done = fs.existsSync(out); } catch { done = false; } }
           if (!done && soffice) { await run(soffice, ['--headless', '--norestore', `-env:UserInstallation=file:///${work.replace(/\\/g, '/')}/lo`, '--convert-to', 'pdf', '--outdir', work, src]); fs.renameSync(path.join(work, 'input.pdf'), out); done = true; }
-          if (!done) return json(res, { error: 'Install Microsoft Office or the free LibreOffice to open this file' }, 501);
+          if (!done) return json(res, { error: 'To open this file, install the free LibreOffice (libreoffice.org) or Microsoft Office, then try again. Or save it as a PDF first.' }, 501);
           return send(res, 200, fs.readFileSync(out), 'application/pdf');
         } finally { fs.rmSync(work, { recursive: true, force: true }); }
       }
       if (r === '/api/pdf/encrypt' || r === '/api/pdf/decrypt') {
-        if (!python) return json(res, { error: 'Passwords need Python with pypdf and cryptography (py -m pip install pypdf cryptography)' }, 501);
+        if (!python) return json(res, { error: 'Passwords need a small add-on. Run this once in a terminal: py -m pip install pypdf cryptography, then restart Loeito.' }, 501);
         const h = k => req.headers[k] || '';
         const args = JSON.stringify({ encrypt: r.endsWith('encrypt'), password: h('x-pdf-password'), open: h('x-open-password'), owner: h('x-owner-password'), allow: h('x-allow') });
         const out = await run(python, [path.join(root, 'tools', 'pdfcrypt.py'), args], await body(req));

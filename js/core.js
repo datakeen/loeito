@@ -285,7 +285,28 @@
     setTimeout(() => { el.style.transition = 'opacity .3s'; el.style.opacity = '0'; setTimeout(() => el.remove(), 320); }, opts.ms || 2600);
     return el;
   };
-  L.error = (msg, err) => { console.error(msg, err); L.toast(msg + (err && err.message ? ` — ${err.message}` : ''), { kind: 'err', ms: 5200 }); };
+  // Every problem comes with what to do about it, in plain words. The technical detail stays one click away.
+  const REMEDIES = [
+    [/password|encrypt/i, 'This PDF is locked with a password. Unlock it in Protect, then try again.'],
+    [/EBUSY|in use|being used|locked by|resource busy/i, 'The file is open in another program. Close it there, then try again, or save a copy under a new name.'],
+    [/EACCES|EPERM|permission|not allowed|denied|read-?only|doesn’t allow/i, 'Your computer didn’t allow this here. Close the file in other programs, or save to Documents instead.'],
+    [/ENOSPC|no space|disk full/i, 'The disk is full. Free up some space, or save to another drive.'],
+    [/ENOENT|not found|no longer exists|moved/i, 'It seems to have moved or been renamed. Pick it again from its folder.'],
+    [/Failed to fetch|NetworkError|ECONNREFUSED|ECONNRESET|Load failed/i, 'Loeito’s file helper stopped answering. Save what you can, then restart Loeito; your tabs come back.'],
+    [/Office|LibreOffice|soffice|Word|Excel|PowerPoint/i, 'Save it as a PDF from Word, Excel or LibreOffice (File → Save As → PDF), then open that PDF here.'],
+    [/memory|allocation|RangeError|too large|larger than/i, 'That’s a lot of work for this computer. Close other tabs, or try fewer pages at a time.'],
+    [/Invalid PDF|InvalidPDF|FormatError|XRef|corrupt|damaged|Unexpected (end|token)|bad (xref|object)/i, 'The file looks damaged. Open it in your web browser, print it to PDF, then open that copy here.'],
+    [/timeout|timed out|took longer/i, 'It took too long. Try again with fewer pages, or after closing other programs.'],
+  ];
+  L.remedyFor = err => { const m = String((err && err.message) || err || ''); return (REMEDIES.find(([re]) => re.test(m)) || [])[1] || 'Please try once more. If it happens again, restart Loeito, or tell us the steps through the contact form in About.'; };
+  L.error = (msg, err) => {
+    console.error(msg, err);
+    if (err && (err.message === 'Canceled' || err.name === 'AbortError')) return;
+    let detail = err && err.message ? String(err.message) : '';
+    const own = /\.\s+\S/.test(detail) && !/\b(at|Error:)\b.*\(/.test(detail); // Loeito's own messages already say what to do
+    const fix = own ? detail : L.remedyFor(err); if (own) detail = '';
+    L.toast(`${msg}. ${fix}`, { kind: 'err', ms: 9000, action: detail ? { label: 'Copy details', fn: () => L.copyText ? L.copyText(`${msg}: ${detail}`) : navigator.clipboard.writeText(`${msg}: ${detail}`) } : null });
+  };
 
   // Long-running work: a quiet HUD with a progress bar and Cancel.
   L.task = (title, { cancelable = true } = {}) => {

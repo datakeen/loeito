@@ -173,7 +173,7 @@
         ui.check('Show passwords', PW.show, v => { PW.show = v; L.renderInspector(); }),
         h('div', { class: 'grid2' },
           ui.btn(sec ? 'Update protection' : 'Protect when saving', 'shield', () => {
-            if (PW.open !== PW.confirm) return L.toast('The two passwords are different.', { kind: 'err' });
+            if (PW.open !== PW.confirm) return L.toast('The two passwords don’t match. Type them again, slowly; Show helps.', { kind: 'err' });
             if (!PW.open && !PW.owner) return L.toast('Type a password to open the file, or an owner password for the limits.', { kind: 'err' });
             if (PW.open && strength(PW.open) < 2 && !confirm('This password is easy to guess. Use it anyway?')) return;
             S.security = { open: PW.open, owner: PW.owner || (PW.open ? '' : ''), allow: [...PW.allow] }; S.dirty = true; L.emit('docs'); L.renderInspector();

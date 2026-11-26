@@ -16,7 +16,7 @@
       if (document.fullscreenElement) await document.exitFullscreen();
       else await document.documentElement.requestFullscreen();
       setTimeout(() => L.render && L.render(), 200);
-    } catch { L.toast('Full screen is not allowed here', { kind: 'err' }); }
+    } catch { L.toast('Full screen isn’t available here. Try F11, or Full window (Ctrl Shift F).', { kind: 'err' }); }
   };
 
   /* ——— Scroll on into the next page: in every tool, the mouse wheel continues past the end of a page ——— */
@@ -78,7 +78,7 @@
       const blob = await new Promise(res => cut.toBlob(res, 'image/png'));
       t && t.remove && t.remove();
       show(blob, cut);
-    } catch (err) { t && t.remove && t.remove(); L.toast('Could not take the snapshot: ' + (err.message || err), { kind: 'err' }); }
+    } catch (err) { t && t.remove && t.remove(); L.error('Couldn’t take the snapshot', err); }
   }
   function show(blob, cut) {
     const url = URL.createObjectURL(blob);

@@ -218,7 +218,7 @@
         const v = inp.value.trim();
         if (!ok || !v) return row.remove();
         try { const r = await FS.mkdir(cur, v); await go(r.path); L.toast(`Made “${v}”`, { kind: 'ok', icon: 'folderplus' }); }
-        catch (e) { row.remove(); L.toast(e.message, { kind: 'err' }); }
+        catch (e) { row.remove(); L.error('Couldn’t make the folder', e); }
       };
       inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); commit(true); } if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); commit(false); } });
       inp.addEventListener('blur', () => commit(true));

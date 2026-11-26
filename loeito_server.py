@@ -203,7 +203,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 if route == '/api/fs/read':
                     return self._read(self._query().get('path', ''))
             except PermissionError:
-                return self._json({'error': 'Windows doesn’t allow Loeito to open that place'}, 403)
+                return self._json({'error': 'Windows doesn’t let Loeito open that place. Pick a folder in Documents, Desktop or Downloads.'}, 403)
             except FileNotFoundError:
                 return self._json({'error': 'That folder or file no longer exists'}, 404)
             except OSError as e:
@@ -229,7 +229,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         except PermissionError:
             return self._json({'error': 'Windows doesn’t allow saving there. If the file is open in another program (e.g. Acrobat), close it and try again — or save a copy.'}, 423)
         except FileNotFoundError:
-            return self._json({'error': 'That folder no longer exists'}, 404)
+            return self._json({'error': 'That folder has moved or was deleted. Pick another folder.'}, 404)
         except OSError as e:
             return self._json({'error': e.strerror or str(e)}, 500)
         return self.send_error(404)
@@ -264,7 +264,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def _read(self, path):
         path = os.path.abspath(path)
         if os.path.splitext(path)[1].lower() not in OPEN_TYPES:
-            return self._json({'error': 'Loeito opens PDFs, images and Office files'}, 415)
+            return self._json({'error': 'Loeito opens PDFs, pictures and Office files. Save other kinds as PDF first.'}, 415)
         if os.path.getsize(path) > MAX_FILE:
             return self._json({'error': 'The file is larger than 500 MB'}, 413)
         with open(path, 'rb') as f:
@@ -286,11 +286,11 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         path = os.path.abspath(q.get('path', ''))
         name = os.path.basename(path)
         if os.path.splitext(name)[1].lower() not in SAVE_TYPES:
-            return self._json({'error': 'Loeito can’t save that kind of file'}, 415)
+            return self._json({'error': 'Loeito can’t save that kind of file. Choose PDF, a picture, or a table format.'}, 415)
         if not name or BAD_NAME & set(name):
             return self._json({'error': 'A file name can’t contain \\ / : * ? " < > |'}, 400)
         if not os.path.isdir(os.path.dirname(path)):
-            return self._json({'error': 'That folder no longer exists'}, 404)
+            return self._json({'error': 'That folder has moved or was deleted. Pick another folder.'}, 404)
         exists = os.path.exists(path)
         if exists and q.get('overwrite') != '1':
             return self._json({'error': f'“{name}” already exists', 'exists': True}, 409)
@@ -323,7 +323,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         import base64
         import io
         if not pdf_crypto():
-            return self._json({'error': 'Password protection needs the pypdf and cryptography packages: run  py -m pip install pypdf cryptography'}, 501)
+            return self._json({'error': 'Passwords need a small add-on. Run this once in a terminal: py -m pip install pypdf cryptography, then restart Loeito.'}, 501)
         from pypdf import PdfReader, PdfWriter
         from pypdf.constants import UserAccessPermissions as UAP
         hdr = lambda k: base64.b64decode(self.headers.get(k, '') or '').decode('utf-8')
@@ -333,7 +333,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         reader = PdfReader(io.BytesIO(data))
         if reader.is_encrypted:
             if not reader.decrypt(hdr('X-Pdf-Password')):
-                return self._json({'error': 'That password is not right'}, 403)
+                return self._json({'error': 'That password isn’t right. Check Caps Lock and the keyboard language, then try again.'}, 403)
         writer = PdfWriter(clone_from=reader)
         if encrypt:
             user, owner = hdr('X-Open-Password'), hdr('X-Owner-Password')
@@ -358,7 +358,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return self._json({'error': f'{ext or "This"} files are not supported'}, 415)
         data = self._body(MAX_CONVERT)
         if data is None:
-            return self._json({'error': 'The file is empty or larger than 60 MB'}, 413)
+            return self._json({'error': 'The file is empty or larger than 60 MB. Make it smaller with Optimize, or split it first.'}, 413)
         work = tempfile.mkdtemp(prefix='loeito-')
         try:
             src, out = os.path.join(work, 'input' + ext), os.path.join(work, 'output.pdf')
@@ -377,14 +377,14 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 if os.path.exists(os.path.join(work, 'input.pdf')):
                     os.replace(os.path.join(work, 'input.pdf'), out)
             if run is None:
-                return self._json({'error': 'Install Microsoft Office or the free LibreOffice to open this file'}, 501)
+                return self._json({'error': 'To open this file, install the free LibreOffice (libreoffice.org) or Microsoft Office, then try again. Or save it as a PDF first.'}, 501)
             if run.returncode != 0 or not os.path.exists(out):
                 msg = (run.stderr or run.stdout or 'Conversion failed').strip().splitlines()
                 return self._json({'error': next((m for m in msg if m.strip()), 'Conversion failed')[:300]}, 500)
             with open(out, 'rb') as f:
                 return self._bytes(f.read(), 'application/pdf')
         except subprocess.TimeoutExpired:
-            return self._json({'error': 'Office took longer than 3 minutes'}, 504)
+            return self._json({'error': 'Office took longer than 3 minutes. Open the file in Office, save it as PDF, then open that PDF here.'}, 504)
         finally:
             shutil.rmtree(work, ignore_errors=True)
 

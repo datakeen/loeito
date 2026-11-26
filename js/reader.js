@@ -220,7 +220,7 @@
     speechSynthesis.speak(u);
   });
   L.speakFrom = async i => {
-    if (!window.speechSynthesis) return L.toast('This browser can’t read aloud.', { kind: 'err' });
+    if (!window.speechSynthesis) return L.toast('This browser can’t read aloud. Microsoft Edge, Chrome or the Loeito desktop app can.', { kind: 'err' });
     stopSpeaking(); const token = ++SP.token; SP.on = true; SP.paused = false; L.emit('speech');
     const st = L.state;
     for (let k = i; k < st.pages.length && token === SP.token; k++) {

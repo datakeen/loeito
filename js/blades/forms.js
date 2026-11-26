@@ -224,7 +224,7 @@
       if (!all) { FS.sugg = found[0].fields.length ? { pageId: found[0].page.id, fields: found[0].fields } : null; if (!total) L.toast('No blanks found on this page — draw fields with the tools above.', { icon: 'info', ms: 4200 }); }
       else if (total) { change(`add ${total} detected fields`, () => found.forEach(x => fieldsOf(x.page).push(...x.fields))); L.toast(`Added ${total} fields on ${found.filter(x => x.fields.length).length} page(s)`, { kind: 'ok', icon: 'sparkles' }); }
       else L.toast('No blanks found — draw fields with the tools above.', { icon: 'info' });
-    } catch (e) { L.error('Field detection failed', e); }
+    } catch (e) { L.error('Finding the fields didn’t finish', e); }
     finally { t.done(); FS.busy = false; L.drawOverlay(); L.renderInspector(); }
   }
   FS.detectNow = () => detect(false);

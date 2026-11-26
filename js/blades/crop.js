@@ -81,9 +81,9 @@
         t.set(i / list.length, `Page ${i + 1} of ${list.length}`);
         const r = await contentBox(list[i]); if (r) res.set(list[i].id, r);
       }
-    } catch (e) { if (e.message !== 'Canceled') L.error('Auto-trim failed', e); t.done(); return; }
+    } catch (e) { if (e.message !== 'Canceled') L.error('Auto-trim didn’t finish', e); t.done(); return; }
     t.done();
-    if (!res.size) return L.toast('Couldn’t find any content to trim to.', { kind: 'err' });
+    if (!res.size) return L.toast('This page looks empty, so there’s nothing to trim to. Drag the crop edges by hand instead.', { kind: 'err' });
     L.inDoc(doc, () => L.mutate(`auto-trim ${res.size} page${res.size > 1 ? 's' : ''}`, () => { L.state.pages = L.state.pages.map(q => res.has(q.id) ? { ...q, crop: res.get(q.id) } : q); }, { silent: doc !== L.doc }));
     C.draft = null;
     L.toast(`Trimmed ${res.size} page${res.size > 1 ? 's' : ''}`, { kind: 'ok', icon: 'wand' });
