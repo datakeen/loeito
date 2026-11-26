@@ -58,11 +58,15 @@ function create({ root, getPath, reveal }) {
     try {
       if (r === '/api/fs/places') return json(res, { places: [['desktop', 'Desktop'], ['documents', 'Documents'], ['downloads', 'Downloads']].map(([id, name]) => ({ id, name, path: getPath(id) })), drives: drives(), home: os.homedir(), safety: safetyDir, sep: path.sep });
       if (r === '/api/fs/list') {
+        // Read the folder without blocking the app: big or cloud-synced folders used to freeze the window.
         const p = path.resolve(q.path || os.homedir()), entries = [];
-        for (const e of fs.readdirSync(p, { withFileTypes: true })) {
-          if (/^(\.|\$|~\$)/.test(e.name) || /^(desktop\.ini|thumbs\.db)$/i.test(e.name)) continue;
-          try { const st = fs.statSync(path.join(p, e.name)); entries.push({ name: e.name, dir: st.isDirectory(), size: st.isDirectory() ? 0 : st.size, mtime: st.mtimeMs }); } catch {}
-          if (entries.length >= 5000) break;
+        const names = (await fs.promises.readdir(p, { withFileTypes: true }))
+          .filter(e => !/^(\.|\$|~\$)/.test(e.name) && !/^(desktop\.ini|thumbs\.db)$/i.test(e.name)).slice(0, 5000);
+        for (let i = 0; i < names.length; i += 64) {
+          const part = await Promise.all(names.slice(i, i + 64).map(e => fs.promises.stat(path.join(p, e.name))
+            .then(st => ({ name: e.name, dir: st.isDirectory(), size: st.isDirectory() ? 0 : st.size, mtime: st.mtimeMs }))
+            .catch(() => (e.isDirectory() ? { name: e.name, dir: true, size: 0, mtime: 0 } : null))));
+          entries.push(...part.filter(Boolean));
         }
         const parent = path.dirname(p); return json(res, { path: p, parent: parent === p ? null : parent, entries });
       }

@@ -56,7 +56,7 @@
     const md = await readDoc('CHANGELOG.md');
     const section = md ? md.split(/\n(?=## )/).find(s => s.startsWith('## ' + L.VERSION)) : null;
     L.setPref('seenVersion', L.VERSION);
-    await L.dialog({ title: `What’s new in Loeito ${L.VERSION}`, text: `“${L.CODENAME}” — Swedish for craftsmanship.`, wide: true,
+    await L.dialog({ title: `What’s new in Loeito ${L.VERSION}`, text: `Loeito ${L.VERSION}`, wide: true,
       body: section ? h('article', { class: 'manual compact', html: L.markdown(section.replace(/^## .*\n/, '')) }) : h('p', null, 'See CHANGELOG.md in the Loeito folder.'),
       actions: [{ label: 'User manual', value: 'manual' }, { label: 'Got it', primary: true, value: true }] }).then(v => v === 'manual' && showDoc('docs/User Manual.md', 'Loeito User Manual'));
   };
@@ -73,7 +73,7 @@
   }
   async function about() {
     const md = await readDoc('docs/About.md');
-    L.dialog({ title: '', body: h('div', { class: 'about' }, L.logo(72), h('h2', null, 'Loeito'), h('p', { class: 'ver' }, `Version ${L.VERSION} “${L.CODENAME}”`),
+    L.dialog({ title: '', body: h('div', { class: 'about' }, L.logo(72), h('h2', null, 'Loeito'), h('p', { class: 'ver' }, `Version ${L.VERSION}`),
       md ? h('article', { class: 'manual compact about-text', html: L.markdown(md.replace(/^# .*\n/, '').replace(/^\*\*Loeito — PDF, just right\.\*\*.*\n/m, '')) })
         : h('p', null, 'PDF, just right — every everyday PDF task, privately on your computer.')),
     actions: [{ label: 'What’s new', value: 'new' }, { label: 'OK', primary: true, value: true }] }).then(v => v === 'new' && L.whatsNew());
@@ -94,13 +94,13 @@
     { label: 'Reference manual', icon: 'code', fn: () => showDoc('docs/Reference Manual.md', 'Loeito Reference Manual') },
     { label: 'Keyboard shortcuts', icon: 'type', kbd: '?', fn: shortcuts },
     'sep',
-    { label: 'About Loeito', icon: 'info', fn: about },
+    { label: `About Loeito ${L.VERSION}`, icon: 'info', fn: about },
   ]);
   L.showShortcuts = shortcuts;
   // after an update, offer the release notes once
   L.serverReady && L.serverReady.then(() => {
     const seen = L.pref('seenVersion', null);
-    if (seen !== L.VERSION) setTimeout(() => L.toast(`Loeito ${L.VERSION} is here — Save to the original, covers, form templates, Protect and more.`, { icon: 'sparkles', ms: 9000, action: { label: 'What’s new', fn: L.whatsNew } }), 1200);
+    if (seen !== L.VERSION) setTimeout(() => L.toast(`Loeito ${L.VERSION} is here. See what’s new and improved.`, { icon: 'sparkles', ms: 9000, action: { label: 'What’s new', fn: L.whatsNew } }), 1200);
     if (!seen) L.setPref('seenVersion', L.VERSION);
   });
 })();

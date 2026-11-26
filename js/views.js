@@ -107,6 +107,7 @@
     const flowBtn = h('button', { onclick: e => { e.stopPropagation(); L.setPref('pageFlow', !flow()); flowBtn.firstChild.textContent = (flow() ? '✓ ' : '   ') + 'Scroll on to the next page'; } },
       h('span', null, (flow() ? '✓ ' : '   ') + 'Scroll on to the next page'));
     return [h('hr'),
+      item((L.rulers.on() ? '✓ ' : '   ') + 'Rulers and guides', 'Ctrl Alt R', () => L.rulers.toggle()),
       item('Full window', 'Ctrl Shift F', () => L.toggleFullWindow()),
       item('Full screen', 'F11', () => L.toggleFullScreen()),
       item('Continuous reading', '', () => { L.setBlade('view'); L.readerShow && L.readerShow(true); }),

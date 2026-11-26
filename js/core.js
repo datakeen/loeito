@@ -270,6 +270,7 @@
     const used = new Set();
     const mark = pages => pages.forEach(p => used.add(p.src));
     for (const d of L.docs) { mark(d.state.pages); [...d.undo, ...d.redo].forEach(e => mark(e.snap.pages)); }
+    if (L.sourcesHeld) mark(L.sourcesHeld()); // e.g. the last merge, kept so it can be changed and merged again
     for (const id of Object.keys(L.sources)) if (!used.has(id)) { try { L.sources[id].doc.destroy(); } catch {} delete L.sources[id]; }
   };
 

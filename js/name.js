@@ -17,7 +17,8 @@
       return lw.replace(/(^|[-–(/"'])([a-z])/g, (m, a, b) => a + b.toUpperCase());
     }).join(' ');
   };
-  const prettyFile = n => L.titleCase(String(n || '').replace(/\.[a-z0-9]{2,4}$/i, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[-_.]+/g, ' '));
+  // Leftovers like “(1) (1)”, “+ 0 more” and “_merged” are not part of a name.
+  const prettyFile = n => L.titleCase(String(n || '').replace(/\.[a-z0-9]{2,4}$/i, '').replace(/\s*\(\d+\)/g, '').replace(/\s*\+\s*\d+\s*more\b/i, '').replace(/_merged$/i, '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[-_.]+/g, ' '));
   const prettyMeta = t => L.titleCase(String(t || '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/([A-Za-z])(\d)/g, '$1 $2').replace(/(\d)([A-Za-z])/g, '$1 $2').replace(/[_]+/g, ' '));
   // "Capital Development Authority" → "CDA"
   const ORG_END = 'Authority|Ministry|Department|University|Corporation|Commission|Board|Council|Agency|Institute|Directorate|Company|Bank';

@@ -69,7 +69,9 @@
 
   F.sheet = async ({ mode = 'save', title, text, name = '', ext = 'pdf', folder, origin, extras, confirm } = {}) => {
     const places = placesCache ||= await FS.places();
-    let cur = null, listing = null, back = [], fwd = [], filter = '', pick = new Set(), anchor = null, cursor = -1, rows = [], primary = null, result = null;
+    let cur = null, listing = null, back = [], fwd = [], filter = '', pick = new Set(), anchor = null, cursor = -1, rows = [], rowEls = [], primary = null, result = null;
+    let sort = L.pref('fsSort', { k: 'name', d: 1 }), seek = '', seekT = 0, pvTok = 0, pvTimer = 0;
+    const withPreview = mode === 'open';
     const ctl = { setExt: e => { ext = e; extTag.textContent = '.' + ext; paintStatus(); } };
 
     const nameIn = h('input', { class: 'input fs-name', value: name, spellcheck: 'false', 'aria-label': 'File name', oninput: () => paintStatus() });
@@ -85,11 +87,14 @@
 
     async function go(path, push = true) {
       try {
+        listEl.classList.add('loading');
         const l = await FS.list(path);
+        if (l.error) throw new Error(l.error);
         if (push && cur && !P.same(cur, l.path)) { back.push(cur); fwd = []; }
         cur = l.path; listing = l; pick = new Set(); anchor = null; cursor = -1; filter = ''; filterIn.value = '';
-        paint();
-      } catch (e) { L.toast(e.message, { kind: 'err' }); if (!cur) go(places.home, false); }
+        paint(); preview();
+      } catch (e) { L.toast('Couldn’t open that folder. It may have moved, or Loeito isn’t allowed to read it. Pick another place on the left.', { kind: 'err', ms: 6000 }); if (!cur) go(places.home, false); }
+      finally { listEl.classList.remove('loading'); }
     }
     function step(dir) {
       const from = dir < 0 ? back : fwd, to = dir < 0 ? fwd : back;
@@ -119,17 +124,40 @@
       crumbs.scrollLeft = 1e6;
     }
     const wanted = e => e.dir || (mode === 'open' ? OPENABLE.test(e.name) : P.ext(e.name) === ext);
+    const KIND = { pdf: 'PDF', png: 'Picture', jpg: 'Picture', jpeg: 'Picture', doc: 'Word', docx: 'Word', docm: 'Word', rtf: 'Word', odt: 'OpenDocument text', xls: 'Excel', xlsx: 'Excel', xlsm: 'Excel', ods: 'OpenDocument sheet', ppt: 'PowerPoint', pptx: 'PowerPoint', odp: 'OpenDocument slides' };
+    const kindOf = e => e.dir ? 'Folder' : KIND[P.ext(e.name)] || (P.ext(e.name) ? P.ext(e.name).toUpperCase() + ' file' : 'File');
+    const iconOf = e => e.dir ? 'folder' : /\.pdf$/i.test(e.name) ? 'doc' : /\.(png|jpe?g)$/i.test(e.name) ? 'image' : 'text';
+    const CMP = { name: natural, date: (a, b) => a.mtime - b.mtime || natural(a, b), size: (a, b) => a.size - b.size || natural(a, b), type: (a, b) => kindOf(a).localeCompare(kindOf(b)) || natural(a, b) };
+    const head = h('div', { class: 'fs-head' });
+    function paintHead() {
+      const col = (k, label, cls) => h('button', { class: 'fs-hcol' + (cls ? ' ' + cls : '') + (sort.k === k ? ' on' : ''), title: `Sort by ${label.toLowerCase()}`, onclick: () => setSort(k) },
+        label, sort.k === k ? h('span', { class: 'fs-arrow' }, sort.d > 0 ? '▲' : '▼') : null);
+      head.replaceChildren(h('span'), col('name', 'Name'), col('date', 'Date modified'), col('type', 'Type'), col('size', 'Size', 'r'));
+    }
+    function setSort(k) {
+      sort = { k, d: sort.k === k ? -sort.d : (k === 'date' || k === 'size' ? -1 : 1) }; // newest and largest first feel natural
+      L.setPref('fsSort', sort);
+      const keep = rows[cursor]?.name; paintList();
+      if (keep) { cursor = rows.findIndex(r => r.name === keep); refreshSel(true); }
+    }
     function paintList() {
+      paintHead();
       const ents = (listing?.entries || []).filter(e => !filter || e.name.toLowerCase().includes(filter))
         .filter(e => mode !== 'open' || e.dir || OPENABLE.test(e.name));
-      rows = [...ents.filter(e => e.dir).sort(natural), ...ents.filter(e => !e.dir).sort(natural)];
-      if (!rows.length) { listEl.replaceChildren(h('div', { class: 'fs-empty' }, filter ? 'Nothing matches.' : mode === 'open' ? 'No PDFs, images or Office files here.' : 'This folder is empty.')); return; }
-      listEl.replaceChildren(...rows.map((e, i) => h('div', {
-        class: 'fs-row' + (wanted(e) ? '' : ' dim') + (pick.has(e.name) ? ' on' : '') + (i === cursor ? ' cursor' : ''), role: 'option', 'aria-selected': String(pick.has(e.name)),
+      const by = (a, b) => CMP[sort.k](a, b) * sort.d;
+      rows = [...ents.filter(e => e.dir).sort(by), ...ents.filter(e => !e.dir).sort(by)];
+      if (!rows.length) { rowEls = []; listEl.replaceChildren(h('div', { class: 'fs-empty' }, filter ? 'Nothing matches. Clear the filter to see everything here.' : mode === 'open' ? 'No PDFs, pictures or Office files here. Try Documents or Downloads on the left.' : 'This folder is empty.')); return; }
+      rowEls = rows.map((e, i) => h('div', {
+        class: 'fs-row' + (wanted(e) ? '' : ' dim'), role: 'option', title: e.name,
         onclick: ev => choose(i, ev), ondblclick: () => activate(e),
-      }, L.icon(e.dir ? 'folder' : /\.pdf$/i.test(e.name) ? 'doc' : /\.(png|jpe?g)$/i.test(e.name) ? 'image' : 'text'),
-      h('span', { class: 'fs-n' }, e.name), h('span', { class: 'fs-d' }, when(e.mtime)), h('span', { class: 'fs-s' }, e.dir ? '' : L.fmtBytes(e.size)))));
-      listEl.querySelector('.cursor')?.scrollIntoView({ block: 'nearest' });
+      }, L.icon(iconOf(e)), h('span', { class: 'fs-n' }, e.name), h('span', { class: 'fs-d' }, when(e.mtime)), h('span', { class: 'fs-t' }, kindOf(e)), h('span', { class: 'fs-s' }, e.dir ? '' : L.fmtBytes(e.size))));
+      listEl.replaceChildren(...rowEls);
+      refreshSel(false);
+    }
+    // Selection changes only touch classes, never rebuild the list, so arrow keys stay instant in big folders.
+    function refreshSel(scroll) {
+      rowEls.forEach((el, i) => { const on = pick.has(rows[i].name); el.classList.toggle('on', on); el.classList.toggle('cursor', i === cursor); el.setAttribute('aria-selected', String(on)); });
+      if (scroll && rowEls[cursor]) rowEls[cursor].scrollIntoView({ block: 'nearest' });
     }
     function choose(i, ev = {}) {
       const e = rows[i]; if (!e) return;
@@ -138,12 +166,44 @@
       else if (mode === 'open' && !e.dir && ev.shiftKey && anchor != null) { pick = new Set(rows.slice(Math.min(anchor, i), Math.max(anchor, i) + 1).filter(r => !r.dir).map(r => r.name)); }
       else { pick = new Set([e.name]); anchor = i; }
       if (mode === 'save' && !e.dir && P.ext(e.name) === ext) nameIn.value = P.stem(e.name); // click a file to save over it
-      paintList(); paintStatus();
+      refreshSel(!!ev.key); paintStatus(); preview();
     }
     function activate(e) {
       if (e.dir) return go(P.join(cur, e.name));
       if (mode === 'open') { pick = new Set([e.name]); primary.click(); }
       else if (mode === 'save' && P.ext(e.name) === ext) { nameIn.value = P.stem(e.name); paintStatus(); primary.click(); }
+    }
+    // Preview: the first page of a PDF, a picture, or the details of anything else.
+    const pv = h('aside', { class: 'fs-preview', 'aria-live': 'polite' });
+    function preview() {
+      if (!withPreview) return;
+      clearTimeout(pvTimer); const tok = ++pvTok, e = rows[cursor];
+      if (!e) { pv.replaceChildren(h('div', { class: 'fs-pv-empty' }, L.icon('doc'), h('span', null, 'Click a file to see it here'))); return; }
+      const facts = [kindOf(e), e.dir ? null : L.fmtBytes(e.size), when(e.mtime)].filter(Boolean);
+      const info = h('span', null, facts.join(' · '));
+      const meta = h('div', { class: 'fs-pv-meta' }, h('b', null, e.name), info);
+      const pic = h('div', { class: 'fs-pv-pic' }, L.icon(iconOf(e)));
+      pv.replaceChildren(pic, meta);
+      if (/\.(docx?|docm|rtf|odt|xlsx?|xlsm|ods|pptx?|odp)$/i.test(e.name)) meta.append(h('small', null, 'Opens as a PDF through Microsoft Office or LibreOffice.'));
+      if (e.dir || !/\.(pdf|png|jpe?g)$/i.test(e.name) || e.size > 80e6) return;
+      pvTimer = setTimeout(async () => {
+        try {
+          const bytes = await FS.read(P.join(cur, e.name)); if (tok !== pvTok) return;
+          if (/\.pdf$/i.test(e.name)) {
+            const pdf = await pdfjsLib.getDocument({ data: bytes, isEvalSupported: false }).promise;
+            try {
+              const pg = await pdf.getPage(1); if (tok !== pvTok) return;
+              const v0 = pg.getViewport({ scale: 1 }), vp = pg.getViewport({ scale: Math.min(400 / v0.width, 480 / v0.height) });
+              const c = h('canvas', { width: Math.round(vp.width), height: Math.round(vp.height) });
+              await pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise; if (tok !== pvTok) return;
+              pic.replaceChildren(c); info.textContent = [`${pdf.numPages} page${pdf.numPages === 1 ? '' : 's'}`, ...facts.slice(1)].join(' · ');
+            } finally { pdf.destroy(); }
+          } else {
+            const url = URL.createObjectURL(new Blob([bytes])), img = h('img', { src: url, alt: '' });
+            img.onload = () => URL.revokeObjectURL(url); pic.replaceChildren(img);
+          }
+        } catch { if (tok === pvTok) meta.append(h('small', null, 'No preview for this one, but you can still open it.')); }
+      }, 160);
     }
     async function newFolder() {
       let base = 'New folder', n = 1;
@@ -187,7 +247,7 @@
           const isOrigin = origin && P.same(P.join(cur, ex.name), origin);
           status.append(L.icon('info'), h('span', { class: 'grow' }, `“${ex.name}” already exists here${isOrigin ? ' — it’s the original' : ''}. Saving replaces it; Loeito keeps a safety copy.`),
             h('button', { class: 'btn small', onclick: () => { nameIn.value = freeName(); paintStatus(); } }, 'Keep both'));
-        } else status.append(h('span', { class: 'muted' }, `Saves to ${P.base(cur) || cur}`));
+        } else status.append(h('span', { class: 'muted fs-where', title: P.join(cur, `${nm}.${ext}`) }, 'Saves to ', h('b', null, cur)));
       } else if (mode === 'open') {
         const n = [...pick].filter(nm => rows.find(r => r.name === nm && !r.dir)).length;
         primary.disabled = !n; primary.textContent = n > 1 ? `Open ${n}` : 'Open';
@@ -203,15 +263,22 @@
       if (e.target.closest('.fs-newname')) return true; // the new-folder field handles its own keys
       if (typing) return false;
       if (e.key === 'Backspace') { e.preventDefault(); if (listing?.parent) go(listing.parent); return true; }
-      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); choose(L.clamp(cursor + (e.key === 'ArrowDown' ? 1 : -1), 0, rows.length - 1), { shiftKey: e.shiftKey }); return true; }
+      const page = Math.max(1, Math.floor(listEl.clientHeight / 30) - 1);
+      const moves = { ArrowDown: cursor + 1, ArrowUp: cursor - 1, PageDown: cursor + page, PageUp: cursor - page, Home: 0, End: rows.length - 1 };
+      if (e.key in moves && rows.length) { e.preventDefault(); choose(L.clamp(moves[e.key], 0, rows.length - 1), { shiftKey: e.shiftKey, key: e.key }); return true; }
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey && e.key !== ' ' && document.activeElement === listEl) { // type a name to jump to it
+        clearTimeout(seekT); seek += e.key.toLowerCase(); seekT = setTimeout(() => { seek = ''; }, 800);
+        const i = rows.findIndex(r => r.name.toLowerCase().startsWith(seek)); if (i >= 0) choose(i, { key: e.key }); return true;
+      }
       if (e.key === 'Enter' && rows[cursor]?.dir && (mode !== 'save' || document.activeElement === listEl)) { e.preventDefault(); go(P.join(cur, rows[cursor].name)); return true; }
+      if (e.key === 'Enter' && mode === 'open' && rows[cursor] && !rows[cursor].dir && document.activeElement === listEl) { e.preventDefault(); if (!pick.size) pick = new Set([rows[cursor].name]); primary.click(); return true; }
       return false;
     }
 
     const body = h('div', { class: 'fs-sheet' },
       mode === 'save' ? h('div', { class: 'fs-namerow' }, h('label', { class: 'fs-label' }, 'Name'), h('div', { class: 'fs-namebox' }, nameIn, extTag)) : null,
-      h('div', { class: 'fs-browser' }, side,
-        h('div', { class: 'fs-main' }, h('div', { class: 'fs-bar' }, bBack, bFwd, bUp, crumbs, filterIn, bNew), listEl)),
+      h('div', { class: 'fs-browser' + (withPreview ? ' with-preview' : '') }, side,
+        h('div', { class: 'fs-main' }, h('div', { class: 'fs-bar' }, bBack, bFwd, bUp, crumbs, filterIn, bNew), head, listEl), withPreview ? pv : null),
       h('div', { class: 'fs-foot' }, status, mode === 'open' ? h('button', { class: 'linkish', onclick: () => { result = 'native'; L.closeDialog('native'); } }, 'Use the Windows dialog…') : null),
       extras ? h('div', { class: 'fs-extras' }, typeof extras === 'function' ? extras(ctl) : extras) : null);
 

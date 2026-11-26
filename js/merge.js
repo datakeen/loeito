@@ -62,11 +62,17 @@
     }
     t && t.done();
     M.busy = false;
-    if (!M.name) M.name = defaultName();
+    if (!M.name || M.autoName) { M.name = defaultName(); M.autoName = true; }
     paint();
   }
   const stem = n => n.replace(/\.[a-z0-9]{2,4}$/i, '');
-  const defaultName = () => !M.files.length ? 'Merged' : M.files.length === 2 ? L.safeName(`${stem(M.files[0].name)} + ${stem(M.files[1].name)}`) : L.safeName(`${stem(M.files[0].name)} + ${M.files.length - 1} more`);
+  // Two words from each of the first two files: “Annual Report and Budget Plan_merged”; “… and more_merged” for three or more.
+  const words = n => stem(n).replace(/\s*\(\d+\)/g, '').split(/[\s_\-.+]+/).filter(Boolean).slice(0, 2).join(' ');
+  const defaultName = () => {
+    const f = M.files; if (!f.length) return 'Merged';
+    if (f.length === 1) return L.safeName(`${words(f[0].name)}_merged`);
+    return L.safeName(`${words(f[0].name)} and ${words(f[1].name)}${f.length > 2 ? ' and more' : ''}_merged`);
+  };
 
   /* ——— open / close ——— */
   // The open document, with every edit it has (order, rotation, crop, marks, fields, OCR), as a merge card.
@@ -85,7 +91,7 @@
   L.openMerge = async (opts) => {
     if (M.open && M.hidden) return resume(opts);
     if (M.open) return;
-    Object.assign(M, { open: true, hidden: false, files: [], sel: new Set(), clip: null, fileClip: null, undo: [], folder: null, name: '' });
+    Object.assign(M, { open: true, hidden: false, files: [], sel: new Set(), clip: null, fileClip: null, undo: [], folder: null, name: '', autoName: true, again: null });
     show();
     const withCurrent = opts && opts.withCurrent && L.hasDoc();
     if (withCurrent) { M.files.push(docCard(L.doc)); paint(); }
@@ -94,6 +100,16 @@
     if (files && files.length) await add(files);
     else paint();
   };
+  // Change the merge you just made: the same files, order, rotations and name come back; merging again replaces the earlier result.
+  L.reopenMerge = () => {
+    if (!M.last) return L.toast('There’s no earlier merge to change yet. Start one with Merge PDFs.', { icon: 'merge' });
+    if (M.open) return M.hidden ? resume() : null;
+    const last = M.last;
+    Object.assign(M, { open: true, hidden: false, files: last.files.map(cloneFile), sel: new Set(), clip: null, fileClip: null, undo: [], folder: last.folder, name: last.name, autoName: last.autoName, again: last });
+    show();
+  };
+  L.sourcesHeld = () => (M.last ? M.last.files.flatMap(f => f.pages) : []);
+  L.hasLastMerge = () => !!M.last;
   function show() {
     root = h('div', { class: 'merge', role: 'dialog', 'aria-label': 'Merge PDFs' });
     document.body.append(root);
@@ -191,10 +207,10 @@
   }
 
   /* ——— merging ——— */
+  const folderNow = () => M.folder || (M.files.find(f => f.path) ? L.path.dir(M.files.find(f => f.path).path) : L.pref('lastFolder', null) || M.docsFolder || null);
   async function folderGuess() {
-    if (M.folder) return M.folder;
-    const first = M.files.find(f => f.path);
-    return first ? L.path.dir(first.path) : L.pref('lastFolder', null);
+    const f = folderNow(); if (f) return f;
+    const pl = await L.fs.places(); M.docsFolder = pl.places.find(p => p.id === 'documents')?.path || pl.home; return M.docsFolder;
   }
   async function chooseFolder() {
     if (!L.fs.on()) return L.toast('Your browser will ask where to save. The Loeito desktop app lets you pick a folder here.', { icon: 'info', ms: 5000 });
@@ -215,7 +231,10 @@
       if (L.fs.on()) {
         let folder = await folderGuess();
         if (!folder) { const pl = await L.fs.places(); folder = pl.places.find(p => p.id === 'documents')?.path || pl.home; }
-        const out = await L.files.writeFree(folder, name, 'pdf', bytes);
+        const again = M.again && L.path.same(L.path.dir(M.again.savedTo), folder) && L.path.stem(L.path.base(M.again.savedTo)) === name;
+        const out = again ? await L.fs.write(M.again.savedTo, bytes, true) : await L.files.writeFree(folder, name, 'pdf', bytes);
+        if (out.error) throw new Error(out.error);
+        L.files.remember(out.path);
         file = new File([bytes], L.path.base(out.path), { type: 'application/pdf' }); file.loeitoPath = out.path;
         M.savedTo = out.path;
       } else {
@@ -225,9 +244,13 @@
       t.done();
       await success(pages.length, bytes.length);
       const savedTo = M.savedTo; M.savedTo = null;
+      const prev = M.again && L.docs.find(d => d.id === M.again.docId);
+      M.last = { files: M.files.map(cloneFile), name: M.name, autoName: M.autoName, folder: M.folder, savedTo };
       close();
+      if (prev && !prev.state.dirty) await L.closeDoc(prev); // the earlier result is replaced by this one
       await L.openFiles([file]);
-      L.toast(`Merged ${pages.length} pages · ${L.fmtBytes(bytes.length)}`, { kind: 'ok', ms: 6000, action: savedTo ? { label: 'Show in folder', fn: () => L.fs.reveal(savedTo) } : null });
+      if (M.last) M.last.docId = L.doc?.id;
+      L.toast(`Merged ${pages.length} pages · ${savedTo ? 'saved in ' + (L.path.base(L.path.dir(savedTo)) || L.path.dir(savedTo)) : L.fmtBytes(bytes.length)}`, { kind: 'ok', ms: 8000, action: { label: 'Change the merge', fn: () => L.reopenMerge() } });
     } catch (e) { t.done(); M.busy = false; paint(); if (e.message !== 'Canceled') L.error('Couldn’t merge', e); }
   }
   const success = (n, size) => new Promise(res => {
@@ -268,12 +291,14 @@
     M.files.forEach(f => { f.fresh = false; });
   }
   function header() {
-    const total = allPages().length, folderLabel = M.folder || (M.files.find(f => f.path) ? L.path.dir(M.files.find(f => f.path).path) : null);
+    const total = allPages().length, folderLabel = folderNow();
+    if (!folderLabel && L.fs.on() && !M.docsFolder) folderGuess().then(() => M.open && !M.hidden && paint());
     return h('header', { class: 'merge-head' },
       h('div', { class: 'mh-title' }, L.icon('merge', 22), h('div', null, h('b', null, 'Merge PDFs'), h('span', null, M.files.length ? `${M.files.length} file${M.files.length > 1 ? 's' : ''} · ${total} page${total === 1 ? '' : 's'}` : 'Pick two or more files'))),
       h('div', { class: 'mh-out' },
-        h('label', { class: 'mh-name' }, h('span', null, 'Save as'), h('input', { class: 'input', value: M.name, placeholder: 'Merged', oninput: e => { M.name = e.target.value; } }), h('i', null, '.pdf')),
-        h('button', { class: 'mh-folder', title: folderLabel || 'Choose where to save', onclick: chooseFolder }, L.icon('folder', 16), h('span', null, L.fs.on() ? (folderLabel ? L.path.base(folderLabel) || folderLabel : 'Documents') : 'Ask when saving'), L.icon('down', 12))),
+        h('label', { class: 'mh-name' }, h('span', null, 'Save as'), h('input', { class: 'input', value: M.name, placeholder: 'Merged', oninput: e => { M.name = e.target.value; M.autoName = false; } }), h('i', null, '.pdf')),
+        h('button', { class: 'mh-folder', title: L.fs.on() ? `Saves in ${folderLabel || 'Documents'}. Click to choose another folder.` : 'Your browser asks where to save', onclick: chooseFolder }, L.icon('folder', 16), h('span', null, L.fs.on() ? (folderLabel ? L.path.base(folderLabel) || folderLabel : 'Documents') : 'Ask when saving'), L.icon('down', 12)),
+        L.fs.on() && folderLabel ? h('div', { class: 'mh-where', title: folderLabel }, 'in ', h('b', null, folderLabel)) : null),
       h('div', { class: 'mh-actions' },
         h('button', { class: 'btn', onclick: async () => add(await pick()) }, L.icon('plus'), 'Add files'),
         h('button', { class: 'btn', title: 'Add a designed front cover or last page', onclick: addCover }, L.icon('cover'), 'Cover…'),

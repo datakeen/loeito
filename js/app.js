@@ -132,7 +132,7 @@
     pin.addEventListener('keydown', e => { if (e.key === 'Enter') pin.blur(); e.stopPropagation(); });
   }
   function buildWelcome() {
-    L.$('#hero-mark').append(L.logo(84));
+    L.$('#hero-mark').append(L.logo(84)); L.$('#hero-ver').textContent = L.VERSION;
     L.$('#dz-icon').append(L.icon('upload'));
     const dz = L.$('#dropzone');
     dz.onclick = () => L.pickFiles(false);
@@ -167,7 +167,7 @@
   }
   function updateChrome() {
     const s = L.state, has = L.hasDoc();
-    L.$('#doc-name').textContent = has ? s.name : 'Loeito';
+    L.$('#doc-name').textContent = has ? s.name : `Loeito ${L.VERSION}`;
     L.$('#doc-sub').textContent = has ? `${s.pages.length} page${s.pages.length === 1 ? '' : 's'}${s.dirty ? ' · Edited' : ''}` : '';
     document.title = has ? `${s.name}${s.dirty ? ' •' : ''} — Loeito` : 'Loeito — PDF, just right';
     L.$$('.blade').forEach(b => { b.classList.toggle('active', has && b.dataset.blade === s.blade); b.classList.toggle('idle', !has); b.disabled = false; });
