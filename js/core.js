@@ -2,7 +2,7 @@
 /* Loeito core: DOM helpers, icons, state, history, feedback (toasts, tasks, dialogs), file utilities. */
 (() => {
   const L = (window.Loeito = window.Loeito || {});
-  L.VERSION = '2.0.0'; L.CODENAME = 'Hantverk'; // keep in step with VERSION, desktop/package.json and CHANGELOG.md
+  L.VERSION = '2.0.1'; L.CODENAME = 'Hantverk'; // keep in step with VERSION, desktop/package.json and CHANGELOG.md
 
   /* ——— Motion: a just-rotated page turns into place wherever it is shown (grid, sidebar, page, reader) ——— */
   L.spins = new Map(); // page id -> { delta, until }

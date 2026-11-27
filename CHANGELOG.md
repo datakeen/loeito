@@ -2,6 +2,11 @@
 
 All notable changes to Loeito, newest first. Every release is on the GitHub Releases page.
 
+## 2.0.1 — 2026-11-27
+
+### Fixed
+- Installer builds: Windows and Linux installers are published even when another platform’s build has a problem, and build problems are shown clearly.
+
 ## 2.0.0 — 2026-11-27
 
 A big step, so a new major number: a website, Print, rulers and guides, Rename by content, a much better file window, and a smaller installer you can tailor.
