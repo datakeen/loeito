@@ -2,6 +2,11 @@
 
 All notable changes to Loeito, newest first. Every release is on the GitHub Releases page.
 
+## 2.0.2 — 2026-11-27
+
+### Fixed
+- The macOS installers build again (a missing disk-image helper on the build machine).
+
 ## 2.0.1 — 2026-11-27
 
 ### Fixed

@@ -12,3 +12,4 @@ desktop.ini
 __pycache__/
 desktop/.vendor-cache/
 marketing/
+desktop/package-lock.json
