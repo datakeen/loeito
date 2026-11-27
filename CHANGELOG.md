@@ -2,7 +2,9 @@
 
 All notable changes to Loeito, newest first. Every release is on the GitHub Releases page.
 
-## 1.10.0 — 2026-11-26
+## 2.0.0 — 2026-11-27
+
+A big step, so a new major number: a website, Print, rulers and guides, Rename by content, a much better file window, and a smaller installer you can tailor.
 
 ### Added
 - **Rename by content** (start screen, Ctrl K): pick one or many PDFs; Loeito reads each, suggests a clear name and renames the files in their folders in one go. It replaces the Smart Name card, which only opened the file.

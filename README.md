@@ -8,7 +8,7 @@
 
 Your files never leave your computer. No account, no upload, no subscription, no analytics. The installed app works without internet from the very first start. ([The website](https://datakeen.github.io/loeito/) counts visits without cookies and stores nothing about you.)
 
-**Version 1.10.0** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
+**Version 2.0.0** · Windows, macOS and Linux · free and open source (GNU AGPL v3)
 
 In the browser, everything works except folder browsing, opening Word / Excel / PowerPoint files and passwords; those need the desktop app.
 
