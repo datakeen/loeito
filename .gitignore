@@ -11,4 +11,4 @@ desktop.ini
 .DS_Store
 __pycache__/
 desktop/.vendor-cache/
-marketing/raw/
+marketing/

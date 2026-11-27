@@ -60,6 +60,8 @@
   function pump() {
     if (!R.on) return;
     const mid = root().getBoundingClientRect().top + root().clientHeight / 2;
+    // only pages of this document that are still on screen: after a tab switch the old ones would loop forever
+    for (const el of near) if (!el.isConnected || !pageOf(el)) near.delete(el);
     const todo = [...near].filter(el => el.dataset.key !== keyFor(el)).sort((a, b) => Math.abs(a.getBoundingClientRect().top - mid) - Math.abs(b.getBoundingClientRect().top - mid));
     while (busy < 2 && todo.length) { const el = todo.shift(); busy++; renderPage(el).finally(() => { busy--; pump(); }); }
   }

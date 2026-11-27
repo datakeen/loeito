@@ -998,3 +998,12 @@ body.full-window #sidebar, body.full-window #tabbar { display: none !important; 
 
 /* toolbar families (1.10) */
 .blade-sep { flex: none; width: 1px; align-self: stretch; margin: 8px 4px; background: var(--sep); }
+
+/* Rename by content (1.10.1) */
+.rn-list { display: flex; flex-direction: column; gap: 10px; max-height: 56vh; overflow: auto; }
+.rn-row { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; padding: 10px 12px; border: 1px solid var(--sep); border-radius: 10px; background: var(--surface); }
+.rn-row input[type=checkbox] { margin-top: 26px; }
+.rn-main { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.rn-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rn-name { font-weight: 600; }
+.rn-chips { display: flex; flex-wrap: wrap; gap: 6px; }

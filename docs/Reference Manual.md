@@ -40,7 +40,7 @@ All of them run in the page. An optional local Python server adds the file API a
 | `js/formdetect.js` | Finds blanks in flat PDFs and scans |
 | `js/formtemplates.js` | **Ten form templates** + layout engine (`L.formTemplatePdf`, `L.createFromTemplate`, `L.openFormTemplates`) |
 | `js/blades/*.js` | One file per tool: view (Read), pages, edit, crop, ocr (Searchable), tables, digitize, compress (Optimize), stamp, **covers**, forms, **protect** |
-| `js/name.js` | Smart Name and document details |
+| `js/name.js` | Name suggestions, Rename by content (many files at once) and document details |
 | `js/app.js` | Opening files (records each tab’s `origin`), toolbar, welcome (Recent, Form templates), keyboard, drag & drop (file handles) |
 | `loeito_server.py` | Local server (stdlib): static files, Office conversion, file API |
 | `tools/convert.ps1` | Office COM export to PDF |

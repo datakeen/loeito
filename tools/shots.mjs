@@ -2,7 +2,7 @@
 // Makes the screenshots for the website and SourceForge.
 //   1. start Loeito's local server:   py loeito_server.py --port 8799
 //   2. run:                           node tools/shots.mjs
-// Raw app screenshots go to marketing/raw/, framed marketing images to marketing/sourceforge/ (1280 × 800),
+// Raw app screenshots go to marketing/raw/, framed store images (1280 × 800, for SourceForge) to marketing/framed/,
 // website images to website/img/. Uses Microsoft Edge or Chrome in headless mode (nothing to install).
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const APP = process.env.LOEITO_URL || 'http://localhost:8799/index.html';
-const OUT_RAW = path.join(ROOT, 'marketing', 'raw'), OUT_SF = path.join(ROOT, 'marketing', 'sourceforge'), OUT_WEB = path.join(ROOT, 'website', 'img');
+const OUT_RAW = path.join(ROOT, 'marketing', 'raw'), OUT_SF = path.join(ROOT, 'marketing', 'framed'), OUT_WEB = path.join(ROOT, 'website', 'img');
 for (const d of [OUT_RAW, OUT_SF, OUT_WEB]) fs.mkdirSync(d, { recursive: true });
 const BROWSERS = ['C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', 'C:/Program Files/Microsoft/Edge/Application/msedge.exe', 'C:/Program Files/Google/Chrome/Application/chrome.exe',
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/usr/bin/google-chrome', '/usr/bin/chromium'];
@@ -137,7 +137,7 @@ async function compose(raws) {
     const html = path.join(profile, 'frame.html'); fs.writeFileSync(html, frameHtml(file, title, sub, i, name === '13-dark'));
     await cdp('Page.navigate', { url: 'file:///' + html.replace(/\\/g, '/') }); await sleep(700);
     const r = await cdp('Page.captureScreenshot', { format: 'png' });
-    fs.writeFileSync(path.join(OUT_SF, name + '.png'), Buffer.from(r.data, 'base64')); console.log('  marketing/sourceforge/' + name + '.png'); i++;
+    fs.writeFileSync(path.join(OUT_SF, name + '.png'), Buffer.from(r.data, 'base64')); console.log('  marketing/framed/' + name + '.png'); i++;
   }
 }
 

@@ -63,7 +63,7 @@
   L.suggestNames = async () => {
     const s = L.state, out = [], seen = new Set();
     const add = (name, why) => { name = L.safeName(name); const k = name.toLowerCase(); if (name.length > 2 && !seen.has(k)) { seen.add(k); out.push({ name, why }); } };
-    const firstSrc = Object.values(s.sources)[0];
+    const firstSrc = (s.pages[0] && s.sources[s.pages[0].src]) || Object.values(s.sources)[0]; // this document's own file (sources are shared by all tabs)
     let info = {};
     try { info = (await firstSrc.doc.getMetadata()).info || {}; } catch {}
     // headline: the largest text on page 1 (PDF text or OCR)
@@ -122,6 +122,51 @@
     if (m.title && !m.displayTitle) out.push({ level: 'info', text: 'Viewers show the file name in their title bar — they can show the title instead.', fix: x => { x.displayTitle = true; } });
     return out;
   }
+  // Rename by content: Loeito reads each open document (or the ones just picked) and suggests a clear name.
+  L.renameByContent = async (docs = L.docs) => {
+    docs = [...docs].filter(d => d && d.state && d.state.pages.length); // a copy: switching tabs reorders L.docs
+    if (!docs.length) return L.toast('Open one or more PDFs first, then choose Rename by content (Ctrl K).', { icon: 'info' });
+    const t = L.task('Reading the documents for good names', { cancelable: false });
+    const rows = [], here = L.doc;
+    try {
+      for (const [i, d] of docs.entries()) {
+        t.set(i / docs.length, d.state.name);
+        let sugg = [];
+        try { if (L.doc !== d) await L.switchDoc(d); sugg = await L.suggestNames(); } catch {}
+        rows.push({ d, from: d.state.name, sugg: sugg.map(x => x.name), name: sugg[0]?.name || d.state.name, on: !!sugg.length });
+      }
+    } finally { t.done(); if (here && L.doc !== here && L.docs.includes(here)) await L.switchDoc(here); }
+    // two documents with the same best name get “(2)”, “(3)”… so nothing clashes
+    const used = new Map(); for (const r of rows) { const k = r.name.toLowerCase(), n = (used.get(k) || 0) + 1; used.set(k, n); if (n > 1) r.name = `${r.name} (${n})`; }
+    const onDisk = L.fs.on() && rows.some(r => r.d.origin?.path);
+    const list = h('div', { class: 'rn-list' }, rows.map(r => {
+      const inp = h('input', { class: 'input rn-name', value: r.name, 'aria-label': `New name for ${r.from}`, oninput: e => { r.name = e.target.value; r.on = true; box.checked = true; } });
+      const box = h('input', { type: 'checkbox', checked: r.on, 'aria-label': `Rename ${r.from}`, onchange: e => { r.on = e.target.checked; } });
+      const chips = h('div', { class: 'rn-chips' }, r.sugg.slice(1, 4).map(n => h('button', { class: 'chip', type: 'button', title: 'Use this name', onclick: () => { inp.value = r.name = n; r.on = box.checked = true; } }, n)));
+      return h('div', { class: 'rn-row' }, box, h('div', { class: 'rn-main' }, h('small', { class: 'muted' }, r.from + (r.d.origin?.path ? '.pdf' : '')), inp, r.sugg.length > 1 ? chips : null,
+        r.sugg.length ? null : h('small', { class: 'muted' }, 'No text found to suggest from. Make it searchable first, or type a name.')));
+    }));
+    const ok = await L.dialog({ title: `Rename by content · ${rows.length} document${rows.length === 1 ? '' : 's'}`, wide: true, body: list,
+      text: onDisk ? 'Loeito read each document and suggests a clear, findable name. Change any of them, then rename the files in their folders.' : 'Loeito read each document and suggests a clear name. The new names are used for the tabs and when you save.',
+      actions: [{ label: 'Cancel', value: false }, { label: onDisk ? 'Rename files' : 'Use these names', primary: true, value: true }] });
+    if (!ok) return;
+    let done = 0; const problems = [];
+    for (const r of rows.filter(r => r.on)) {
+      const name = L.safeName(r.name.trim()); if (!name || name === r.from) continue;
+      const p = r.d.origin?.path;
+      if (p && L.fs.on()) {
+        const out = await L.fs.rename(p, name).catch(e => ({ error: e.message }));
+        if (out.error) { problems.push(`${r.from}: ${out.error}`); continue; }
+        L.files.forget(p); L.files.remember(out.path);
+        r.d.origin = { ...r.d.origin, path: out.path, name: L.path.base(out.path) };
+      }
+      r.d.state.name = name; done++;
+    }
+    L.emit('docs');
+    if (problems.length) L.toast(`Renamed ${done}. Not renamed: ${problems.join(' · ')}`, { kind: 'err', ms: 12000 });
+    else if (done) L.toast(onDisk ? `Renamed ${done} file${done === 1 ? '' : 's'}` : `${done} new name${done === 1 ? '' : 's'} ready for saving`, { kind: 'ok', icon: 'sparkles' });
+  };
+
   L.openNameSheet = async () => {
     if (!L.hasDoc()) return;
     const s = L.state, m = { creator: '', lang: '', created: null, custom: [], displayTitle: false, ...s.meta, custom: [...(s.meta.custom || [])] };

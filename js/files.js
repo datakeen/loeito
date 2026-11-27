@@ -23,6 +23,7 @@
     mkdir: (path, name) => api('mkdir?' + qs({ path, name }), { method: 'POST' }).then(r => r.json()),
     read: async path => new Uint8Array(await (await api('read?' + qs({ path }))).arrayBuffer()),
     write: (path, data, overwrite = false) => api('write?' + qs({ path, overwrite: overwrite ? 1 : 0 }), { method: 'POST', body: data instanceof Blob ? data : new Blob([data]) }).then(r => r.json()),
+    rename: (path, name) => api('rename?' + qs({ path, name }), { method: 'POST' }).then(r => r.json()),
     reveal: path => api('reveal?' + qs({ path }), { method: 'POST' }).catch(e => L.error('Couldn’t show it in its folder', e)),
   });
 

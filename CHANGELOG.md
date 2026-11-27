@@ -5,6 +5,7 @@ All notable changes to Loeito, newest first. Every release is on the GitHub Rele
 ## 1.10.0 — 2026-11-26
 
 ### Added
+- **Rename by content** (start screen, Ctrl K): pick one or many PDFs; Loeito reads each, suggests a clear name and renames the files in their folders in one go. It replaces the Smart Name card, which only opened the file.
 - **Print** (Ctrl P, the Save menu or Ctrl K): prints the document as it is now, with every edit, form and stamp.
 - **Rulers and guides** (Ctrl Alt R or the View menu): millimeters, centimeters, inches or points; drag a guide out of a ruler, move it, drag it back to remove it.
 - **Change the merge:** after Merge & Open, bring the same files and order back, fix something and merge again; the earlier result is replaced.
@@ -22,6 +23,8 @@ All notable changes to Loeito, newest first. Every release is on the GitHub Rele
 
 ### Fixed
 - The file window list could not scroll and froze on the Down key in large folders.
+- Switching between documents while pages were still loading could freeze the window.
+- Name suggestions with several documents open could come from another tab’s file.
 - Suggested names no longer carry leftovers such as “(1) (1)” or “+ 0 more”.
 
 ## 1.9.0 — 2026-11-08

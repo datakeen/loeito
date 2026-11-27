@@ -13,6 +13,7 @@
       { t: 'Merge PDFs', i: 'merge', f: () => L.openMerge(L.hasDoc() ? { withCurrent: true } : undefined) },
       { t: 'Change the last merge (merge again)', i: 'merge', f: () => L.reopenMerge() },
       { t: 'Document properties & metadata', i: 'tag', f: need(() => L.openNameSheet()) },
+      { t: 'Rename by content (all open documents)', i: 'sparkles', f: need(() => L.renameByContent()) },
       { t: 'Password-protect or unlock', i: 'shield', f: need(() => L.setBlade('protect')) },
       { t: 'Find in document', k: 'Ctrl F', i: 'search', f: need(() => L.openSearch()) },
       { t: 'Rotate page right', k: 'Ctrl R', i: 'rotr', f: need(() => L.rotateSelected(90)) },

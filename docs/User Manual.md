@@ -367,7 +367,8 @@ It also lists the largest images (pixels, compression, color) and the embedded f
   3. Trace points, lines and areas.
   4. Export to Shapefile, GeoJSON, KML, GPX, DXF, CSV/WKT or Delft3D (.ldb land boundary, .pol, .pli, .xyz, .xyn).
 - **Make Searchable:** OCR in English and other Latin-script languages; Urdu and Arabic are recognized for copying.
-- **Smart Name:** click the document name for name suggestions and the details stored in the PDF.
+- **Name suggestions:** click the document name for suggestions and the details stored in the PDF.
+- **Rename by content:** on the start screen (or Ctrl K → Rename by content), pick one or many PDFs. Loeito reads each, suggests a clear name (you can change it or pick another), and renames the files in their folders in one go. It never overwrites another file; two documents with the same name get “(2)”.
 
 ## Keyboard shortcuts
 

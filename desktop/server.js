@@ -74,6 +74,14 @@ function create({ root, getPath, reveal, ocrDir }) {
       }
       if (r === '/api/fs/read') { const p = path.resolve(q.path || ''); if (!OPEN.has(path.extname(p).toLowerCase())) return json(res, { error: 'Loeito opens PDFs, pictures and Office files. Save other kinds as PDF first.' }, 415); return send(res, 200, fs.readFileSync(p), 'application/octet-stream'); }
       if (r === '/api/fs/mkdir') { const name = (q.name || '').trim(); if (!name || BAD.test(name)) return json(res, { error: 'A folder name can’t contain \\ / : * ? " < > |' }, 400); const t = path.join(path.resolve(q.path), name); if (fs.existsSync(t)) return json(res, { error: `“${name}” already exists here` }, 409); fs.mkdirSync(t); return json(res, { path: t }); }
+      if (r === '/api/fs/rename') {
+        const from = path.resolve(q.path || ''), name = (q.name || '').trim().replace(/\.+$/, '');
+        if (!name || BAD.test(name)) return json(res, { error: 'A name can’t contain \\ / : * ? " < > |. Remove those characters and try again.' }, 400);
+        const to = path.join(path.dirname(from), name + path.extname(from));
+        if (!fs.existsSync(from)) return json(res, { error: 'That file has moved or was renamed. Open it again, then rename it.' }, 404);
+        if (to.toLowerCase() !== from.toLowerCase() && fs.existsSync(to)) return json(res, { error: `“${path.basename(to)}” already exists there. Choose another name.`, exists: true }, 409);
+        fs.renameSync(from, to); return json(res, { path: to });
+      }
       if (r === '/api/fs/write') {
         const p = path.resolve(q.path || ''), name = path.basename(p);
         if (!SAVE.has(path.extname(name).toLowerCase())) return json(res, { error: 'Loeito can’t save that kind of file. Choose PDF, a picture, or a table format.' }, 415);

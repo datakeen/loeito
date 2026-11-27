@@ -74,7 +74,7 @@
     }
     // Several images dropped together become one document; PDFs each get a tab.
     const groups = loaded.every(x => !x.pdfDoc) && loaded.length > 1 ? [loaded] : loaded.map(x => [x]);
-    let last = null;
+    let last = null; const groupsDocs = [];
     for (const g of groups) {
       const doc = L.newDoc(), s = doc.state;
       s.pages = g.flatMap(x => x.pages);
@@ -84,14 +84,15 @@
       await L.proxy(s.pages[0]);
       // where it came from — what Save writes back to (a converted Office file is never overwritten with a PDF)
       if (g.length === 1 && L.files) doc.origin = L.files.originOf(g[0].file, g[0].office ? 'converted' : isImg(g[0].file) ? 'image' : 'pdf');
-      L.docs.push(doc); last = doc;
+      L.docs.push(doc); last = doc; groupsDocs.push(doc);
       setTimeout(() => L.emit('opened', doc), 400);
       if (g[0].formFields) L.toast(`This PDF is a fillable form — ${g[0].formFields} fields. Fill it in or change it in Forms.`, { icon: 'form', ms: 7000, action: { label: 'Open Forms', fn: () => { L.switchDoc(doc); L.setBlade('forms'); } } });
       if (g[0].office) L.toast(`Converted “${g[0].file.name}” with Microsoft Office. Turn its blanks into fillable fields?`, { icon: 'form', ms: 9000, action: { label: 'Find fields', fn: () => { L.switchDoc(doc); L.setBlade('forms'); L.formsUI.detectNow(); } } });
     }
     document.body.classList.add('has-doc');
     L.switchDoc(last);
-    if (pendingBlade) { L.setBlade(pendingBlade); pendingBlade = null; }
+    if (typeof pendingBlade === 'function') { const fn = pendingBlade; pendingBlade = null; fn(groupsDocs); }
+    else if (pendingBlade) { L.setBlade(pendingBlade); pendingBlade = null; }
     if (groups.length > 1) L.toast(`Opened ${groups.length} documents in tabs`, { kind: 'ok' });
   };
   L.pickFiles = (append = false) => L.files.open({ append: append && L.hasDoc() });
@@ -167,10 +168,10 @@
       grid.append(h('button', { class: 'bcard', style: { border: 0, font: 'inherit', textAlign: 'left' }, onclick: () => { pendingBlade = b.id; L.pickFiles(false); } },
         h('span', { class: 'bi', style: { background: b.color } }, L.icon(b.icon)), h('b', null, b.label === 'Searchable' ? 'Make Searchable' : b.label), h('span', null, b.desc)));
     }
-    grid.append(h('button', { class: 'bcard', style: { border: 0, font: 'inherit', textAlign: 'left' }, onclick: () => { pendingBlade = 'view'; L.pickFiles(false); } },
-      h('span', { class: 'bi', style: { background: '#ff375f' } }, L.icon('sparkles')), h('b', null, 'Smart Name'), h('span', null, 'Suggests a clear, findable file name from the content.')));
+    grid.append(h('button', { class: 'bcard', style: { border: 0, font: 'inherit', textAlign: 'left' }, onclick: () => { pendingBlade = docs => L.renameByContent(docs); L.pickFiles(false); } },
+      h('span', { class: 'bi', style: { background: '#ff375f' } }, L.icon('sparkles')), h('b', null, 'Rename by content'), h('span', null, 'Pick one or many PDFs. Loeito reads each and suggests a clear, findable name, then renames them in one go.')));
     grid.append(h('button', { class: 'bcard', style: { border: 0, font: 'inherit', textAlign: 'left' }, onclick: () => L.openFormTemplates() },
-      h('span', { class: 'bi', style: { background: '#30a46c' } }, L.icon('template')), h('b', null, 'Form templates'), h('span', null, 'Ten ready forms — registration, invoice, leave, survey… Make one your own.')));
+      h('span', { class: 'bi', style: { background: '#30a46c' } }, L.icon('template')), h('b', null, 'New form from a template'), h('span', null, 'No file needed. Ten ready forms — registration, invoice, leave, survey… Make one your own.')));
   }
   // Recently opened files (needs the local server to reopen them by path).
   function paintRecent() {

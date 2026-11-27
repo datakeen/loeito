@@ -48,6 +48,10 @@ A **check** points out what's missing or untidy and fixes it with one click.
 
 **How it works:** Loeito's own file window lists folders with a preview of the first page. Click a column title to sort by name, date, type or size; type a name to jump to it. Without the desktop app, your browser's window is used.
 
+## Rename by content
+
+On the start screen, **Rename by content** asks for one or many PDFs, reads each and suggests a clear name such as “Water Quality Report 2026” instead of “scan_0012 (1)”. Change any name, untick the ones to leave, then **Rename files**. Also in Ctrl K for the documents already open.
+
 ## Print
 
 **Ctrl P** (or the Save menu, or Ctrl K → Print) prints the document as it is now, with every edit, form and stamp, through your computer's print window.

@@ -222,6 +222,8 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 return self._mkdir()
             if route == '/api/fs/write':
                 return self._write()
+            if route == '/api/fs/rename':
+                return self._rename()
             if route == '/api/fs/reveal':
                 return self._reveal()
             if route in ('/api/pdf/encrypt', '/api/pdf/decrypt'):
@@ -280,6 +282,20 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             return self._json({'error': f'“{name}” already exists here'}, 409)
         os.mkdir(target)
         return self._json({'path': target})
+
+    def _rename(self):
+        q = self._query()
+        src = os.path.abspath(q.get('path', ''))
+        name = q.get('name', '').strip().rstrip('.')
+        if not name or BAD_NAME & set(name):
+            return self._json({'error': 'A name can’t contain \\ / : * ? " < > |. Remove those characters and try again.'}, 400)
+        if not os.path.isfile(src):
+            return self._json({'error': 'That file has moved or was renamed. Open it again, then rename it.'}, 404)
+        dst = os.path.join(os.path.dirname(src), name + os.path.splitext(src)[1])
+        if os.path.normcase(dst) != os.path.normcase(src) and os.path.exists(dst):
+            return self._json({'error': f'“{os.path.basename(dst)}” already exists there. Choose another name.', 'exists': True}, 409)
+        os.replace(src, dst)
+        return self._json({'path': dst})
 
     def _write(self):
         q = self._query()
